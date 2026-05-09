@@ -1,0 +1,96 @@
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-semibold">
+                <i class="fab fa-vimeo text-primary me-2"></i>Ajouter un code Vimeo
+            </h4>
+            <p class="text-muted small mt-1">Créer un nouveau code d'accès à la plateforme Vimeo</p>
+        </div>
+        <a href="/vimeo-code" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-right me-1"></i>Retour
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form action="/vimeo-code/create" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Code <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="code" required placeholder="Ex: 1138488973">
+                        <div class="form-text small">Code numérique unique pour l'authentification</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Utilisateur</label>
+                        <input type="text" class="form-control" name="user" value="education" placeholder="Nom d'utilisateur">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Statut</label>
+                        <select class="form-select" name="status">
+                            <option value="PENDING">En attente</option>
+                            <option value="ACTIVE">Actif</option>
+                            <option value="USED">Utilisé</option>
+                            <option value="EXPIRED">Expiré</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Date d'expiration</label>
+                        <input type="datetime-local" class="form-control" name="expiresAt">
+                        <div class="form-text small">Optionnel</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">Titre de la vidéo</label>
+                        <input type="text" class="form-control" name="videoTitle" placeholder="Titre de la vidéo associée">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">URL de la vidéo</label>
+                        <input type="text" class="form-control" name="videoUrl" placeholder="https://vimeo.com/...">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">Description</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Description optionnelle"></textarea>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-1"></i>Enregistrer
+                        </button>
+                        <a href="/vimeo-code" class="btn btn-light px-4">Annuler</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 20px;
+}
+.form-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+}
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+.btn-primary {
+    background: #3b82f6;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.2rem;
+}
+.btn-light {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+</style>

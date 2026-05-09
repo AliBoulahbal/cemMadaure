@@ -1,0 +1,214 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-lock"></i> إدارة الصلاحيات
+        </h3>
+        <div class="card-tools">
+            <a href="/permissions/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> إضافة صلاحية
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- الصلاحيات حسب الفئة -->
+        <div class="permissions-container">
+            {{#each permissions}}
+            <div class="category-section">
+                <div class="category-header">
+                    <h4>
+                        {{#if (eq @key 'users')}}<i class="fas fa-users"></i> إدارة المستخدمين
+                        {{else if (eq @key 'content')}}<i class="fas fa-file-alt"></i> إدارة المحتوى
+                        {{else if (eq @key 'academic')}}<i class="fas fa-graduation-cap"></i> الإدارة التربوية
+                        {{else if (eq @key 'reports')}}<i class="fas fa-chart-bar"></i> التقارير
+                        {{else if (eq @key 'settings')}}<i class="fas fa-cog"></i> الإعدادات
+                        {{else if (eq @key 'system')}}<i class="fas fa-server"></i> النظام
+                        {{else}}{{@key}}{{/if}}
+                    </h4>
+                    <span class="badge bg-secondary">{{this.length}} صلاحية</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الكود</th>
+                                <th>الوصف</th>
+                                <th>الأدوار الافتراضية</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each this}}
+                            <tr>
+                                <td><strong>{{this.name}}</strong></td>
+                                <td><code>{{this.code}}</code></td>
+                                <td>{{this.description}}</td>
+                                <td>
+                                    {{#each this.defaultRoles}}
+                                        <span class="role-badge role-{{this}}">{{this}}</span>
+                                    {{else}}
+                                        <span class="text-muted">—</span>
+                                    {{/each}}
+                                </td>
+                                <td>
+                                    <a href="/permissions/edit/{{this._id}}" class="btn-edit" title="تعديل">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="/permissions/delete/{{this._id}}?_method=DELETE" method="post" style="display: inline;">
+                                        <button type="submit" class="btn-delete" title="حذف" onclick="return confirm('هل أنت متأكد؟')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        
+        <!-- صلاحيات المستخدمين -->
+        <div class="users-permissions">
+            <div class="category-header">
+                <h4><i class="fas fa-user-shield"></i> صلاحيات المستخدمين</h4>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>المستخدم</th>
+                            <th>الدور</th>
+                            <th>الصلاحيات الإضافية</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                        <tr>
+                            <td><strong>{{this.fullName}}</strong><br><small>{{this.username}}</small></td>
+                            <td>
+                                <span class="role-badge role-{{this.role}}">{{this.role}}</span>
+                            </td>
+                            <td>
+                                {{#if this.permissions}}
+                                    {{#each this.permissions}}
+                                        <span class="perm-badge">{{this}}</span>
+                                    {{/each}}
+                                {{else}}
+                                    <span class="text-muted">بدون صلاحيات إضافية</span>
+                                {{/if}}
+                            </td>
+                            <td>
+                                <a href="/permissions/user/{{this._id}}" class="btn-perm" title="تعديل الصلاحيات">
+                                    <i class="fas fa-key"></i> إدارة الصلاحيات
+                                </a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.permissions-container, .users-permissions {
+    margin-bottom: 2rem;
+}
+
+.category-section {
+    margin-bottom: 2rem;
+    border: 1px solid #eef2f6;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.category-header {
+    background: #f8fafc;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #eef2f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: right;
+    padding: 0.8rem;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.role-super_admin { background: #fef2f2; color: #ef4444; }
+.role-admin { background: #fffbeb; color: #f59e0b; }
+.role-teacher { background: #ecfdf5; color: #10b981; }
+.role-viewer { background: #f1f5f9; color: #64748b; }
+
+.perm-badge {
+    display: inline-block;
+    background: #eff6ff;
+    color: #3b82f6;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    margin: 0.2rem;
+}
+
+.btn-edit, .btn-delete, .btn-perm {
+    background: none;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+}
+
+.btn-edit { color: #f59e0b; }
+.btn-edit:hover { background: #fffbeb; }
+
+.btn-delete { color: #ef4444; }
+.btn-delete:hover { background: #fef2f2; }
+
+.btn-perm { 
+    color: #3b82f6; 
+    background: #eff6ff;
+}
+.btn-perm:hover { 
+    background: #e0e7ff; 
+}
+</style>

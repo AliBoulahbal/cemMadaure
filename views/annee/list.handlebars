@@ -1,0 +1,91 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-calendar-alt"></i> Liste des Années Scolaires
+        </h3>
+        <div class="card-tools">
+            <a href="/annee/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Ajouter une année
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover datatable">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="50">#</th>
+                        <th>Nom de l'année</th>
+                        <th width="150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each annees}}
+                    <tr>
+                        <td>{{inc @index}}</td>
+                        <td><strong>{{this.name}}</strong></td>
+                        <td>
+                            <a href="/annee/edit/{{this._id}}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <form action="/annee/delete/{{this._id}}?_method=DELETE" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cette année ?')">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="3" class="text-center">Aucune année trouvée</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie"></i> Statistiques
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Total des années:</strong> {{annees.length}}
+                </div>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <strong>Années disponibles:</strong>
+                    <ul class="mt-2 mb-0">
+                        {{#each annees}}
+                        <li>{{this.name}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-lightbulb"></i> Conseils
+                </h3>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Les années sont utilisées pour organiser les unités et les leçons</li>
+                    <li>Exemples: 1ère Année Moyenne, 2ème Année Moyenne, 3ème Année Moyenne</li>
+                    <li>Chaque année peut contenir plusieurs unités</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

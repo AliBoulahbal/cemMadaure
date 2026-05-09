@@ -1,0 +1,759 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-cloud-upload-alt"></i> رفع المحتوى
+        </h3>
+        <div class="card-tools">
+            <a href="/lesson" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- إحصائيات سريعة -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-2 col-6">
+                <div class="stat-card-sm">
+                    <div class="stat-icon-sm bg-primary">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="stat-info-sm">
+                        <div class="stat-number-sm">{{stats.videos}}</div>
+                        <div class="stat-label-sm">فيديوهات</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="stat-card-sm">
+                    <div class="stat-icon-sm bg-danger">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="stat-info-sm">
+                        <div class="stat-number-sm">{{stats.pdfs}}</div>
+                        <div class="stat-label-sm">PDF</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="stat-card-sm">
+                    <div class="stat-icon-sm bg-success">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info-sm">
+                        <div class="stat-number-sm">{{stats.texts}}</div>
+                        <div class="stat-label-sm">نصوص</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="stat-card-sm">
+                    <div class="stat-icon-sm bg-warning">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="stat-info-sm">
+                        <div class="stat-number-sm">{{stats.quizzes}}</div>
+                        <div class="stat-label-sm">اختبارات</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="stat-card-sm">
+                    <div class="stat-icon-sm bg-secondary">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="stat-info-sm">
+                        <div class="stat-number-sm">{{stats.images}}</div>
+                        <div class="stat-label-sm">صور</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="stat-card-sm">
+                    <div class="stat-icon-sm bg-dark">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info-sm">
+                        <div class="stat-number-sm">{{stats.total}}</div>
+                        <div class="stat-label-sm">المجموع</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- تبويبات المحتوى -->
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="video">
+                    <i class="fas fa-video"></i> فيديو
+                </button>
+                <button class="tab-btn" data-tab="pdf">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </button>
+                <button class="tab-btn" data-tab="image">
+                    <i class="fas fa-image"></i> صورة
+                </button>
+                <button class="tab-btn" data-tab="text">
+                    <i class="fas fa-file-alt"></i> نص
+                </button>
+                <button class="tab-btn" data-tab="quiz">
+                    <i class="fas fa-question-circle"></i> اختبار
+                </button>
+            </div>
+            
+            <div class="tabs-content">
+                <!-- تبويب فيديو -->
+                <div class="tab-pane active" id="tab-video">
+                    <form id="videoForm">
+                        <div class="form-group">
+                            <label class="form-label">اختر الدرس <span class="text-danger">*</span></label>
+                            <select class="form-select" name="lessonId" required>
+                                <option value="">-- اختر درس --</option>
+                                {{#each lessons}}
+                                <option value="{{this._id}}">{{this.name}} - {{this.branchId.name}} - {{this.subjectId.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">عنوان الفيديو <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="title" placeholder="مثال: شرح الدرس الأول" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">نوع المصدر</label>
+                            <div class="source-type-group">
+                                <label class="source-option">
+                                    <input type="radio" name="sourceType" value="upload" checked>
+                                    <span class="source-option-content">
+                                        <i class="fas fa-upload"></i>
+                                        <span>رفع ملف</span>
+                                    </span>
+                                </label>
+                                <label class="source-option">
+                                    <input type="radio" name="sourceType" value="url">
+                                    <span class="source-option-content">
+                                        <i class="fab fa-vimeo"></i>
+                                        <span>رابط Vimeo</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Zone Upload -->
+                        <div id="videoUploadZone">
+                            <div class="form-group">
+                                <label class="form-label">الملف <span class="text-danger">*</span></label>
+                                <div class="upload-zone" id="videoFileZone">
+                                    <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
+                                    <p>اسحب الفيديو هنا أو انقر للاختيار</p>
+                                    <small class="text-muted">MP4, WebM, AVI, MOV</small>
+                                    <input type="file" accept="video/*" style="display:none;" id="videoFileInput">
+                                </div>
+                                <div id="videoProgress" class="progress-wrapper" style="display:none;">
+                                    <div class="progress-info">
+                                        <span id="videoFileName" class="progress-filename"></span>
+                                        <span id="videoPercent">0%</span>
+                                    </div>
+                                    <div class="progress-bar-track">
+                                        <div class="progress-bar-fill" id="videoProgressBar"></div>
+                                    </div>
+                                    <div id="videoStatus" class="progress-status"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Zone URL -->
+                        <div id="videoUrlZone" style="display:none;">
+                            <div class="form-group">
+                                <label class="form-label">رابط الفيديو <span class="text-danger">*</span></label>
+                                <input type="url" class="form-control" id="videoUrlInput" 
+                                       placeholder="https://vimeo.com/123456789">
+                                <div class="form-text small">أدخل رابط الفيديو من Vimeo</div>
+                            </div>
+                            <div id="videoPreviewContainer" style="display:none;">
+                                <div class="preview-box">
+                                    <div class="preview-header">
+                                        <i class="fas fa-eye"></i> معاينة
+                                    </div>
+                                    <div class="ratio ratio-16x9">
+                                        <iframe id="videoPreviewIframe" src="" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ترتيب العرض</label>
+                            <input type="number" class="form-control" name="order" value="0" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="isReel" name="isReel">
+                                <label class="custom-control-label" for="isReel">
+                                    <i class="fab fa-tiktok"></i> هذا الفيديو هو Reel (فيديو قصير)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="videoBtnSubmit">
+                            <i class="fas fa-upload"></i> رفع الفيديو
+                        </button>
+                    </form>
+                </div>
+
+                <!-- تبويب PDF -->
+                <div class="tab-pane" id="tab-pdf">
+                    <form id="pdfForm">
+                        <div class="form-group">
+                            <label class="form-label">اختر الدرس <span class="text-danger">*</span></label>
+                            <select class="form-select" name="lessonId" required>
+                                <option value="">-- اختر درس --</option>
+                                {{#each lessons}}
+                                <option value="{{this._id}}">{{this.name}} - {{this.branchId.name}} - {{this.subjectId.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">عنوان PDF <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="title" placeholder="مثال: ملخص الدرس" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ملف PDF <span class="text-danger">*</span></label>
+                            <div class="upload-zone" id="pdfUploadZone">
+                                <i class="fas fa-file-pdf fa-3x mb-2 text-danger"></i>
+                                <p>اسحب PDF هنا أو انقر للاختيار</p>
+                                <small class="text-muted">PDF فقط</small>
+                                <input type="file" accept=".pdf" style="display:none;" id="pdfFileInput">
+                            </div>
+                            <div id="pdfProgress" class="progress-wrapper" style="display:none;">
+                                <div class="progress-info">
+                                    <span id="pdfFileName" class="progress-filename"></span>
+                                    <span id="pdfPercent">0%</span>
+                                </div>
+                                <div class="progress-bar-track">
+                                    <div class="progress-bar-fill bg-danger" id="pdfProgressBar"></div>
+                                </div>
+                                <div id="pdfStatus" class="progress-status"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ترتيب العرض</label>
+                            <input type="number" class="form-control" name="order" value="0" min="0">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="pdfBtnSubmit">
+                            <i class="fas fa-upload"></i> رفع PDF
+                        </button>
+                    </form>
+                </div>
+
+                <!-- تبويب صورة -->
+                <div class="tab-pane" id="tab-image">
+                    <form id="imageForm">
+                        <div class="form-group">
+                            <label class="form-label">اختر الدرس <span class="text-danger">*</span></label>
+                            <select class="form-select" name="lessonId" required>
+                                <option value="">-- اختر درس --</option>
+                                {{#each lessons}}
+                                <option value="{{this._id}}">{{this.name}} - {{this.branchId.name}} - {{this.subjectId.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">عنوان الصورة <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="title" placeholder="مثال: رسم توضيحي" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">الصورة <span class="text-danger">*</span></label>
+                            <div class="upload-zone" id="imageUploadZone">
+                                <i class="fas fa-image fa-3x mb-2"></i>
+                                <p>اسحب الصورة هنا أو انقر للاختيار</p>
+                                <small class="text-muted">JPG, PNG, WebP, GIF</small>
+                                <input type="file" accept="image/*" style="display:none;" id="imageFileInput">
+                            </div>
+                            <div id="imageProgress" class="progress-wrapper" style="display:none;">
+                                <div class="progress-info">
+                                    <span id="imageFileName" class="progress-filename"></span>
+                                    <span id="imagePercent">0%</span>
+                                </div>
+                                <div class="progress-bar-track">
+                                    <div class="progress-bar-fill bg-secondary" id="imageProgressBar"></div>
+                                </div>
+                                <div id="imageStatus" class="progress-status"></div>
+                            </div>
+                            <div id="imagePreviewContainer" style="display:none; margin-top:0.75rem;">
+                                <img id="imagePreview" src="#" alt="معاينة" style="max-width:100%; border-radius:10px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ترتيب العرض</label>
+                            <input type="number" class="form-control" name="order" value="0" min="0">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="imageBtnSubmit">
+                            <i class="fas fa-upload"></i> رفع الصورة
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- تبويب نص -->
+                <div class="tab-pane" id="tab-text">
+                    <form action="/content/upload/text" method="post">
+                        <div class="form-group">
+                            <label class="form-label">اختر الدرس <span class="text-danger">*</span></label>
+                            <select class="form-select" name="lessonId" required>
+                                <option value="">-- اختر درس --</option>
+                                {{#each lessons}}
+                                <option value="{{this._id}}">{{this.name}} - {{this.branchId.name}} - {{this.subjectId.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">عنوان المحتوى <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">المحتوى <span class="text-danger">*</span></label>
+                            <textarea name="body" rows="10" class="form-control" placeholder="اكتب المحتوى هنا..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ترتيب العرض</label>
+                            <input type="number" class="form-control" name="order" value="0" min="0">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ النص
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- تبويب اختبار (simplifié) -->
+                <div class="tab-pane" id="tab-quiz">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        يمكنك إنشاء الاختبارات من قسم "الاختبارات" في القائمة الجانبية.
+                    </div>
+                    <a href="/quiz" class="btn btn-primary">
+                        <i class="fas fa-question-circle"></i> إدارة الاختبارات
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+/* Progress Bar */
+.progress-wrapper {
+    margin-top: 0.75rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    font-size: 0.82rem;
+}
+.progress-filename {
+    color: #334155;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 70%;
+    direction: ltr;
+}
+.progress-bar-track {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: #3b82f6;
+    border-radius: 99px;
+    transition: width 0.2s ease;
+}
+.progress-bar-fill.bg-danger { background: #ef4444; }
+.progress-bar-fill.bg-secondary { background: #64748b; }
+.progress-status {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-align: left;
+    direction: ltr;
+}
+
+/* Statistiques */
+.stat-card-sm {
+    background: white;
+    border-radius: 14px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid #eef2f6;
+}
+.stat-icon-sm {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+}
+.stat-icon-sm.bg-primary { background: #3b82f6; }
+.stat-icon-sm.bg-danger { background: #ef4444; }
+.stat-icon-sm.bg-success { background: #10b981; }
+.stat-icon-sm.bg-warning { background: #f59e0b; }
+.stat-icon-sm.bg-secondary { background: #64748b; }
+.stat-icon-sm.bg-dark { background: #1e293b; }
+.stat-number-sm {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+.stat-label-sm {
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+/* Tabs */
+.tabs-container {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #eef2f6;
+    overflow: hidden;
+}
+.tabs-nav {
+    display: flex;
+    border-bottom: 1px solid #eef2f6;
+    background: #fafcff;
+    flex-wrap: wrap;
+}
+.tab-btn {
+    flex: 1;
+    padding: 0.9rem;
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+}
+.tab-btn i { margin-left: 0.5rem; }
+.tab-btn:hover { background: #f1f5f9; color: #1e293b; }
+.tab-btn.active {
+    color: #3b82f6;
+    border-bottom: 2px solid #3b82f6;
+    background: white;
+}
+.tabs-content { padding: 1.5rem; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Formulaires */
+.form-group { margin-bottom: 1.25rem; }
+.form-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+.form-control, .form-select {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+.form-control:focus, .form-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
+}
+
+/* Source type */
+.source-type-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.source-option {
+    flex: 1;
+    cursor: pointer;
+}
+.source-option input {
+    display: none;
+}
+.source-option-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+}
+.source-option input:checked + .source-option-content {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+/* Upload zone */
+.upload-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    background: #fafcff;
+}
+.upload-zone:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+/* Preview */
+.preview-box {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+.preview-header {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+.ratio {
+    border-radius: 12px;
+    overflow: hidden;
+}
+.ratio-16x9 { aspect-ratio: 16 / 9; }
+
+.btn-primary {
+    background: #3b82f6;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn-primary:hover {
+    background: #2563eb;
+}
+.text-danger { color: #ef4444; }
+.text-muted { color: #64748b; }
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+</style>
+
+<script>
+// تبديل التبويبات
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+// Gestion source vidéo
+const sourceRadios = document.querySelectorAll('input[name="sourceType"]');
+const uploadZoneDiv = document.getElementById('videoUploadZone');
+const urlZoneDiv = document.getElementById('videoUrlZone');
+const fileInput = document.getElementById('videoFileInput');
+const urlInput = document.getElementById('videoUrlInput');
+
+function updateSource() {
+    const selected = document.querySelector('input[name="sourceType"]:checked').value;
+    if (selected === 'upload') {
+        uploadZoneDiv.style.display = 'block';
+        urlZoneDiv.style.display = 'none';
+        if (fileInput) fileInput.required = true;
+        if (urlInput) urlInput.required = false;
+    } else {
+        uploadZoneDiv.style.display = 'none';
+        urlZoneDiv.style.display = 'block';
+        if (fileInput) fileInput.required = false;
+        if (urlInput) urlInput.required = true;
+    }
+}
+
+sourceRadios.forEach(r => r.addEventListener('change', updateSource));
+updateSource();
+
+// Aperçu Vimeo
+if (urlInput) {
+    urlInput.addEventListener('input', function() {
+        const url = this.value;
+        const previewDiv = document.getElementById('videoPreviewContainer');
+        const iframe = document.getElementById('videoPreviewIframe');
+        const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+        
+        if (match && match[1]) {
+            iframe.src = 'https://player.vimeo.com/video/' + match[1] + '?autoplay=0';
+            previewDiv.style.display = 'block';
+        } else {
+            previewDiv.style.display = 'none';
+            iframe.src = '';
+        }
+    });
+}
+
+// Setup zones de drop
+function setupZone(zoneId, inputId) {
+    const zone = document.getElementById(zoneId);
+    const input = document.getElementById(inputId);
+    if (!zone || !input) return;
+    zone.addEventListener('click', () => input.click());
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event('change'));
+    });
+}
+
+setupZone('videoFileZone', 'videoFileInput');
+setupZone('pdfUploadZone', 'pdfFileInput');
+setupZone('imageUploadZone', 'imageFileInput');
+
+// Upload vers Wasabi
+async function uploadToWasabi(file, type, progressBar, percentEl, statusEl, progressWrapper) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    statusEl.textContent = 'جاري التحضير...';
+    progressWrapper.style.display = 'block';
+
+    const res = await fetch('/content/presign?type=' + type + '&ext=' + ext);
+    if (!res.ok) throw new Error('فشل الحصول على رابط الرفع');
+    const data = await res.json();
+
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', data.url);
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const pct = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = pct + '%';
+                percentEl.textContent = pct + '%';
+                statusEl.textContent = pct < 100 ? 'جاري الرفع...' : 'اكتمل الرفع ✓';
+            }
+        });
+
+        xhr.addEventListener('load', () => {
+            if (xhr.status === 200) resolve(data.publicUrl);
+            else reject(new Error('فشل رفع الملف'));
+        });
+
+        xhr.addEventListener('error', () => reject(new Error('خطأ في الاتصال')));
+        xhr.send(file);
+    });
+}
+
+// Submit vidéo
+document.getElementById('videoForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const sourceType = document.querySelector('input[name="sourceType"]:checked').value;
+    const lessonId = document.querySelector('#videoForm [name="lessonId"]').value;
+    const title = document.querySelector('#videoForm [name="title"]').value;
+    const order = document.querySelector('#videoForm [name="order"]').value;
+    const isReel = document.querySelector('#isReel')?.checked || false;
+    
+    if (!lessonId || !title) {
+        Swal.fire('خطأ', 'يرجى ملء جميع الحقول', 'error');
+        return;
+    }
+    
+    const btn = document.getElementById('videoBtnSubmit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المعالجة...';
+    
+    try {
+        if (sourceType === 'url') {
+            const videoUrl = urlInput.value;
+            if (!videoUrl) throw new Error('يرجى إدخال رابط الفيديو');
+            
+            const response = await fetch('/content/upload/video-url', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lessonId, title, order, videoUrl, isReel })
+});
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error);
+            Swal.fire('✅', 'تم إضافة الفيديو بنجاح', 'success').then(() => location.reload());
+        } else {
+            const file = fileInput.files[0];
+            if (!file) throw new Error('يرجى اختيار ملف فيديو');
+            
+            const publicUrl = await uploadToWasabi(
+                file, 'video',
+                document.getElementById('videoProgressBar'),
+                document.getElementById('videoPercent'),
+                document.getElementById('videoStatus'),
+                document.getElementById('videoProgress')
+            );
+            
+            const response = await fetch('/content/upload/video', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lessonId, title, order, fileUrl: publicUrl, isReel })
+            });
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error);
+            Swal.fire('✅', 'تم رفع الفيديو بنجاح', 'success').then(() => location.reload());
+        }
+    } catch (err) {
+        Swal.fire('خطأ', err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-upload"></i> رفع الفيديو';
+    }
+});
+
+// Affichage noms fichiers
+document.getElementById('videoFileInput')?.addEventListener('change', function() {
+    if (this.files[0]) document.getElementById('videoFileName').textContent = this.files[0].name;
+});
+document.getElementById('pdfFileInput')?.addEventListener('change', function() {
+    if (this.files[0]) document.getElementById('pdfFileName').textContent = this.files[0].name;
+});
+document.getElementById('imageFileInput')?.addEventListener('change', function() {
+    if (!this.files[0]) return;
+    document.getElementById('imageFileName').textContent = this.files[0].name;
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreviewContainer').style.display = 'block';
+    };
+    reader.readAsDataURL(this.files[0]);
+});
+</script>

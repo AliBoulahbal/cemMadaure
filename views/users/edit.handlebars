@@ -1,0 +1,82 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-user-edit"></i> تعديل المستخدم: {{user.fullName}}
+        </h3>
+        <div class="card-tools">
+            <a href="/users" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        {{#if error}}
+        <div class="alert-error">{{error}}</div>
+        {{/if}}
+        
+        <form action="/users/edit/{{user._id}}?_method=PUT" method="post" class="user-form">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">الاسم الكامل <span class="required">*</span></label>
+                    <input type="text" class="field-input" name="fullName" value="{{user.fullName}}" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">رقم الهاتف</label>
+                    <input type="tel" class="field-input" name="phone" value="{{user.phone}}">
+                </div>
+                <div class="form-field">
+                    <label class="field-label">الدور <span class="required">*</span></label>
+                    <select class="field-select" name="role" required>
+                        <option value="super_admin" {{#if (eq user.role 'super_admin')}}selected{{/if}}>👑 مدير عام</option>
+                        <option value="admin" {{#if (eq user.role 'admin')}}selected{{/if}}>🛡️ مدير</option>
+                        <option value="teacher" {{#if (eq user.role 'teacher')}}selected{{/if}}>📚 أستاذ</option>
+                        <option value="viewer" {{#if (eq user.role 'viewer')}}selected{{/if}}>👁️ مشاهد</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">الحالة</label>
+                    <select class="field-select" name="status">
+                        <option value="active" {{#if (eq user.status 'active')}}selected{{/if}}>🟢 نشط</option>
+                        <option value="inactive" {{#if (eq user.status 'inactive')}}selected{{/if}}>🔴 غير نشط</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="info-warning">
+                <i class="fas fa-info-circle"></i>
+                <span>لتغيير كلمة المرور، يرجى استخدام <a href="/users/change-password/{{user._id}}">هذا الرابط</a></span>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> حفظ التغييرات
+                </button>
+                <a href="/users" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.info-warning {
+    background: #fffbeb;
+    border-radius: 10px;
+    padding: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: #f59e0b;
+}
+
+.info-warning a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.info-warning a:hover {
+    text-decoration: underline;
+}
+</style>

@@ -1,0 +1,202 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  --ink: #0f1117; --ink-muted: #6b7280; --surface: #ffffff; --surface-2: #f7f8fa;
+  --border: #e8eaed; --accent: #2563eb; --success: #059669; --danger: #dc2626;
+  --radius: 14px; --shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+}
+* { box-sizing: border-box; }
+body, .lp-edit { font-family: 'DM Sans', sans-serif; color: var(--ink); }
+
+.lp-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem; padding-bottom:1.25rem; border-bottom:1px solid var(--border); }
+.lp-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; margin:0; letter-spacing:-.02em; }
+.lp-sub { font-size:.78rem; color:var(--ink-muted); margin:.2rem 0 0; }
+
+.btn-lp { display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .9rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; border:none; cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap; }
+.btn-primary { background:var(--accent); color:white; }
+.btn-primary:hover { background:#1d4ed8; color:white; }
+.btn-outline { background:transparent; color:var(--ink-muted); border:1px solid var(--border); }
+.btn-outline:hover { border-color:var(--ink-muted); color:var(--ink); }
+.btn-lg { padding:.6rem 1.4rem; font-size:.88rem; }
+
+.form-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.75rem; }
+.field-grid { display:grid; gap:1rem; }
+.field-grid-2 { grid-template-columns:1fr 1fr; }
+.field-grid-3 { grid-template-columns:1fr 1fr 1fr; }
+@media(max-width:640px) { .field-grid-2, .field-grid-3 { grid-template-columns:1fr; } }
+
+.field-label { display:block; font-size:.72rem; font-weight:600; color:var(--ink-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.4rem; }
+.form-input { width:100%; padding:.55rem .85rem; border:1px solid var(--border); border-radius:9px; font-family:'DM Sans',sans-serif; font-size:.86rem; color:var(--ink); background:var(--surface); outline:none; transition:border-color .15s, box-shadow .15s; }
+.form-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+select.form-input { cursor:pointer; }
+textarea.form-input { resize:vertical; }
+
+/* Type selector pills */
+.type-pills { display:flex; gap:.5rem; flex-wrap:wrap; }
+.type-pill { display:none; }
+.type-pill-label {
+  display:inline-flex; align-items:center; gap:.45rem; padding:.5rem 1rem;
+  border-radius:8px; border:1.5px solid var(--border); background:var(--surface-2);
+  font-size:.82rem; font-weight:500; color:var(--ink-muted); cursor:pointer; transition:all .15s;
+}
+.type-pill:checked + .type-pill-label {
+  border-color:var(--accent); background:var(--accent); color:white;
+}
+
+.success-hint { display:inline-flex; align-items:center; gap:.35rem; font-size:.75rem; color:var(--success); margin-top:.4rem; }
+
+.form-check-row { display:flex; align-items:center; gap:.55rem; cursor:pointer; }
+.form-check-row input { width:16px; height:16px; accent-color:var(--accent); }
+.form-check-row span { font-size:.85rem; }
+
+.divider { border:none; border-top:1px solid var(--border); margin:1.25rem 0; }
+.form-actions { display:flex; gap:.75rem; align-items:center; margin-top:1.5rem; }
+
+/* Conditional panels */
+.cond-panel { display:none; }
+.cond-panel.visible { display:block; }
+</style>
+
+<div class="lp-edit">
+  <div class="lp-header">
+    <div>
+      <h1 class="lp-title">تعديل الجزء</h1>
+      <p class="lp-sub">{{part.title}}</p>
+    </div>
+    <a href="/lesson-part/lesson/{{lessonIdStr}}" class="btn-lp btn-outline">
+      <i class="fas fa-arrow-right"></i> رجوع
+    </a>
+  </div>
+
+  <div class="form-card">
+    <form action="/lesson-part/update/{{part.id}}?_method=PUT" method="post">
+      <input type="hidden" name="lessonId" value="{{lessonIdStr}}">
+
+      <!-- Type selector -->
+      <div style="margin-bottom:1.25rem;">
+        <label class="field-label">نوع المحتوى</label>
+        <div class="type-pills">
+          <input type="radio" name="type" id="t-video" value="VIDEO" class="type-pill" {{#if (eq part.type 'VIDEO')}}checked{{/if}}>
+          <label for="t-video" class="type-pill-label"><i class="fas fa-video"></i> فيديو</label>
+
+          <input type="radio" name="type" id="t-pdf" value="PDF" class="type-pill" {{#if (eq part.type 'PDF')}}checked{{/if}}>
+          <label for="t-pdf" class="type-pill-label"><i class="fas fa-file-pdf"></i> PDF</label>
+
+          <input type="radio" name="type" id="t-text" value="TEXT" class="type-pill" {{#if (eq part.type 'TEXT')}}checked{{/if}}>
+          <label for="t-text" class="type-pill-label"><i class="fas fa-file-alt"></i> نص</label>
+
+          <input type="radio" name="type" id="t-quiz" value="QUIZ" class="type-pill" {{#if (eq part.type 'QUIZ')}}checked{{/if}}>
+          <label for="t-quiz" class="type-pill-label"><i class="fas fa-question-circle"></i> اختبار</label>
+        </div>
+      </div>
+
+      <!-- Title + order + free -->
+      <div class="field-grid field-grid-3" style="margin-bottom:1.25rem;">
+        <div style="grid-column:1/3;">
+          <label class="field-label" for="title">العنوان <span style="color:var(--danger);">*</span></label>
+          <input type="text" class="form-input" id="title" name="title" value="{{part.title}}" required>
+        </div>
+        <div>
+          <label class="field-label" for="order">الترتيب</label>
+          <input type="number" class="form-input" id="order" name="order" value="{{part.order}}" min="0">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- VIDEO fields -->
+      <div class="cond-panel" id="panel-url">
+        <div class="field-grid" style="margin-bottom:1rem;">
+          <div>
+            <label class="field-label" for="url">رابط الفيديو (Vimeo)</label>
+            <input type="text" class="form-input" id="url" name="url" value="{{part.url}}" placeholder="https://vimeo.com/...">
+            {{#if part.url}}<div class="success-hint"><i class="fas fa-check-circle"></i> رابط موجود</div>{{/if}}
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF field -->
+      <div class="cond-panel" id="panel-pdf">
+        <div class="field-grid" style="margin-bottom:1rem;">
+          <div>
+            <label class="field-label" for="bodyPdf">رابط PDF (Wasabi)</label>
+            <input type="text" class="form-input" id="bodyPdf" name="body" value="{{part.body}}" placeholder="https://s3.wasabisys.com/...">
+            {{#if part.body}}<div class="success-hint"><i class="fas fa-check-circle"></i> PDF موجود</div>{{/if}}
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXT/QUIZ field -->
+      <div class="cond-panel" id="panel-text">
+        <div class="field-grid" style="margin-bottom:1rem;">
+          <div>
+            <label class="field-label" for="bodyText">المحتوى النصي</label>
+            <textarea class="form-input" id="bodyText" name="body" rows="8">{{part.body}}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duration (video/quiz) -->
+      <div class="cond-panel" id="panel-duration">
+        <div class="field-grid field-grid-2" style="margin-bottom:1rem;">
+          <div>
+            <label class="field-label" for="duration">المدة (بالثواني)</label>
+            <input type="number" class="form-input" id="duration" name="duration" value="{{part.duration}}" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- isFree -->
+      <label class="form-check-row" style="margin-bottom:1.5rem;">
+        <input type="checkbox" id="isFree" name="isFree" {{#if part.isFree}}checked{{/if}}>
+        <span><i class="fas fa-gift" style="color:var(--warning);"></i> جزء مجاني</span>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-lp btn-primary btn-lg">
+          <i class="fas fa-save"></i> تحديث
+        </button>
+        <a href="/lesson-part/lesson/{{lessonIdStr}}" class="btn-lp btn-outline btn-lg">إلغاء</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+let ckEditor = null;
+const initialType = '{{part.type}}';
+
+function updateFields(type) {
+  const panelUrl      = document.getElementById('panel-url');
+  const panelPdf      = document.getElementById('panel-pdf');
+  const panelText     = document.getElementById('panel-text');
+  const panelDuration = document.getElementById('panel-duration');
+
+  panelUrl.classList.remove('visible');
+  panelPdf.classList.remove('visible');
+  panelText.classList.remove('visible');
+  panelDuration.classList.remove('visible');
+
+  if (type === 'VIDEO') {
+    panelUrl.classList.add('visible');
+    panelPdf.classList.add('visible');
+    panelDuration.classList.add('visible');
+  } else if (type === 'PDF') {
+    panelPdf.classList.add('visible');
+  } else if (type === 'TEXT') {
+    panelText.classList.add('visible');
+    if (!ckEditor) ckEditor = CKEDITOR.replace('bodyText', { height: 260 });
+  } else if (type === 'QUIZ') {
+    panelText.classList.add('visible');
+    panelDuration.classList.add('visible');
+    if (!ckEditor) ckEditor = CKEDITOR.replace('bodyText', { height: 260 });
+  }
+}
+
+document.querySelectorAll('input[name="type"]').forEach(r => {
+  r.addEventListener('change', () => updateFields(r.value));
+});
+updateFields(initialType);
+</script>

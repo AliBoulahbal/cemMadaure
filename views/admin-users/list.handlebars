@@ -1,0 +1,236 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+.users-page { font-family: 'IBM Plex Sans Arabic', sans-serif; direction: rtl; }
+
+.users-page .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 2rem; padding-bottom: 1.25rem;
+    border-bottom: 1px solid #e8edf2;
+}
+.users-page .page-title {
+    font-size: 1.4rem; font-weight: 700; color: #0f172a; margin: 0;
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.users-page .page-title i { color: #3b82f6; font-size: 1.2rem; }
+
+.users-page .btn-add {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #0f172a; color: #fff; border: none;
+    padding: 0.55rem 1.2rem; border-radius: 10px;
+    font-size: 0.85rem; font-weight: 500; text-decoration: none;
+    transition: background 0.2s;
+}
+.users-page .btn-add:hover { background: #1e293b; color: #fff; }
+
+/* Stats */
+.users-page .stats-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+.users-page .stat-item {
+    background: #fff; border: 1px solid #e8edf2; border-radius: 12px;
+    padding: 1rem; text-align: center;
+}
+.users-page .stat-num { font-size: 1.6rem; font-weight: 700; color: #0f172a; line-height: 1; }
+.users-page .stat-lbl { font-size: 0.7rem; color: #94a3b8; margin-top: 0.3rem; }
+.users-page .stat-item.s-sa .stat-num { color: #ef4444; }
+.users-page .stat-item.s-ad .stat-num { color: #f59e0b; }
+.users-page .stat-item.s-tc .stat-num { color: #3b82f6; }
+.users-page .stat-item.s-vi .stat-num { color: #8b5cf6; }
+.users-page .stat-item.s-ac .stat-num { color: #10b981; }
+
+/* Table */
+.users-page .table-wrap {
+    background: #fff; border: 1px solid #e8edf2; border-radius: 14px; overflow: hidden;
+}
+.users-page table { width: 100%; border-collapse: collapse; }
+.users-page thead tr { background: #f8fafc; border-bottom: 1px solid #e8edf2; }
+.users-page thead th {
+    padding: 0.85rem 1rem; font-size: 0.72rem; font-weight: 600;
+    color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+.users-page tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+.users-page tbody tr:last-child { border-bottom: none; }
+.users-page tbody tr:hover { background: #f8fafc; }
+.users-page tbody td { padding: 0.9rem 1rem; font-size: 0.85rem; color: #334155; vertical-align: middle; }
+
+/* Badges */
+.users-page .role-badge {
+    display: inline-flex; align-items: center; padding: 0.2rem 0.65rem;
+    border-radius: 20px; font-size: 0.7rem; font-weight: 600;
+}
+.users-page .r-sa { background: #fef2f2; color: #ef4444; }
+.users-page .r-ad { background: #fffbeb; color: #d97706; }
+.users-page .r-tc { background: #eff6ff; color: #3b82f6; }
+.users-page .r-vi { background: #f5f3ff; color: #7c3aed; }
+
+.users-page .status-btn {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.7rem;
+    font-weight: 600; border: none; cursor: pointer; transition: all 0.2s;
+}
+.users-page .status-btn.active { background: #ecfdf5; color: #059669; }
+.users-page .status-btn.inactive { background: #fef2f2; color: #ef4444; }
+.users-page .status-btn:hover { filter: brightness(0.95); transform: scale(1.03); }
+
+/* Actions */
+.users-page .actions { display: flex; align-items: center; gap: 0.4rem; }
+.users-page .act-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px;
+    text-decoration: none; font-size: 0.8rem; transition: all 0.15s; border: none; cursor: pointer;
+}
+.users-page .act-view  { background: #eff6ff; color: #3b82f6; }
+.users-page .act-edit  { background: #fffbeb; color: #d97706; }
+.users-page .act-pass  { background: #f5f3ff; color: #7c3aed; }
+.users-page .act-del   { background: #fef2f2; color: #ef4444; }
+.users-page .act-btn:hover { filter: brightness(0.9); }
+
+.users-page .user-info { display: flex; align-items: center; gap: 0.6rem; }
+.users-page .user-avatar {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+}
+.users-page .user-name { font-weight: 600; color: #0f172a; font-size: 0.85rem; }
+.users-page .user-uname { font-size: 0.72rem; color: #94a3b8; }
+</style>
+
+<div class="users-page">
+    <div class="page-header">
+        <h2 class="page-title"><i class="fas fa-user-shield"></i> إدارة المشرفين</h2>
+        <a href="/admin-users/create" class="btn-add">
+            <i class="fas fa-plus"></i> إضافة مشرف
+        </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-num">{{stats.total}}</div>
+            <div class="stat-lbl">المجموع</div>
+        </div>
+        <div class="stat-item s-sa">
+            <div class="stat-num">{{stats.super_admin}}</div>
+            <div class="stat-lbl">مدير عام</div>
+        </div>
+        <div class="stat-item s-ad">
+            <div class="stat-num">{{stats.admin}}</div>
+            <div class="stat-lbl">مدير</div>
+        </div>
+        <div class="stat-item s-tc">
+            <div class="stat-num">{{stats.teacher}}</div>
+            <div class="stat-lbl">أستاذ</div>
+        </div>
+        <div class="stat-item s-vi">
+            <div class="stat-num">{{stats.viewer}}</div>
+            <div class="stat-lbl">مشاهد</div>
+        </div>
+        <div class="stat-item s-ac">
+            <div class="stat-num">{{stats.active}}</div>
+            <div class="stat-lbl">نشط</div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>المستخدم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الدور</th>
+                    <th>الحالة</th>
+                    <th>تاريخ التسجيل</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+                <tr id="user-row-{{this._id}}">
+                    <td style="color:#94a3b8; font-size:0.75rem;">{{inc @index}}</td>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">{{this.fullName.[0]}}</div>
+                            <div>
+                                <div class="user-name">{{this.fullName}}</div>
+                                <div class="user-uname">@{{this.username}}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="color:#64748b;">{{this.email}}</td>
+                    <td>
+                        {{#if (eq this.role 'super_admin')}}<span class="role-badge r-sa">مدير عام</span>
+                        {{else if (eq this.role 'admin')}}<span class="role-badge r-ad">مدير</span>
+                        {{else if (eq this.role 'teacher')}}<span class="role-badge r-tc">أستاذ</span>
+                        {{else}}<span class="role-badge r-vi">مشاهد</span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{#if (neq this._id ../currentUserId)}}
+                        <button id="status-btn-{{this._id}}"
+                            onclick="toggleStatus('{{this._id}}', {{this.isActive}})"
+                            class="status-btn {{#if this.isActive}}active{{else}}inactive{{/if}}">
+                            <i class="fas fa-circle" style="font-size:0.5rem;"></i>
+                            {{#if this.isActive}}نشط{{else}}غير نشط{{/if}}
+                        </button>
+                        {{else}}
+                        <span class="status-btn active"><i class="fas fa-circle" style="font-size:0.5rem;"></i> نشط</span>
+                        {{/if}}
+                    </td>
+                    <td style="color:#94a3b8; font-size:0.78rem;">{{formatDate this.createdAt}}</td>
+                    <td>
+                        <div class="actions">
+                            <a href="/admin-users/view/{{this._id}}" class="act-btn act-view" title="عرض"><i class="fas fa-eye"></i></a>
+                            <a href="/admin-users/edit/{{this._id}}" class="act-btn act-edit" title="تعديل"><i class="fas fa-edit"></i></a>
+                            <a href="/admin-users/change-password/{{this._id}}" class="act-btn act-pass" title="كلمة المرور"><i class="fas fa-key"></i></a>
+                            {{#if (neq this._id ../currentUserId)}}
+                            <form action="/admin-users/delete/{{this._id}}?_method=DELETE" method="post" style="display:inline;">
+                                <button type="submit" class="act-btn act-del" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟')"><i class="fas fa-trash"></i></button>
+                            </form>
+                            {{/if}}
+                        </div>
+                    </td>
+                </tr>
+                {{else}}
+                <tr><td colspan="7" style="text-align:center; padding:3rem; color:#94a3b8;">لا يوجد مشرفين</td></tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+async function toggleStatus(userId, currentStatus) {
+    const action = currentStatus ? 'تعطيل' : 'تفعيل';
+    const confirm = await Swal.fire({
+        title: `${action} الحساب`,
+        text: `هل تريد ${action} هذا الحساب؟`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `نعم، ${action}`,
+        cancelButtonText: 'إلغاء',
+        confirmButtonColor: currentStatus ? '#ef4444' : '#10b981',
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+        const res = await fetch(`/admin-users/toggle-status/${userId}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await res.json();
+        if (result.success) {
+            const btn = document.getElementById(`status-btn-${userId}`);
+            btn.className = `status-btn ${result.isActive ? 'active' : 'inactive'}`;
+            btn.innerHTML = `<i class="fas fa-circle" style="font-size:0.5rem;"></i> ${result.isActive ? 'نشط' : 'غير نشط'}`;
+            btn.setAttribute('onclick', `toggleStatus('${userId}', ${result.isActive})`);
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: result.message, showConfirmButton: false, timer: 2000 });
+        } else {
+            Swal.fire('خطأ', result.error, 'error');
+        }
+    } catch { Swal.fire('خطأ', 'حدث خطأ في الاتصال', 'error'); }
+}
+</script>

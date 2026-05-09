@@ -1,0 +1,128 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-edit"></i> Modifier la matière
+        </h3>
+        <div class="card-tools">
+            <a href="/matiere" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete()">
+                <i class="fas fa-trash"></i> Supprimer
+            </button>
+        </div>
+    </div>
+    <form action="/matiere/edit/{{matiere._id}}?_method=PUT" method="post" id="editMatiereForm">
+        <div class="card-body">
+            <!-- Nom de la matière -->
+            <div class="form-group">
+                <label for="name">Nom de la matière <span class="text-danger">*</span></label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name" 
+                       value="{{matiere.name}}" 
+                       required>
+                <small class="form-text text-muted">Modifiez le nom de la matière si nécessaire</small>
+            </div>
+            
+            <!-- Année scolaire -->
+            <div class="form-group">
+                <label for="AnneeId">Année scolaire <span class="text-danger">*</span></label>
+                <select class="form-control" id="AnneeId" name="AnneeId" required>
+                    <option value="">-- Sélectionner une année --</option>
+                    {{#each annees}}
+                    <option value="{{this._id}}" {{#if (eq this._id ../matiere.AnneeId)}}selected{{/if}}>
+                        {{this.name}}
+                    </option>
+                    {{/each}}
+                </select>
+                <small class="form-text text-muted">Changez l'année si nécessaire</small>
+            </div>
+            
+            <!-- Ordre d'affichage -->
+            <div class="form-group">
+                <label for="order">Ordre d'affichage</label>
+                <input type="number" 
+                       class="form-control" 
+                       id="order" 
+                       name="order" 
+                       value="{{matiere.order}}"
+                       min="0">
+                <small class="form-text text-muted">Modifiez l'ordre d'affichage</small>
+            </div>
+            
+            <!-- Description (optionnelle) -->
+            <div class="form-group">
+                <label for="description">Description (optionnelle)</label>
+                <textarea class="form-control" 
+                          id="description" 
+                          name="description" 
+                          rows="3">{{matiere.description}}</textarea>
+            </div>
+            
+            <!-- Informations supplémentaires -->
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Attention:</strong>
+                La modification de cette matière peut affecter les leçons qui lui sont associées.
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Mettre à jour
+            </button>
+            <a href="/matiere" class="btn btn-default">
+                <i class="fas fa-times"></i> Annuler
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Formulaire caché pour la suppression -->
+<form action="/matiere/delete/{{matiere._id}}?_method=DELETE" method="post" id="deleteForm" style="display: none;"></form>
+
+<script>
+    function confirmDelete() {
+        Swal.fire({
+            title: 'Confirmation de suppression',
+            text: 'Êtes-vous sûr de vouloir supprimer cette matière ? Toutes les leçons associées seront également supprimées !',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm').submit();
+            }
+        });
+    }
+    
+    // Validation du formulaire d'édition
+    document.getElementById('editMatiereForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const AnneeId = document.getElementById('AnneeId').value;
+        
+        if (!name) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Le nom de la matière ne peut pas être vide'
+            });
+            return false;
+        }
+        
+        if (!AnneeId) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Veuillez sélectionner une année scolaire'
+            });
+            return false;
+        }
+    });
+</script>

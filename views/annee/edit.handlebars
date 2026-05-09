@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Modifier l'Année Scolaire</h3>
+        <div class="card-tools">
+            <a href="/annee" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    </div>
+    <form action="/annee/edit/{{annee._id}}?_method=PUT" method="post">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="name">Nom de l'année <span class="text-danger">*</span></label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name" 
+                       value="{{annee.name}}" 
+                       required>
+                <small class="form-text text-muted">Exemples: 1ère Année, 2ème Année, 3ème Année</small>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Mettre à jour
+            </button>
+            <a href="/annee" class="btn btn-default">
+                <i class="fas fa-times"></i> Annuler
+            </a>
+        </div>
+    </form>
+</div>

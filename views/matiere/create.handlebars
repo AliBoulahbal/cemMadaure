@@ -1,0 +1,106 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-plus-circle"></i> Ajouter une nouvelle matière
+        </h3>
+        <div class="card-tools">
+            <a href="/matiere" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+    <form action="/matiere/create" method="post" id="createMatiereForm">
+        <div class="card-body">
+            <!-- Nom de la matière -->
+            <div class="form-group">
+                <label for="name">Nom de la matière <span class="text-danger">*</span></label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name" 
+                       placeholder="Ex: Mathématiques, Français, Sciences, Anglais..." 
+                       required
+                       autofocus>
+                <small class="form-text text-muted">Entrez le nom complet de la matière</small>
+            </div>
+            
+            <!-- Année scolaire -->
+            <div class="form-group">
+                <label for="AnneeId">Année scolaire <span class="text-danger">*</span></label>
+                <select class="form-control" id="AnneeId" name="AnneeId" required>
+                    <option value="">-- Sélectionner une année --</option>
+                    {{#each annees}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+                <small class="form-text text-muted">Choisissez l'année à laquelle appartient cette matière</small>
+            </div>
+            
+            <!-- Ordre d'affichage -->
+            <div class="form-group">
+                <label for="order">Ordre d'affichage</label>
+                <input type="number" 
+                       class="form-control" 
+                       id="order" 
+                       name="order" 
+                       value="0"
+                       min="0"
+                       placeholder="0">
+                <small class="form-text text-muted">Plus le nombre est petit, plus la matière apparaît en premier</small>
+            </div>
+            
+            <!-- Description (optionnelle) -->
+            <div class="form-group">
+                <label for="description">Description (optionnelle)</label>
+                <textarea class="form-control" 
+                          id="description" 
+                          name="description" 
+                          rows="3" 
+                          placeholder="Description de la matière..."></textarea>
+            </div>
+            
+            <!-- Aperçu -->
+            <div class="alert alert-info mt-3">
+                <i class="fas fa-info-circle"></i>
+                <strong>Information:</strong>
+                Une fois créée, cette matière sera visible dans l'application mobile pour les étudiants.
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Enregistrer la matière
+            </button>
+            <button type="reset" class="btn btn-secondary">
+                <i class="fas fa-undo"></i> Réinitialiser
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Script pour la validation -->
+<script>
+    document.getElementById('createMatiereForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const AnneeId = document.getElementById('AnneeId').value;
+        
+        if (!name) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Veuillez entrer le nom de la matière'
+            });
+            return false;
+        }
+        
+        if (!AnneeId) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Veuillez sélectionner une année scolaire'
+            });
+            return false;
+        }
+    });
+</script>

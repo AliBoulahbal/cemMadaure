@@ -1,0 +1,163 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-plus-circle"></i> إضافة صلاحية جديدة
+        </h3>
+        <div class="card-tools">
+            <a href="/permissions" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        {{#if error}}
+        <div class="alert-error">{{error}}</div>
+        {{/if}}
+        
+        <form action="/permissions/create" method="post" class="permission-form">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">الاسم <span class="required">*</span></label>
+                    <input type="text" name="name" class="field-input" value="{{formData.name}}" required>
+                    <small>مثال: عرض المستخدمين</small>
+                </div>
+                
+                <div class="form-field">
+                    <label class="field-label">الكود <span class="required">*</span></label>
+                    <input type="text" name="code" class="field-input" value="{{formData.code}}" required>
+                    <small>مثال: users.view</small>
+                </div>
+                
+                <div class="form-field">
+                    <label class="field-label">الفئة <span class="required">*</span></label>
+                    <select name="category" class="field-select" required>
+                        <option value="users">إدارة المستخدمين</option>
+                        <option value="content">إدارة المحتوى</option>
+                        <option value="academic">الإدارة التربوية</option>
+                        <option value="reports">التقارير</option>
+                        <option value="settings">الإعدادات</option>
+                        <option value="system">النظام</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="field-label">الأدوار الافتراضية</label>
+                    <select name="defaultRoles" multiple class="field-select" style="height: 100px;">
+                        <option value="super_admin">مدير عام</option>
+                        <option value="admin">مدير</option>
+                        <option value="teacher">أستاذ</option>
+                        <option value="viewer">مشاهد</option>
+                    </select>
+                    <small>اضغط Ctrl لاختيار عدة خيارات</small>
+                </div>
+                
+                <div class="form-field full-width">
+                    <label class="field-label">الوصف</label>
+                    <textarea name="description" class="field-input" rows="3">{{formData.description}}</textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> إضافة الصلاحية
+                </button>
+                <a href="/permissions" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.permission-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.form-field.full-width {
+    grid-column: span 2;
+}
+
+.field-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.field-input, .field-select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.field-input:focus, .field-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+small {
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+.alert-error {
+    background: #fef2f2;
+    color: #ef4444;
+    padding: 0.8rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border-right: 3px solid #ef4444;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.btn-submit {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-back, .btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-field.full-width {
+        grid-column: span 1;
+    }
+}
+</style>

@@ -1,0 +1,77 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+.uview { font-family: 'IBM Plex Sans Arabic', sans-serif; direction: rtl; max-width: 720px; }
+.uview .vheader { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; padding-bottom:1.25rem; border-bottom:1px solid #e8edf2; }
+.uview .vtitle { font-size:1.3rem; font-weight:700; color:#0f172a; margin:0; display:flex; align-items:center; gap:0.5rem; }
+.uview .vtitle i { color:#3b82f6; }
+.uview .vactions { display:flex; gap:0.5rem; }
+.uview .btn-back { display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1rem; border-radius:9px; background:#f1f5f9; color:#64748b; text-decoration:none; font-size:0.82rem; }
+.uview .btn-edit { display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1rem; border-radius:9px; background:#fffbeb; color:#d97706; text-decoration:none; font-size:0.82rem; }
+
+.uview .profile-card { background:#fff; border:1px solid #e8edf2; border-radius:16px; padding:2rem; display:flex; gap:2rem; align-items:flex-start; margin-bottom:1.25rem; }
+.uview .avatar-big { width:80px; height:80px; border-radius:20px; background:linear-gradient(135deg,#3b82f6,#6366f1); display:flex; align-items:center; justify-content:center; color:#fff; font-size:2rem; font-weight:700; flex-shrink:0; }
+.uview .profile-info .fullname { font-size:1.3rem; font-weight:700; color:#0f172a; }
+.uview .profile-info .username { font-size:0.85rem; color:#64748b; margin-top:0.2rem; }
+.uview .profile-info .badges { display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap; }
+.uview .role-badge { display:inline-flex; align-items:center; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.72rem; font-weight:600; }
+.uview .r-sa { background:#fef2f2; color:#ef4444; }
+.uview .r-ad { background:#fffbeb; color:#d97706; }
+.uview .r-tc { background:#eff6ff; color:#3b82f6; }
+.uview .r-vi { background:#f5f3ff; color:#7c3aed; }
+.uview .status-badge { display:inline-flex; align-items:center; gap:0.3rem; padding:0.2rem 0.7rem; border-radius:20px; font-size:0.72rem; font-weight:600; }
+.uview .s-active { background:#ecfdf5; color:#059669; }
+.uview .s-inactive { background:#fef2f2; color:#ef4444; }
+
+.uview .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+.uview .info-box { background:#fff; border:1px solid #e8edf2; border-radius:12px; padding:1rem 1.25rem; }
+.uview .info-lbl { font-size:0.7rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.3rem; }
+.uview .info-val { font-size:0.9rem; font-weight:500; color:#0f172a; }
+</style>
+
+<div class="uview">
+    <div class="vheader">
+        <h2 class="vtitle"><i class="fas fa-user-circle"></i> ملف المشرف</h2>
+        <div class="vactions">
+            <a href="/admin-users" class="btn-back"><i class="fas fa-arrow-right"></i> رجوع</a>
+            <a href="/admin-users/edit/{{user._id}}" class="btn-edit"><i class="fas fa-edit"></i> تعديل</a>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <div class="avatar-big">{{user.fullName.[0]}}</div>
+        <div class="profile-info">
+            <div class="fullname">{{user.fullName}}</div>
+            <div class="username">@{{user.username}}</div>
+            <div class="badges">
+                {{#if (eq user.role 'super_admin')}}<span class="role-badge r-sa">مدير عام</span>
+                {{else if (eq user.role 'admin')}}<span class="role-badge r-ad">مدير</span>
+                {{else if (eq user.role 'teacher')}}<span class="role-badge r-tc">أستاذ</span>
+                {{else}}<span class="role-badge r-vi">مشاهد</span>{{/if}}
+                {{#if user.isActive}}
+                <span class="status-badge s-active"><i class="fas fa-circle" style="font-size:0.45rem;"></i> نشط</span>
+                {{else}}
+                <span class="status-badge s-inactive"><i class="fas fa-circle" style="font-size:0.45rem;"></i> غير نشط</span>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <div class="info-lbl">البريد الإلكتروني</div>
+            <div class="info-val">{{user.email}}</div>
+        </div>
+        <div class="info-box">
+            <div class="info-lbl">رقم الهاتف</div>
+            <div class="info-val">{{#if user.phone}}{{user.phone}}{{else}}—{{/if}}</div>
+        </div>
+        <div class="info-box">
+            <div class="info-lbl">تاريخ التسجيل</div>
+            <div class="info-val">{{formatDate user.createdAt}}</div>
+        </div>
+        <div class="info-box">
+            <div class="info-lbl">آخر تسجيل دخول</div>
+            <div class="info-val">{{#if user.lastLogin}}{{formatDate user.lastLogin}}{{else}}لا يوجد{{/if}}</div>
+        </div>
+    </div>
+</div>

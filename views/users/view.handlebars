@@ -1,0 +1,157 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-user-circle"></i> ملف المستخدم
+        </h3>
+        <div class="card-tools">
+            <a href="/users" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+            <a href="/users/edit/{{user._id}}" class="btn-edit">
+                <i class="fas fa-edit"></i> تعديل
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+                <h3>{{user.fullName}}</h3>
+                <span class="role-tag role-{{user.role}}">
+                    {{#if (eq user.role 'super_admin')}}مدير عام
+                    {{else if (eq user.role 'admin')}}مدير
+                    {{else if (eq user.role 'teacher')}}أستاذ
+                    {{else}}مشاهد{{/if}}
+                </span>
+            </div>
+        </div>
+        
+        <div class="profile-details">
+            <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-user"></i> الاسم الكامل</span>
+                <span class="detail-value">{{user.fullName}}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-signature"></i> اسم المستخدم</span>
+                <span class="detail-value">{{user.username}}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
+                <span class="detail-value">{{user.email}}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-phone"></i> رقم الهاتف</span>
+                <span class="detail-value">{{user.phone}}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-flag"></i> الحالة</span>
+                <span class="detail-value">
+                    {{#if (eq user.status 'active')}}
+                        <span class="status-active">نشط</span>
+                    {{else}}
+                        <span class="status-inactive">غير نشط</span>
+                    {{/if}}
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-calendar"></i> تاريخ التسجيل</span>
+                <span class="detail-value">{{formatDate user.createdAt}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.profile-avatar i {
+    font-size: 5rem;
+    color: #3b82f6;
+}
+
+.profile-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+    color: #1e293b;
+}
+
+.role-tag {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.role-super_admin { background: #fef2f2; color: #ef4444; }
+.role-admin { background: #fffbeb; color: #f59e0b; }
+.role-teacher { background: #ecfdf5; color: #10b981; }
+.role-viewer { background: #f1f5f9; color: #64748b; }
+
+.profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.detail-item {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.detail-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-bottom: 0.3rem;
+}
+
+.detail-label i {
+    margin-left: 0.3rem;
+    width: 18px;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f59e0b;
+    color: white;
+    padding: 0.35rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-decoration: none;
+}
+
+.btn-edit:hover {
+    background: #d97706;
+}
+
+@media (max-width: 640px) {
+    .profile-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>

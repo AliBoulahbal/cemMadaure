@@ -1,0 +1,509 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  --ink: #0f1117;
+  --ink-muted: #6b7280;
+  --surface: #ffffff;
+  --surface-2: #f7f8fa;
+  --border: #e8eaed;
+  --accent: #2563eb;
+  --success: #059669;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --radius: 14px;
+  --shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+}
+* { box-sizing: border-box; }
+body, .lp-create-page { font-family: 'DM Sans', sans-serif; color: var(--ink); }
+
+.lp-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem; padding-bottom:1.25rem; border-bottom:1px solid var(--border); }
+.lp-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; margin:0; letter-spacing:-.02em; }
+.lp-sub { font-size:.78rem; color:var(--ink-muted); margin:.2rem 0 0; }
+
+.btn-lp { display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .9rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; border:none; cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap; }
+.btn-primary { background:var(--accent); color:white; }
+.btn-primary:hover { background:#1d4ed8; color:white; }
+.btn-outline { background:transparent; color:var(--ink-muted); border:1px solid var(--border); }
+.btn-outline:hover { border-color:var(--ink-muted); color:var(--ink); }
+.btn-lg { padding:.65rem 1.5rem; font-size:.9rem; }
+
+/* Form card */
+.form-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.75rem; margin-bottom:1.25rem; }
+
+/* Form fields */
+.field-grid { display:grid; gap:1rem; }
+.field-grid-2 { grid-template-columns:1fr 1fr; }
+.field-grid-3 { grid-template-columns:2fr 1fr 1fr; }
+@media(max-width:640px) { .field-grid-2, .field-grid-3 { grid-template-columns:1fr; } }
+
+.field-label {
+  display:block; font-size:.73rem; font-weight:600; color:var(--ink-muted);
+  text-transform:uppercase; letter-spacing:.05em; margin-bottom:.4rem;
+}
+.req { color:var(--danger); margin-right:.2rem; }
+.form-input {
+  width:100%; padding:.55rem .85rem; border:1px solid var(--border); border-radius:9px;
+  font-family:'DM Sans',sans-serif; font-size:.86rem; color:var(--ink); background:var(--surface);
+  outline:none; transition:border-color .15s, box-shadow .15s;
+}
+.form-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+textarea.form-input { resize:vertical; }
+
+/* Toggle section card */
+.section-card {
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:1rem;
+  transition:border-color .2s;
+}
+.section-card.active { border-color: var(--accent); }
+.section-card.active.s-danger { border-color: var(--danger); }
+.section-card.active.s-success { border-color: var(--success); }
+.section-card.active.s-warning { border-color: var(--warning); }
+
+.section-header {
+  display:flex; align-items:center; gap:.75rem; padding:.9rem 1.1rem;
+  background:var(--surface-2); cursor:pointer;
+}
+.section-badge {
+  width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+  font-size:.9rem; color:white; flex-shrink:0;
+}
+.sb-blue   { background:var(--accent); }
+.sb-red    { background:var(--danger); }
+.sb-green  { background:var(--success); }
+.sb-amber  { background:var(--warning); }
+
+.section-label { font-weight:600; font-size:.9rem; flex:1; }
+.section-toggle {
+  width:42px; height:24px; border-radius:12px; border:none; cursor:pointer;
+  position:relative; background:#d1d5db; transition:background .2s;
+  flex-shrink:0;
+}
+.section-toggle::after {
+  content:''; position:absolute; width:18px; height:18px; border-radius:50%;
+  background:white; top:3px; left:3px; transition:left .2s;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.section-toggle.on { background:var(--accent); }
+.section-toggle.on.t-red { background:var(--danger); }
+.section-toggle.on.t-green { background:var(--success); }
+.section-toggle.on.t-amber { background:var(--warning); }
+.section-toggle.on::after { left:21px; }
+
+.section-body { display:none; padding:1.25rem; border-top:1px solid var(--border); background:var(--surface); }
+.section-body.open { display:block; }
+
+/* Checkbox row */
+.check-row { display:flex; align-items:center; gap:.6rem; cursor:pointer; }
+.check-row input[type=checkbox] { width:17px; height:17px; border-radius:4px; accent-color:var(--accent); cursor:pointer; }
+.check-label { font-size:.85rem; font-weight:500; color:var(--ink); }
+
+/* Upload zone */
+.upload-zone {
+  border:2px dashed var(--border); border-radius:12px; padding:2rem 1rem;
+  text-align:center; cursor:pointer; transition:all .2s; background:var(--surface-2);
+}
+.upload-zone:hover { border-color:var(--accent); background:#eff4ff; }
+.upload-zone.dragover { border-color:var(--accent); background:#eff4ff; }
+.upload-zone.selected { border-color:var(--success); background:#ecfdf5; border-style:solid; }
+.uz-icon { font-size:2rem; margin-bottom:.6rem; }
+.uz-text { font-size:.84rem; color:var(--ink-muted); margin-bottom:.25rem; }
+.uz-hint { font-size:.72rem; color:#9ca3af; }
+.uz-filename { font-size:.83rem; font-weight:500; color:var(--success); margin-top:.3rem; }
+
+/* Progress */
+.upload-progress { margin-top:.85rem; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.85rem 1rem; display:none; }
+.up-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem; }
+.up-filename { font-size:.8rem; font-weight:500; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%; direction:ltr; }
+.up-percent { font-size:.8rem; font-weight:700; color:var(--accent); }
+.up-track { height:6px; background:#e5e7eb; border-radius:99px; overflow:hidden; }
+.up-fill { height:100%; width:0%; background:var(--accent); border-radius:99px; transition:width .25s ease; }
+.up-fill.fill-red { background:var(--danger); }
+.up-status { font-size:.73rem; color:var(--ink-muted); margin-top:.35rem; direction:ltr; }
+
+/* Divider */
+.section-divider { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
+
+/* Form actions */
+.form-actions { display:flex; gap:.75rem; align-items:center; margin-top:1.5rem; }
+</style>
+
+<div class="lp-create-page">
+
+  <div class="lp-header">
+    <div>
+      <h1 class="lp-title">إضافة جزء جديد</h1>
+      <p class="lp-sub">{{lesson.name}}</p>
+    </div>
+    <a href="/lesson-part/lesson/{{lessonIdStr}}" class="btn-lp btn-outline">
+      <i class="fas fa-arrow-right"></i> رجوع
+    </a>
+  </div>
+
+  <form id="lessonPartForm">
+    <!-- Hidden fields -->
+    <input type="hidden" name="lessonId" value="{{lessonIdStr}}">
+    <input type="hidden" name="lesson" value="{{lesson.name}}">
+    <input type="hidden" name="branchId" value="{{branchIdValue}}">
+    <input type="hidden" name="branch" value="{{branchNameValue}}">
+    <input type="hidden" name="subjectId" value="{{subjectIdValue}}">
+    <input type="hidden" name="subject" value="{{subjectNameValue}}">
+    <input type="hidden" name="unitId" value="{{unitIdValue}}">
+    <input type="hidden" name="unit" value="{{unitNameValue}}">
+    <input type="hidden" id="pdfUrlHidden" name="pdfUrl" value="">
+
+    <!-- Base info -->
+    <div class="form-card">
+      <div class="field-grid field-grid-3">
+        <div>
+          <label class="field-label"><span class="req">*</span>اسم الجزء</label>
+          <input type="text" class="form-input" name="partName" placeholder="مثال: Partie 1, Introduction..." required>
+        </div>
+        <div>
+          <label class="field-label">الترتيب</label>
+          <input type="number" class="form-input" name="partOrder" value="{{nextOrder}}" min="0">
+        </div>
+        <div style="display:flex;align-items:flex-end;padding-bottom:.1rem;">
+          <label class="check-row">
+            <input type="checkbox" name="isFree">
+            <span class="check-label"><i class="fas fa-gift" style="color:var(--warning);"></i> الجزء مجاني</span>
+          </label>
+        </div>
+      </div>
+      <div style="margin-top:1rem;">
+        <label class="field-label">وصف مختصر (اختياري)</label>
+        <textarea class="form-input" name="description" rows="2" placeholder="وصف مختصر للجزء..."></textarea>
+      </div>
+    </div>
+
+    <!-- VIDEO section -->
+    <div class="section-card" id="sc-video">
+      <div class="section-header" onclick="toggleSection('video')">
+        <div class="section-badge sb-blue"><i class="fas fa-video"></i></div>
+        <span class="section-label">فيديو</span>
+        <button type="button" class="section-toggle" id="toggle-video" onclick="event.stopPropagation(); toggleSection('video')"></button>
+      </div>
+      <div class="section-body" id="body-video">
+        <div class="field-grid field-grid-2">
+          <div>
+            <label class="field-label">عنوان الفيديو</label>
+            <input type="text" class="form-input" name="videoTitle" placeholder="مثال: شرح الدرس">
+          </div>
+          <div>
+            <label class="field-label">رابط Vimeo</label>
+            <input type="url" class="form-input" name="videoUrl" placeholder="https://vimeo.com/...">
+          </div>
+          <div>
+            <label class="field-label">المدة (بالثواني)</label>
+            <input type="number" class="form-input" name="videoDuration" value="0" min="0">
+          </div>
+          <div style="display:flex;align-items:flex-end;padding-bottom:.1rem;">
+            <label class="check-row">
+              <input type="checkbox" name="videoIsFree">
+              <span class="check-label">الفيديو مجاني</span>
+            </label>
+          </div>
+        </div>
+        <!-- Hidden for form compat -->
+        <input type="hidden" name="hasVideo" id="hasVideoHidden" value="false">
+      </div>
+    </div>
+
+    <!-- PDF section -->
+    <div class="section-card s-danger" id="sc-pdf">
+      <div class="section-header" onclick="toggleSection('pdf')">
+        <div class="section-badge sb-red"><i class="fas fa-file-pdf"></i></div>
+        <span class="section-label">ملف PDF</span>
+        <button type="button" class="section-toggle t-red" id="toggle-pdf" onclick="event.stopPropagation(); toggleSection('pdf')"></button>
+      </div>
+      <div class="section-body" id="body-pdf">
+        <div class="field-grid field-grid-2">
+          <div>
+            <label class="field-label"><span class="req">*</span>عنوان PDF</label>
+            <input type="text" class="form-input" id="pdfTitle" name="pdfTitle" placeholder="مثال: ملخص الدرس">
+          </div>
+          <div>
+            <label class="field-label"><span class="req">*</span>ملف PDF</label>
+            <div class="upload-zone" id="pdfZone">
+              <div class="uz-icon" style="color:var(--danger);">📄</div>
+              <div class="uz-text">اسحب PDF هنا أو انقر للاختيار</div>
+              <div class="uz-hint">PDF فقط — حجم أقصى 50 MB</div>
+              <input type="file" accept=".pdf" id="pdfFileInput" style="display:none;">
+            </div>
+            <div class="upload-progress" id="pdfProgress">
+              <div class="up-top">
+                <span class="up-filename" id="pdfFilename"></span>
+                <span class="up-percent" id="pdfPercent">0%</span>
+              </div>
+              <div class="up-track"><div class="up-fill fill-red" id="pdfFill"></div></div>
+              <div class="up-status" id="pdfStatus"></div>
+            </div>
+          </div>
+          <div style="grid-column:1/-1;">
+            <label class="check-row">
+              <input type="checkbox" name="pdfIsFree">
+              <span class="check-label">PDF مجاني</span>
+            </label>
+          </div>
+        </div>
+        <input type="hidden" name="hasPdf" id="hasPdfHidden" value="false">
+      </div>
+    </div>
+
+    <!-- TEXT section -->
+    <div class="section-card s-success" id="sc-text">
+      <div class="section-header" onclick="toggleSection('text')">
+        <div class="section-badge sb-green"><i class="fas fa-file-alt"></i></div>
+        <span class="section-label">نص</span>
+        <button type="button" class="section-toggle t-green" id="toggle-text" onclick="event.stopPropagation(); toggleSection('text')"></button>
+      </div>
+      <div class="section-body" id="body-text">
+        <div class="field-grid">
+          <div>
+            <label class="field-label">عنوان النص</label>
+            <input type="text" class="form-input" name="textTitle" placeholder="مثال: شرح نصي">
+          </div>
+          <div>
+            <label class="field-label">المحتوى</label>
+            <textarea class="form-input" name="textContent" rows="6" placeholder="اكتب محتوى النص هنا..."></textarea>
+          </div>
+          <label class="check-row">
+            <input type="checkbox" name="textIsFree">
+            <span class="check-label">النص مجاني</span>
+          </label>
+        </div>
+        <input type="hidden" name="hasText" id="hasTextHidden" value="false">
+      </div>
+    </div>
+
+    <!-- QUIZ section -->
+    <div class="section-card s-warning" id="sc-quiz">
+      <div class="section-header" onclick="toggleSection('quiz')">
+        <div class="section-badge sb-amber"><i class="fas fa-question-circle"></i></div>
+        <span class="section-label">اختبار (Quiz)</span>
+        <button type="button" class="section-toggle t-amber" id="toggle-quiz" onclick="event.stopPropagation(); toggleSection('quiz')"></button>
+      </div>
+      <div class="section-body" id="body-quiz">
+        <div class="field-grid">
+          <div>
+            <label class="field-label">عنوان الاختبار</label>
+            <input type="text" class="form-input" name="quizTitle" placeholder="مثال: اختبار الدرس">
+          </div>
+          <div>
+            <label class="field-label">الأسئلة (JSON)</label>
+            <textarea class="form-input" name="quizQuestions" rows="5"
+              placeholder='[{"text":"السؤال الأول","options":["A","B","C"],"correct":0}]'></textarea>
+            <div style="font-size:.72rem;color:var(--ink-muted);margin-top:.35rem;">
+              الصيغة: <code>[{"text":"...","options":["A","B","C"],"correct":0}]</code>
+            </div>
+          </div>
+          <label class="check-row">
+            <input type="checkbox" name="quizIsFree">
+            <span class="check-label">الاختبار مجاني</span>
+          </label>
+        </div>
+        <input type="hidden" name="hasQuiz" id="hasQuizHidden" value="false">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-lp btn-primary btn-lg" id="submitBtn">
+        <i class="fas fa-save"></i> إنشاء الجزء
+      </button>
+      <a href="/lesson-part/lesson/{{lessonIdStr}}" class="btn-lp btn-outline btn-lg">إلغاء</a>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// ── Section toggles ──────────────────────────────────────────────
+const sections = { video: false, pdf: false, text: false, quiz: false };
+
+function toggleSection(key) {
+  sections[key] = !sections[key];
+  const body    = document.getElementById('body-' + key);
+  const toggle  = document.getElementById('toggle-' + key);
+  const card    = document.getElementById('sc-' + key);
+
+  body.classList.toggle('open', sections[key]);
+  toggle.classList.toggle('on', sections[key]);
+  card.classList.toggle('active', sections[key]);
+
+  // Sync hidden "has*" flags
+  if (key === 'video') document.getElementById('hasVideoHidden').value = sections[key];
+  if (key === 'pdf')   document.getElementById('hasPdfHidden').value   = sections[key];
+  if (key === 'text')  document.getElementById('hasTextHidden').value  = sections[key];
+  if (key === 'quiz')  document.getElementById('hasQuizHidden').value  = sections[key];
+}
+
+// ── PDF Upload zone ──────────────────────────────────────────────
+(function setupPdfZone() {
+  const zone  = document.getElementById('pdfZone');
+  const input = document.getElementById('pdfFileInput');
+  if (!zone || !input) return;
+
+  zone.addEventListener('click', () => input.click());
+
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('dragover');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') {
+      // Set file via DataTransfer
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    } else if (file) {
+      Swal.fire('خطأ', 'يرجى اختيار ملف PDF فقط', 'warning');
+    }
+  });
+
+  input.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    // Size check: 50 MB
+    if (file.size > 50 * 1024 * 1024) {
+      Swal.fire('ملف كبير', 'حجم الملف يتجاوز 50 MB', 'warning');
+      this.value = '';
+      return;
+    }
+    zone.classList.add('selected');
+    const existingName = zone.querySelector('.uz-filename');
+    if (existingName) existingName.remove();
+    const nameEl = document.createElement('div');
+    nameEl.className = 'uz-filename';
+    nameEl.textContent = '✅ ' + file.name;
+    zone.appendChild(nameEl);
+  });
+})();
+
+// ── Wasabi upload ────────────────────────────────────────────────
+async function uploadToWasabi(file, type, fillEl, percentEl, statusEl, progressWrap, filenameEl) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (filenameEl) filenameEl.textContent = file.name;
+  if (statusEl)   statusEl.textContent   = 'جاري التحضير...';
+  if (progressWrap) progressWrap.style.display = 'block';
+
+  const res = await fetch('/content/presign?type=' + type + '&ext=' + ext);
+  if (!res.ok) throw new Error('فشل الحصول على رابط الرفع');
+  const data = await res.json();
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', data.url);
+    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+
+    xhr.upload.addEventListener('progress', e => {
+      if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 100);
+        if (fillEl)    fillEl.style.width    = pct + '%';
+        if (percentEl) percentEl.textContent  = pct + '%';
+        if (statusEl)  statusEl.textContent   = pct < 100 ? 'جاري الرفع...' : 'اكتمل الرفع ✓';
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) resolve(data.publicUrl);
+      else reject(new Error('فشل رفع الملف — رمز الخطأ: ' + xhr.status));
+    });
+    xhr.addEventListener('error',   () => reject(new Error('خطأ في الاتصال بالشبكة')));
+    xhr.addEventListener('timeout', () => reject(new Error('انتهت مهلة الاتصال')));
+    xhr.timeout = 300000; // 5 min
+    xhr.send(file);
+  });
+}
+
+// ── Form submit ──────────────────────────────────────────────────
+document.getElementById('lessonPartForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المعالجة...';
+
+  try {
+    const formData = new FormData(e.target);
+    let pdfUrl = '';
+
+    const hasPdf = sections.pdf;
+    if (hasPdf) {
+      const pdfFile = document.getElementById('pdfFileInput').files[0];
+      if (!pdfFile) throw new Error('يرجى اختيار ملف PDF');
+
+      pdfUrl = await uploadToWasabi(
+        pdfFile, 'pdf',
+        document.getElementById('pdfFill'),
+        document.getElementById('pdfPercent'),
+        document.getElementById('pdfStatus'),
+        document.getElementById('pdfProgress'),
+        document.getElementById('pdfFilename')
+      );
+      document.getElementById('pdfUrlHidden').value = pdfUrl;
+    }
+
+    const postData = {
+      lessonId:      formData.get('lessonId'),
+      lesson:        formData.get('lesson'),
+      branchId:      formData.get('branchId'),
+      branch:        formData.get('branch'),
+      subjectId:     formData.get('subjectId'),
+      subject:       formData.get('subject'),
+      unitId:        formData.get('unitId'),
+      unit:          formData.get('unit'),
+      partName:      formData.get('partName'),
+      partOrder:     formData.get('partOrder'),
+      description:   formData.get('description'),
+      isFree:        formData.get('isFree') === 'on',
+
+      hasVideo:      sections.video,
+      videoTitle:    formData.get('videoTitle'),
+      videoUrl:      formData.get('videoUrl'),
+      videoDuration: formData.get('videoDuration'),
+      videoIsFree:   formData.get('videoIsFree') === 'on',
+
+      hasPdf:        hasPdf,
+      pdfTitle:      formData.get('pdfTitle'),
+      pdfUrl:        pdfUrl,
+      pdfIsFree:     formData.get('pdfIsFree') === 'on',
+
+      hasText:       sections.text,
+      textTitle:     formData.get('textTitle'),
+      textContent:   formData.get('textContent'),
+      textIsFree:    formData.get('textIsFree') === 'on',
+
+      hasQuiz:       sections.quiz,
+      quizTitle:     formData.get('quizTitle'),
+      quizQuestions: formData.get('quizQuestions'),
+      quizIsFree:    formData.get('quizIsFree') === 'on',
+    };
+
+    const response = await fetch('/lesson-part/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(postData)
+    });
+
+    const result = await response.json();
+    if (!result.success) throw new Error(result.error || 'خطأ غير معروف');
+
+    Swal.fire({ icon:'success', title:'تم!', text:'تم إضافة الجزء بنجاح', timer:1600, showConfirmButton:false })
+        .then(() => { window.location.href = `/lesson-part/lesson/${formData.get('lessonId')}`; });
+
+  } catch (err) {
+    Swal.fire({ icon:'error', title:'خطأ', text: err.message });
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-save"></i> إنشاء الجزء';
+  }
+});
+</script>

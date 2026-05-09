@@ -1,0 +1,73 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Ajouter une Année Scolaire</h3>
+        <div class="card-tools">
+            <a href="/annee" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    </div>
+    <form action="/annee/create" method="post">
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>Information:</strong> Les années scolaires sont: 1ère Année, 2ème Année, 3ème Année Moyenne
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Nom de l'année <span class="text-danger">*</span></label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name" 
+                       placeholder="Ex: 1ère Année, 2ème Année, 3ème Année" 
+                       required
+                       autofocus>
+                <small class="form-text text-muted">Exemples: 1ère Année Moyenne, 2ème Année Moyenne, 3ème Année Moyenne</small>
+            </div>
+            
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Note:</strong> Les matières seront associées à cette année lors de leur création.
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Enregistrer
+            </button>
+            <button type="reset" class="btn btn-secondary">
+                <i class="fas fa-undo"></i> Réinitialiser
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Validation du formulaire
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        
+        if (!name) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Veuillez entrer le nom de l\'année'
+            });
+            return false;
+        }
+        
+        // Vérifier les noms valides
+        const validNames = ['1ère Année', '2ème Année', '3ème Année', '1ère Année Moyenne', '2ème Année Moyenne', '3ème Année Moyenne'];
+        const isValid = validNames.some(vn => name.toLowerCase().includes(vn.toLowerCase()));
+        
+        if (!isValid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Attention',
+                text: 'Assurez-vous d\'utiliser un nom d\'année standard (1ère, 2ème ou 3ème Année)',
+                confirmButtonText: 'Continuer quand même'
+            });
+        }
+    });
+</script>

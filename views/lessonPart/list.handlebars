@@ -1,0 +1,317 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  --ink: #0f1117;
+  --ink-muted: #6b7280;
+  --surface: #ffffff;
+  --surface-2: #f7f8fa;
+  --border: #e8eaed;
+  --accent: #2563eb;
+  --success: #059669;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --info: #0284c7;
+  --radius: 14px;
+  --shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+}
+* { box-sizing: border-box; }
+body, .lp-list-page { font-family: 'DM Sans', sans-serif; color: var(--ink); }
+
+.lp-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem; padding-bottom:1.25rem; border-bottom:1px solid var(--border); }
+.lp-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; margin:0; letter-spacing:-.02em; }
+.lp-sub { font-size:.78rem; color:var(--ink-muted); margin:.2rem 0 0; }
+.lp-actions { display:flex; gap:.5rem; }
+
+.btn-lp { display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .9rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; border:none; cursor:pointer; text-decoration:none; transition:all .15s; white-space:nowrap; }
+.btn-primary  { background:var(--accent); color:white; }
+.btn-primary:hover  { background:#1d4ed8; color:white; transform:translateY(-1px); }
+.btn-outline  { background:transparent; color:var(--ink-muted); border:1px solid var(--border); }
+.btn-outline:hover  { border-color:var(--ink-muted); color:var(--ink); }
+.btn-danger-ghost { background:transparent; color:var(--danger); border:1px solid #fecaca; }
+.btn-danger-ghost:hover { background:#fef2f2; }
+.btn-success-ghost { background:transparent; color:var(--success); border:1px solid #a7f3d0; }
+.btn-success-ghost:hover { background:#ecfdf5; }
+.btn-sm { padding:.3rem .65rem; font-size:.76rem; }
+
+/* Stats mini */
+.stats-mini { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1.5rem; }
+@media(max-width:640px) { .stats-mini { grid-template-columns:repeat(2,1fr); } }
+.stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:.9rem; display:flex; align-items:center; gap:.75rem; box-shadow:var(--shadow); }
+.chip-icon { width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:white; flex-shrink:0; }
+.chip-blue  { background:linear-gradient(135deg,#3b82f6,#2563eb); }
+.chip-sky   { background:linear-gradient(135deg,#38bdf8,#0284c7); }
+.chip-red   { background:linear-gradient(135deg,#f87171,#dc2626); }
+.chip-green { background:linear-gradient(135deg,#34d399,#059669); }
+.chip-num { font-size:1.3rem; font-weight:700; line-height:1; }
+.chip-lbl { font-size:.68rem; color:var(--ink-muted); text-transform:uppercase; letter-spacing:.04em; }
+
+/* Accordion */
+.parts-list { display:flex; flex-direction:column; gap:.75rem; }
+.part-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; transition:box-shadow .2s; }
+.part-block:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+
+.part-header {
+  display:flex; align-items:center; gap:.75rem; padding:1rem 1.25rem;
+  cursor:pointer; user-select:none; background:var(--surface);
+  transition:background .15s;
+}
+.part-header:hover { background:var(--surface-2); }
+.part-order {
+  width:28px; height:28px; border-radius:7px; background:var(--accent); color:white;
+  font-size:.75rem; font-weight:700; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.part-name { font-weight:600; font-size:.93rem; flex:1; }
+.part-meta { display:flex; align-items:center; gap:.5rem; margin-right:.5rem; flex-wrap:wrap; }
+.part-chevron { color:var(--ink-muted); font-size:.75rem; transition:transform .25s; margin-right:.25rem; }
+.part-block.open .part-chevron { transform:rotate(180deg); }
+
+/* Part actions separate from toggle */
+.part-hdr-actions { display:flex; gap:.35rem; }
+.part-hdr-actions .btn-lp { pointer-events:all; }
+
+/* Documents list */
+.docs-list { border-top:1px solid var(--border); }
+.doc-row {
+  display:flex; align-items:center; gap:.75rem; padding:.85rem 1.25rem;
+  border-bottom:1px solid var(--border); transition:background .12s;
+}
+.doc-row:last-child { border-bottom:none; }
+.doc-row:hover { background:var(--surface-2); }
+
+.doc-type-icon {
+  width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+  font-size:.95rem; flex-shrink:0;
+}
+.type-video { background:#eff4ff; color:#2563eb; }
+.type-pdf   { background:#fef2f2; color:#dc2626; }
+.type-text  { background:#ecfdf5; color:#059669; }
+.type-quiz  { background:#fffbeb; color:#d97706; }
+
+.doc-info { flex:1; min-width:0; }
+.doc-title { font-weight:500; font-size:.86rem; }
+.doc-meta-line { display:flex; align-items:center; gap:.5rem; margin-top:.2rem; flex-wrap:wrap; }
+.doc-url { font-size:.73rem; color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; }
+
+.lp-badge { display:inline-flex; align-items:center; gap:.25rem; padding:.2rem .5rem; border-radius:5px; font-size:.68rem; font-weight:500; }
+.badge-blue  { background:#eff4ff; color:#2563eb; }
+.badge-green { background:#ecfdf5; color:#059669; }
+.badge-red   { background:#fef2f2; color:#dc2626; }
+.badge-amber { background:#fffbeb; color:#d97706; }
+.badge-gray  { background:var(--surface-2); color:var(--ink-muted); border:1px solid var(--border); }
+
+.doc-actions { display:flex; gap:.3rem; flex-shrink:0; }
+
+/* Empty */
+.empty-docs { padding:2.5rem; text-align:center; color:var(--ink-muted); }
+.empty-docs i { font-size:2rem; opacity:.3; margin-bottom:.75rem; display:block; }
+.empty-docs p { font-size:.85rem; margin-bottom:.75rem; }
+
+.empty-parts { padding:4rem 2rem; text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+.empty-parts i { font-size:2.5rem; opacity:.25; margin-bottom:1rem; display:block; }
+.empty-parts p { font-size:.88rem; color:var(--ink-muted); margin-bottom:1rem; }
+
+/* Description banner */
+.part-desc { padding:.65rem 1.25rem; background:var(--surface-2); border-top:1px solid var(--border); font-size:.78rem; color:var(--ink-muted); border-bottom:1px solid var(--border); }
+
+/* Modal viewer */
+.lp-modal-backdrop { display:none; position:fixed; inset:0; background:rgba(15,17,23,.5); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; }
+.lp-modal-backdrop.open { display:flex; }
+.view-modal { background:white; border-radius:18px; width:760px; max-width:95vw; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.18); overflow:hidden; animation:modalIn .2s ease; }
+@keyframes modalIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.vm-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--border); }
+.vm-title { font-weight:600; font-size:.95rem; }
+.vm-close { background:none; border:none; color:var(--ink-muted); cursor:pointer; font-size:1.1rem; padding:.25rem; border-radius:6px; }
+.vm-close:hover { background:var(--surface-2); color:var(--ink); }
+.vm-body { flex:1; overflow-y:auto; padding:1.25rem; }
+</style>
+
+<div class="lp-list-page">
+
+  <!-- Header -->
+  <div class="lp-header">
+    <div>
+      <h1 class="lp-title">{{lesson.name}}</h1>
+      <p class="lp-sub">أجزاء الدرس ومحتوياتها</p>
+    </div>
+    <div class="lp-actions">
+      <a href="/lesson" class="btn-lp btn-outline">
+        <i class="fas fa-arrow-right"></i> الدروس
+      </a>
+      <a href="/lesson-part/create/{{lessonIdStr}}" class="btn-lp btn-primary">
+        <i class="fas fa-plus"></i> إضافة جزء
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-mini">
+    <div class="stat-chip">
+      <div class="chip-icon chip-blue"><i class="fas fa-cubes"></i></div>
+      <div><div class="chip-num">{{stats.total}}</div><div class="chip-lbl">أجزاء</div></div>
+    </div>
+    <div class="stat-chip">
+      <div class="chip-icon chip-sky"><i class="fas fa-video"></i></div>
+      <div><div class="chip-num">{{stats.videos}}</div><div class="chip-lbl">فيديوهات</div></div>
+    </div>
+    <div class="stat-chip">
+      <div class="chip-icon chip-red"><i class="fas fa-file-pdf"></i></div>
+      <div><div class="chip-num">{{stats.pdfs}}</div><div class="chip-lbl">PDF</div></div>
+    </div>
+    <div class="stat-chip">
+      <div class="chip-icon chip-green"><i class="fas fa-file-alt"></i></div>
+      <div><div class="chip-num">{{stats.texts}}</div><div class="chip-lbl">نصوص</div></div>
+    </div>
+  </div>
+
+  <!-- Parts -->
+  {{#if parts.length}}
+  <div class="parts-list">
+    {{#each parts}}
+    <div class="part-block {{#if @first}}open{{/if}}" id="block-{{_id}}">
+      <div class="part-header" onclick="togglePart('{{_id}}', event)">
+        <span class="part-order">{{partOrder}}</span>
+        <span class="part-name">{{partName}}</span>
+        <div class="part-meta">
+          <span class="lp-badge badge-gray">{{documents.length}} وثائق</span>
+          {{#if isFree}}<span class="lp-badge badge-green"><i class="fas fa-gift"></i> مجاني</span>{{/if}}
+        </div>
+        <div class="part-hdr-actions" onclick="event.stopPropagation()">
+          <a href="/lesson-part/create/{{../lessonIdStr}}" class="btn-lp btn-success-ghost btn-sm" title="إضافة محتوى">
+            <i class="fas fa-plus"></i>
+          </a>
+          <form action="/lesson-part/delete/{{_id}}?_method=DELETE" method="post" class="d-inline"
+                onsubmit="return confirm('هل أنت متأكد من حذف هذا الجزء؟')">
+            <button type="submit" class="btn-lp btn-danger-ghost btn-sm"><i class="fas fa-trash"></i></button>
+          </form>
+        </div>
+        <i class="fas fa-chevron-down part-chevron"></i>
+      </div>
+
+      {{#if description}}
+      <div class="part-desc" style="display:none;" id="desc-{{_id}}">{{description}}</div>
+      {{/if}}
+
+      <div class="docs-list" id="docs-{{_id}}" style="{{#unless @first}}display:none;{{/unless}}">
+        {{#each documents}}
+        <div class="doc-row">
+          <div class="doc-type-icon
+            {{#if (eq type 'VIDEO')}}type-video
+            {{else if (eq type 'PDF')}}type-pdf
+            {{else if (eq type 'TEXT')}}type-text
+            {{else}}type-quiz{{/if}}">
+            {{#if (eq type 'VIDEO')}}<i class="fas fa-video"></i>
+            {{else if (eq type 'PDF')}}<i class="fas fa-file-pdf"></i>
+            {{else if (eq type 'TEXT')}}<i class="fas fa-file-alt"></i>
+            {{else}}<i class="fas fa-question-circle"></i>{{/if}}
+          </div>
+          <div class="doc-info">
+            <div class="doc-title">{{title}}</div>
+            <div class="doc-meta-line">
+              {{#if isFree}}<span class="lp-badge badge-green">مجاني</span>{{/if}}
+              {{#if duration}}<span class="lp-badge badge-gray">{{duration}} ث</span>{{/if}}
+              {{#if url}}<span class="doc-url"><i class="fas fa-link" style="font-size:.65rem;"></i> {{url}}</span>{{/if}}
+            </div>
+          </div>
+          <div class="doc-actions">
+            <button class="btn-lp btn-outline btn-sm view-doc"
+                    data-type="{{type}}" data-url="{{url}}" data-content="{{content}}" data-title="{{title}}">
+              <i class="fas fa-eye"></i>
+            </button>
+            <form action="/lesson-part/{{../_id}}/document/{{_id}}?_method=DELETE" method="post" style="display:inline;"
+                  onsubmit="return confirm('حذف هذا المستند؟')">
+              <button type="submit" class="btn-lp btn-danger-ghost btn-sm"><i class="fas fa-trash"></i></button>
+            </form>
+          </div>
+        </div>
+        {{else}}
+        <div class="empty-docs">
+          <i class="fas fa-folder-open"></i>
+          <p>لا توجد مستندات في هذا الجزء</p>
+          <a href="/lesson-part/create/{{../lessonIdStr}}" class="btn-lp btn-success-ghost btn-sm">
+            <i class="fas fa-plus"></i> إضافة مستند
+          </a>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="empty-parts">
+    <i class="fas fa-inbox"></i>
+    <p>لا توجد أجزاء في هذا الدرس بعد</p>
+    <a href="/lesson-part/create/{{lessonIdStr}}" class="btn-lp btn-primary">
+      <i class="fas fa-plus"></i> إضافة جزء جديد
+    </a>
+  </div>
+  {{/if}}
+</div>
+
+<!-- View modal -->
+<div class="lp-modal-backdrop" id="viewBackdrop">
+  <div class="view-modal">
+    <div class="vm-header">
+      <span class="vm-title" id="vmTitle"></span>
+      <button class="vm-close" onclick="document.getElementById('viewBackdrop').classList.remove('open')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="vm-body" id="vmBody"></div>
+  </div>
+</div>
+
+<script>
+function togglePart(id, event) {
+  const block = document.getElementById('block-' + id);
+  const docs  = document.getElementById('docs-' + id);
+  const desc  = document.getElementById('desc-' + id);
+  const isOpen = block.classList.contains('open');
+  block.classList.toggle('open', !isOpen);
+  if (docs) docs.style.display = isOpen ? 'none' : 'block';
+  if (desc) desc.style.display = isOpen ? 'none' : 'block';
+}
+
+document.getElementById('viewBackdrop').addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+document.querySelectorAll('.view-doc').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const type    = this.dataset.type;
+    const title   = this.dataset.title;
+    const url     = this.dataset.url;
+    const content = this.dataset.content;
+
+    document.getElementById('vmTitle').textContent = title;
+    const body = document.getElementById('vmBody');
+
+    if (type === 'VIDEO') {
+      body.innerHTML = `<div style="position:relative;padding-top:56.25%;"><iframe src="${url}" style="position:absolute;inset:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe></div>`;
+    } else if (type === 'PDF') {
+      body.innerHTML = `<iframe src="${url}" width="100%" height="520px" style="border:none;border-radius:8px;"></iframe>`;
+    } else if (type === 'TEXT') {
+      body.innerHTML = `<div style="background:#f7f8fa;border-radius:10px;padding:1rem;white-space:pre-wrap;font-size:.85rem;line-height:1.7;">${content}</div>`;
+    } else if (type === 'QUIZ') {
+      let questions = [];
+      try { questions = JSON.parse(content); } catch {}
+      let html = '<div style="display:flex;flex-direction:column;gap:.75rem;">';
+      questions.forEach((q, i) => {
+        html += `<div style="background:#f7f8fa;border-radius:10px;padding:1rem;">
+          <div style="font-weight:600;margin-bottom:.5rem;">${i+1}. ${q.text}</div>
+          <ul style="margin:0;padding-right:1.2rem;">`;
+        if (q.options) q.options.forEach((opt, idx) => {
+          const isCorrect = idx === q.correct;
+          html += `<li style="${isCorrect ? 'color:#059669;font-weight:500;' : ''}">${opt} ${isCorrect ? '✓' : ''}</li>`;
+        });
+        html += `</ul></div>`;
+      });
+      html += '</div>';
+      body.innerHTML = html;
+    }
+
+    document.getElementById('viewBackdrop').classList.add('open');
+  });
+});
+</script>

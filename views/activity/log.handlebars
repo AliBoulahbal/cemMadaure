@@ -1,0 +1,250 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-history"></i> سجل النشاطات
+        </h3>
+    </div>
+    
+    <div class="card-body">
+        <!-- Filtres -->
+        <div class="filters-bar">
+            <select id="filterAction" class="filter-select">
+                <option value="">جميع الإجراءات</option>
+                <option value="CREATE">إنشاء</option>
+                <option value="UPDATE">تعديل</option>
+                <option value="DELETE">حذف</option>
+                <option value="VIEW">عرض</option>
+                <option value="PUBLISH">نشر</option>
+                <option value="APPROVE">موافقة</option>
+                <option value="REJECT">رفض</option>
+            </select>
+            
+            <select id="filterEntity" class="filter-select">
+                <option value="">جميع الكيانات</option>
+                <option value="USER">مستخدم</option>
+                <option value="BRANCH">سنة دراسية</option>
+                <option value="SUBJECT">مادة</option>
+                <option value="UNIT">وحدة</option>
+                <option value="LESSON">درس</option>
+                <option value="CONTENT">محتوى</option>
+                <option value="QUIZ">اختبار</option>
+            </select>
+            
+            <button id="applyFilters" class="btn-filter">
+                <i class="fas fa-filter"></i> تطبيق
+            </button>
+        </div>
+        
+        <!-- Tableau des activités -->
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>المستخدم</th>
+                        <th>الإجراء</th>
+                        <th>الكيان</th>
+                        <th>العنوان</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each activities}}
+                    <tr>
+                        <td class="date-cell">{{formatDate this.createdAt}}</td>
+                        <td>
+                            <strong>{{this.username}}</strong>
+                            <br>
+                            <small class="role-{{this.userRole}}">{{this.userRole}}</small>
+                        </td>
+                        <td>
+                            <span class="action-badge action-{{this.action}}">
+                                {{#if (eq this.action 'CREATE')}}إنشاء
+                                {{else if (eq this.action 'UPDATE')}}تعديل
+                                {{else if (eq this.action 'DELETE')}}حذف
+                                {{else if (eq this.action 'VIEW')}}عرض
+                                {{else if (eq this.action 'PUBLISH')}}نشر
+                                {{else if (eq this.action 'APPROVE')}}موافقة
+                                {{else if (eq this.action 'REJECT')}}رفض
+                                {{else}}{{this.action}}{{/if}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="entity-badge">{{this.entityType}}</span>
+                        </td>
+                        <td>{{this.entityName}}</td>
+                        <td>
+                            <button class="btn-details" data-id="{{this._id}}" data-old='{{json this.oldData}}' data-new='{{json this.newData}}'>
+                                <i class="fas fa-info-circle"></i> تفاصيل
+                            </button>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="6" class="empty-row">
+                            <div class="empty-state">
+                                <i class="fas fa-history fa-3x"></i>
+                                <p>لا توجد نشاطات مسجلة</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {{#if pagination}}
+        <div class="pagination">
+            {{#if pagination.hasPrev}}
+            <a href="?page={{pagination.prev}}" class="page-link">&laquo; السابق</a>
+            {{/if}}
+            <span class="page-current">الصفحة {{pagination.current}} من {{pagination.total}}</span>
+            {{#if pagination.hasNext}}
+            <a href="?page={{pagination.next}}" class="page-link">التالي &raquo;</a>
+            {{/if}}
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<!-- Modal détails -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تفاصيل النشاط</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="detailsBody"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.filters-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+}
+
+.btn-filter {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: right;
+    padding: 0.8rem;
+    background: #f8fafc;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.action-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.action-CREATE { background: #ecfdf5; color: #10b981; }
+.action-UPDATE { background: #fffbeb; color: #f59e0b; }
+.action-DELETE { background: #fef2f2; color: #ef4444; }
+.action-VIEW { background: #eff6ff; color: #3b82f6; }
+.action-PUBLISH { background: #ecfdf5; color: #10b981; }
+.action-APPROVE { background: #ecfdf5; color: #10b981; }
+.action-REJECT { background: #fef2f2; color: #ef4444; }
+
+.entity-badge {
+    background: #f1f5f9;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+}
+
+.btn-details {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    align-items: center;
+}
+
+.page-link {
+    padding: 0.4rem 1rem;
+    background: #f1f5f9;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #1e293b;
+}
+
+.page-current {
+    padding: 0.4rem 1rem;
+}
+
+.role-super_admin { color: #ef4444; }
+.role-admin { color: #f59e0b; }
+.role-teacher { color: #10b981; }
+</style>
+
+<script>
+document.getElementById('applyFilters')?.addEventListener('click', function() {
+    const action = document.getElementById('filterAction').value;
+    const entity = document.getElementById('filterEntity').value;
+    let url = '?';
+    if (action) url += `action=${action}&`;
+    if (entity) url += `entityType=${entity}&`;
+    window.location.href = url;
+});
+
+document.querySelectorAll('.btn-details').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const oldData = this.dataset.old ? JSON.parse(this.dataset.old) : null;
+        const newData = this.dataset.new ? JSON.parse(this.dataset.new) : null;
+        const modalBody = document.getElementById('detailsBody');
+        
+        let html = '<div class="details-container">';
+        if (oldData) {
+            html += `<div class="detail-section"><h6>البيانات القديمة</h6><pre>${JSON.stringify(oldData, null, 2)}</pre></div>`;
+        }
+        if (newData) {
+            html += `<div class="detail-section"><h6>البيانات الجديدة</h6><pre>${JSON.stringify(newData, null, 2)}</pre></div>`;
+        }
+        html += '</div>';
+        modalBody.innerHTML = html;
+        $('#detailsModal').modal('show');
+    });
+});
+</script>

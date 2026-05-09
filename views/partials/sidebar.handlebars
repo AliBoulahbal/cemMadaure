@@ -1,0 +1,190 @@
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="MADAURE Education" class="sidebar-logo">
+        </div>
+        <h3>تعليم CEM</h3>
+        <p> مادور منصة التعليم الجزائرية </p>
+    </div>
+    
+    <div class="user-info">
+        <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-name">{{#if user}}{{user.fullName}}{{else}}مدير النظام{{/if}}</div>
+        <div class="user-role">
+            {{#if (eq user.role 'super_admin')}}
+                <span class="badge bg-danger">مدير عام</span>
+            {{else if (eq user.role 'admin')}}
+                <span class="badge bg-warning">مدير</span>
+            {{else if (eq user.role 'teacher')}}
+                <span class="badge bg-info">أستاذ</span>
+            {{else}}
+                <span class="badge bg-secondary">مشاهد</span>
+            {{/if}}
+        </div>
+    </div>
+    
+    <div class="sidebar-nav">
+        <!-- الرئيسية -->
+        <div class="nav-header">الرئيسية</div>
+        <div class="nav-item">
+            <a href="/dashboard" class="nav-link {{#if active.dashboard}}active{{/if}}">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>لوحة التحكم</span>
+            </a>
+        </div>
+        
+        <!-- الإدارة التربوية -->
+        <div class="nav-header">الإدارة التربوية</div>
+        <div class="nav-item">
+            <a href="/branch" class="nav-link {{#if active.branch}}active{{/if}}">
+                <i class="fas fa-calendar-alt"></i>
+                <span>السنوات الدراسية</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="/subject" class="nav-link {{#if active.subject}}active{{/if}}">
+                <i class="fas fa-book"></i>
+                <span>المواد الدراسية</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="/unit" class="nav-link {{#if active.unit}}active{{/if}}">
+                <i class="fas fa-layer-group"></i>
+                <span>الوحدات</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="/lesson" class="nav-link {{#if active.lesson}}active{{/if}}">
+                <i class="fas fa-chalkboard"></i>
+                <span>الدروس</span>
+            </a>
+        </div>
+        <div class="nav-item">
+    <a href="/lesson-part" class="nav-link {{#if active.lessonPart}}active{{/if}}">
+        <i class="fas fa-cubes"></i>
+        <span>أجزاء الدروس</span>
+    </a>
+</div>
+<!-- Section Vimeo -->
+<div class="nav-header">Vidéo</div>
+<div class="nav-item">
+    <a href="/vimeo-code" class="nav-link {{#if active.vimeoCode}}active{{/if}}">
+        <i class="fab fa-vimeo"></i>
+        <span>Codes Vimeo</span>
+    </a>
+</div>
+        
+        <!-- الاختبارات -->
+        <div class="nav-header">الاختبارات</div>
+        <div class="nav-item">
+            <a href="/quiz" class="nav-link {{#if active.quiz}}active{{/if}}">
+                <i class="fas fa-question-circle"></i>
+                <span>الاختبارات</span>
+            </a>
+        </div>
+
+        <!-- إحصائيات -->
+        <div class="nav-header">الإحصائيات</div>
+        <div class="nav-item">
+            <a href="/quiz-attempt" class="nav-link {{#if active.quizAttempt}}active{{/if}}">
+                <i class="fas fa-chart-line"></i>
+                <span>محاولات الاختبارات</span>
+            </a>
+        </div>
+        
+        <!-- المحتوى -->
+        <div class="nav-header">المحتوى</div>
+        <div class="nav-item">
+            <a href="/content/upload" class="nav-link {{#if active.upload}}active{{/if}}">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>رفع المحتوى</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="/content/recent" class="nav-link {{#if active.recent}}active{{/if}}">
+                <i class="fas fa-history"></i>
+                <span>المحتوى الحديث</span>
+            </a>
+        </div>
+        
+        <!-- التدقيق والأمان (للمديرين فقط) -->
+        {{#if (or (eq user.role 'admin') (eq user.role 'super_admin'))}}
+        <div class="nav-header">التدقيق والأمان</div>
+        
+        <!-- سجل النشاطات -->
+        <div class="nav-item">
+            <a href="/activity" class="nav-link {{#if active.activity}}active{{/if}}">
+                <i class="fas fa-history"></i>
+                <span>سجل النشاطات</span>
+            </a>
+        </div>
+        <div class="nav-item">
+    <a href="/notifications" class="nav-link">
+        <i class="nav-icon fas fa-bell"></i>
+        <p>الإشعارات</p>
+        <span class="badge bg-warning" id="sidebarNotificationBadge" style="display: none;">0</span>
+    </a>
+</div>
+        
+        <!-- المحتوى قيد الانتظار (سوبر أدمن فقط) -->
+        {{#if (eq user.role 'super_admin')}}
+        <div class="nav-item">
+            <a href="/approval/pending" class="nav-link {{#if active.pending}}active{{/if}}">
+                <i class="fas fa-clock"></i>
+                <span>المحتوى قيد المراجعة</span>
+                <span class="badge bg-warning" id="pendingCount" style="display: none;">0</span>
+            </a>
+        </div>
+        
+        <!-- صلاحيات المستخدمين -->
+        <div class="nav-item">
+            <a href="/permissions" class="nav-link {{#if active.permissions}}active{{/if}}">
+                <i class="fas fa-lock"></i>
+                <span>الصلاحيات</span>
+            </a>
+        </div>
+        {{/if}}
+        {{/if}}
+        
+        <!-- المستخدمون -->
+        <div class="nav-header">المستخدمون</div>
+        <div class="nav-item">
+            <a href="/users" class="nav-link {{#if active.users}}active{{/if}}">
+                <i class="fas fa-users"></i>
+                <span>المستخدمون</span>
+            </a>
+        </div>
+        
+        <!-- المشرفون (سوبر أدمن فقط) -->
+        {{#if (eq user.role 'super_admin')}}
+        <div class="nav-header">المشرفون</div>
+        <div class="nav-item">
+            <a href="/admin-users" class="nav-link {{#if active.adminUsers}}active{{/if}}">
+                <i class="fas fa-user-shield"></i>
+                <span>المشرفون</span>
+            </a>
+        </div>
+        {{/if}}
+        <!-- Permissions (super_admin seulement) -->
+{{#if (eq user.role 'super_admin')}}
+<div class="nav-item">
+    <a href="/permissions" class="nav-link {{#if active.permissions}}active{{/if}}">
+        <i class="nav-icon fas fa-lock"></i>
+        <span>الصلاحيات</span>
+    </a>
+</div>
+{{/if}}
+        
+        <!-- الحساب -->
+        <div class="nav-header">الحساب</div>
+        <div class="nav-item">
+            <a href="/logout" class="nav-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+            </a>
+        </div>
+    </div>
+</div>

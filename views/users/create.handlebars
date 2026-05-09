@@ -1,0 +1,250 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-user-plus"></i> إضافة مستخدم جديد
+        </h3>
+        <div class="card-tools">
+            <a href="/users" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        {{#if error}}
+        <div class="alert-error">{{error}}</div>
+        {{/if}}
+        
+        <form action="/users/create" method="post" class="user-form" id="userForm">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">الاسم الكامل <span class="required">*</span></label>
+                    <input type="text" class="field-input" name="fullName" value="{{formData.fullName}}" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">اسم المستخدم <span class="required">*</span></label>
+                    <input type="text" class="field-input" name="username" value="{{formData.username}}" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">البريد الإلكتروني <span class="required">*</span></label>
+                    <input type="email" class="field-input" name="email" value="{{formData.email}}" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">رقم الهاتف</label>
+                    <input type="tel" class="field-input" name="phone" value="{{formData.phone}}">
+                </div>
+                <div class="form-field">
+                    <label class="field-label">كلمة المرور <span class="required">*</span></label>
+                    <input type="password" class="field-input" id="password" name="password" required>
+                    <small>6 أحرف على الأقل</small>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">تأكيد كلمة المرور <span class="required">*</span></label>
+                    <input type="password" class="field-input" id="confirmPassword" required>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">الدور <span class="required">*</span></label>
+                    <select class="field-select" id="role" name="role" required>
+                        <option value="">-- اختر الدور --</option>
+                        <option value="super_admin">👑 مدير عام</option>
+                        <option value="admin">🛡️ مدير</option>
+                        <option value="teacher">📚 أستاذ</option>
+                        <option value="viewer">👁️ مشاهد</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="field-label">الحالة</label>
+                    <select class="field-select" name="status">
+                        <option value="active">🟢 نشط</option>
+                        <option value="inactive">🔴 غير نشط</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>ملاحظة:</strong>
+                    <ul>
+                        <li><strong>👑 مدير عام:</strong> جميع الصلاحيات</li>
+                        <li><strong>🛡️ مدير:</strong> إدارة المستخدمين والمحتوى</li>
+                        <li><strong>📚 أستاذ:</strong> إدارة الدروس والمحتوى</li>
+                        <li><strong>👁️ مشاهد:</strong> مشاهدة فقط</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> إضافة المستخدم
+                </button>
+                <button type="reset" class="btn-reset">
+                    <i class="fas fa-undo"></i> إعادة تعيين
+                </button>
+                <a href="/users" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* نماذج */
+.user-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.field-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.field-input, .field-select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.field-input:focus, .field-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
+}
+
+small {
+    font-size: 0.65rem;
+    color: #64748b;
+    margin-top: 0.2rem;
+}
+
+/* معلومات */
+.info-box {
+    background: #eff6ff;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-box i {
+    color: #3b82f6;
+    font-size: 1.2rem;
+}
+
+.info-box ul {
+    margin: 0.5rem 0 0 1rem;
+    font-size: 0.75rem;
+    color: #1e293b;
+}
+
+/* أزرار */
+.form-actions {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.btn-submit {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-submit:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-reset, .btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-reset:hover, .btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.35rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-decoration: none;
+}
+
+.alert-error {
+    background: #fef2f2;
+    color: #ef4444;
+    padding: 0.8rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin-bottom: 1.2rem;
+    border-right: 3px solid #ef4444;
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.getElementById('userForm')?.addEventListener('submit', function(e) {
+    const pass = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    if (pass !== confirm) {
+        e.preventDefault();
+        alert('كلمة المرور غير متطابقة');
+        return false;
+    }
+    if (pass.length < 6) {
+        e.preventDefault();
+        alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+        return false;
+    }
+});
+</script>

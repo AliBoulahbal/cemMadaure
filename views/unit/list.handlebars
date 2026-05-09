@@ -1,0 +1,760 @@
+<div class="modern-card">
+    <div class="modern-card-header">
+        <div class="modern-title-section">
+            <div class="modern-icon-wrapper bg-primary-light">
+                <i class="fas fa-layer-group text-primary"></i>
+            </div>
+            <div>
+                <h3 class="modern-title">قائمة الوحدات</h3>
+                <p class="modern-subtitle">إدارة وعرض جميع الوحدات التعليمية</p>
+            </div>
+        </div>
+        <a href="/unit/create" class="modern-btn modern-btn-primary">
+            <i class="fas fa-plus"></i> إضافة وحدة
+        </a>
+    </div>
+
+    <div class="modern-card-body">
+
+        <!-- ==================== فلاتر البحث ==================== -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label class="filter-label">
+                    <i class="fas fa-calendar-alt"></i> تصفية حسب السنة
+                </label>
+                <select class="modern-filter" id="filterBranch">
+                    <option value="">جميع السنوات</option>
+                    {{#each branches}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">
+                    <i class="fas fa-book"></i> تصفية حسب المادة
+                </label>
+                <select class="modern-filter" id="filterSubject">
+                    <option value="">جميع المواد</option>
+                    {{#each subjects}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">
+                    <i class="fas fa-chalkboard"></i> تصفية حسب الوحدة
+                </label>
+                <select class="modern-filter" id="filterUnitName">
+                    <option value="">جميع الوحدات</option>
+                    {{#each units}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="filter-group filter-search-group">
+                <label class="filter-label">
+                    <i class="fas fa-search"></i> بحث نصي
+                </label>
+                <input type="text" class="modern-filter" id="filterSearch" placeholder="ابحث عن وحدة...">
+            </div>
+            <div class="filter-actions">
+                <button id="resetFilters" class="modern-btn modern-btn-sm modern-btn-secondary">
+                    <i class="fas fa-undo"></i> إعادة تعيين
+                </button>
+            </div>
+        </div>
+
+        <!-- تاقات الفلاتر النشطة -->
+        <div class="filter-status" id="filterStatus" style="display: none;">
+            <div class="filter-active-tags" id="activeTags"></div>
+        </div>
+
+        <!-- ==================== الجدول ==================== -->
+        <div class="table-wrapper">
+            <table class="modern-table" id="unitsTable">
+                <thead>
+                    <tr>
+                        <th class="col-number">#</th>
+                        <th class="col-unit">اسم الوحدة</th>
+                        <th class="col-branch">السنة الدراسية</th>
+                        <th class="col-subject">المادة</th>
+                        <th class="col-order">الترتيب</th>
+                        <th class="col-actions">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each units}}
+                    <tr class="unit-row"
+                        data-unit-id="{{this._id}}"
+                        data-branch-id="{{this.branchId._id}}"
+                        data-branch-name="{{this.branchId.name}}"
+                        data-subject-id="{{this.subjectId._id}}"
+                        data-subject-name="{{this.subjectId.name}}"
+                        data-unit-name="{{this.name}}">
+                        <td class="text-center">{{inc @index}}</td>
+                        <td>
+                            <div class="unit-info">
+                                <div class="unit-icon">
+                                    <i class="fas fa-folder-open"></i>
+                                </div>
+                                <div class="unit-details">
+                                    <strong>{{this.name}}</strong>
+                                    {{#if this.description}}
+                                    <span class="unit-desc">{{this.description}}</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-modern badge-branch">
+                                <i class="fas fa-calendar-alt"></i> {{this.branchId.name}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-modern badge-subject">
+                                <i class="fas fa-book"></i> {{this.subjectId.name}}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="order-badge">{{this.order}}</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="/unit/view/{{this._id}}" class="action-btn action-view" title="عرض">
+                                    <i class="fas fa-eye"></i>
+                                    <span>عرض</span>
+                                </a>
+                                <a href="/unit/edit/{{this._id}}" class="action-btn action-edit" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                    <span>تعديل</span>
+                                </a>
+                                <form action="/unit/delete/{{this._id}}?_method=DELETE" method="post" style="display: inline;">
+                                    <button type="submit" class="action-btn action-delete delete-btn" title="حذف"
+                                        onclick="return confirm('هل أنت متأكد من حذف هذه الوحدة؟ جميع الدروس المرتبطة بها سيتم حذفها أيضاً!')">
+                                        <i class="fas fa-trash"></i>
+                                        <span>حذف</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr class="empty-row-initial">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-layer-group"></i>
+                                <p>لا توجد وحدات</p>
+                                <a href="/unit/create" class="modern-btn modern-btn-primary">أضف وحدة الآن</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+            <!-- رسالة لا توجد نتائج عند الفلترة -->
+            <div id="noResultsMsg" style="display:none;" class="empty-state" style="padding: 2rem;">
+                <i class="fas fa-search"></i>
+                <p>لا توجد وحدات تطابق معايير البحث</p>
+                <button id="clearFiltersBtn" class="modern-btn modern-btn-primary">
+                    <i class="fas fa-undo"></i> إعادة تعيين الفلاتر
+                </button>
+            </div>
+        </div>
+
+        <!-- إحصائيات الفلترة -->
+        <div class="filter-stats" id="filterStats" style="display: none;">
+            <i class="fas fa-chart-line"></i>
+            عرض <span id="filteredCount">0</span> وحدة من أصل <span id="totalCount">0</span>
+        </div>
+    </div>
+</div>
+
+<style>
+    * { direction: rtl; text-align: right; }
+
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #eef2ff;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --danger: #ef4444;
+        --danger-light: #fee2e2;
+        --info: #3b82f6;
+        --info-light: #dbeafe;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+    }
+
+    .modern-card {
+        background: white;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        margin: 1.5rem;
+    }
+
+    .modern-card-header {
+        padding: 1.5rem 2rem;
+        background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .modern-title-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .modern-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .bg-primary-light { background: var(--primary-light); }
+    .text-primary { color: var(--primary); }
+
+    .modern-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin: 0 0 0.25rem 0;
+    }
+
+    .modern-subtitle {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        margin: 0;
+    }
+
+    .modern-card-body { padding: 2rem; }
+
+    /* ===== فلاتر ===== */
+    .filter-section {
+        background: var(--gray-50);
+        padding: 1.25rem 1.5rem;
+        border-radius: var(--radius-lg);
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        border: 1px solid var(--gray-200);
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+        flex: 1;
+        min-width: 160px;
+    }
+
+    .filter-search-group { min-width: 200px; }
+
+    .filter-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        white-space: nowrap;
+    }
+
+    .filter-label i { margin-left: 0.25rem; }
+
+    .modern-filter {
+        padding: 0.55rem 0.9rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius-md);
+        background: white;
+        font-size: 0.875rem;
+        width: 100%;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        color: var(--gray-700);
+    }
+
+    .modern-filter:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+
+    .modern-filter.active-filter {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        color: var(--primary);
+        font-weight: 500;
+    }
+
+    .filter-actions {
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 0;
+    }
+
+    /* تاقات الفلاتر */
+    .filter-status { margin-bottom: 1rem; }
+
+    .filter-active-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-tag {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 0.3rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border: 1px solid rgba(99,102,241,0.2);
+        animation: fadeIn 0.2s ease;
+    }
+
+    .filter-tag-remove {
+        cursor: pointer;
+        font-size: 0.65rem;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(99,102,241,0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        border: none;
+        color: var(--primary);
+        padding: 0;
+    }
+
+    .filter-tag-remove:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ===== الجدول ===== */
+    .table-wrapper {
+        overflow-x: auto;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--gray-200);
+    }
+
+    .modern-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+    }
+
+    .modern-table thead {
+        background: var(--gray-50);
+        border-bottom: 2px solid var(--gray-200);
+    }
+
+    .modern-table th {
+        padding: 0.9rem 1rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    .modern-table td {
+        padding: 0.9rem 1rem;
+        border-bottom: 1px solid var(--gray-100);
+        color: var(--gray-700);
+        vertical-align: middle;
+    }
+
+    .modern-table tbody tr.unit-row {
+        transition: background 0.15s ease;
+    }
+
+    .modern-table tbody tr.unit-row:hover {
+        background: var(--gray-50);
+    }
+
+    .unit-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .unit-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-md);
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+
+    .unit-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .unit-desc {
+        font-size: 0.7rem;
+        color: var(--gray-400);
+        max-width: 260px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .badge-modern {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.72rem;
+        font-weight: 500;
+    }
+
+    .badge-branch {
+        background: var(--info-light);
+        color: var(--info);
+    }
+
+    .badge-subject {
+        background: var(--success-light);
+        color: var(--success);
+    }
+
+    .order-badge {
+        background: var(--gray-100);
+        padding: 0.25rem 0.65rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        display: inline-block;
+    }
+
+    /* ===== أزرار الإجراءات ===== */
+    .action-buttons {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.7rem;
+        border-radius: var(--radius-md);
+        font-size: 0.72rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        border: none;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .action-view  { background: var(--info-light);    color: var(--info);    }
+    .action-view:hover  { background: var(--info);    color: white; }
+    .action-edit  { background: var(--warning-light); color: var(--warning); }
+    .action-edit:hover  { background: var(--warning); color: white; }
+    .action-delete{ background: var(--danger-light);  color: var(--danger);  }
+    .action-delete:hover{ background: var(--danger);  color: white; }
+
+    /* ===== حالة فارغة ===== */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        color: var(--gray-300);
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .empty-state p {
+        color: var(--gray-500);
+        margin-bottom: 1rem;
+    }
+
+    /* ===== أزرار عامة ===== */
+    .modern-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+    }
+
+    .modern-btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+
+    .modern-btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .modern-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: white;
+    }
+
+    .modern-btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-600);
+        border: 1px solid var(--gray-200);
+    }
+
+    .modern-btn-secondary:hover {
+        background: var(--gray-200);
+        color: var(--gray-700);
+    }
+
+    /* ===== إحصائيات الفلترة ===== */
+    .filter-stats {
+        margin-top: 1rem;
+        padding: 0.65rem 1rem;
+        background: var(--primary-light);
+        border-radius: var(--radius-md);
+        font-size: 0.85rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid rgba(99,102,241,0.15);
+    }
+
+    /* Masquer les lignes filtrées */
+    .unit-row.hidden-row { display: none; }
+
+    /* ===== colonnes ===== */
+    .col-number  { width: 50px;  text-align: center; }
+    .col-order   { width: 80px;  text-align: center; }
+    .col-actions { width: 220px; text-align: center; }
+    .text-center { text-align: center !important; }
+
+    /* ===== responsive ===== */
+    @media (max-width: 768px) {
+        .modern-card { margin: 0.5rem; }
+        .modern-card-header,
+        .modern-card-body { padding: 1rem; }
+        .action-btn span { display: none; }
+        .action-btn { padding: 0.5rem; }
+        .filter-section { flex-direction: column; gap: 0.75rem; }
+        .filter-group { width: 100%; min-width: unset; }
+        .filter-actions { width: 100%; }
+        .filter-actions button { width: 100%; justify-content: center; }
+        .modern-table th,
+        .modern-table td { padding: 0.6rem; }
+        .unit-desc { max-width: 120px; }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    var filterBranch   = document.getElementById('filterBranch');
+    var filterSubject  = document.getElementById('filterSubject');
+    var filterUnitName = document.getElementById('filterUnitName');
+    var filterSearch   = document.getElementById('filterSearch');
+    var resetBtn       = document.getElementById('resetFilters');
+    var clearBtn       = document.getElementById('clearFiltersBtn');
+    var filterStats    = document.getElementById('filterStats');
+    var filteredCount  = document.getElementById('filteredCount');
+    var totalCountSpan = document.getElementById('totalCount');
+    var filterStatus   = document.getElementById('filterStatus');
+    var activeTags     = document.getElementById('activeTags');
+    var noResultsMsg   = document.getElementById('noResultsMsg');
+
+    var allRows = Array.from(document.querySelectorAll('#unitsTable tbody tr.unit-row'));
+    var totalRows = allRows.length;
+    if (totalCountSpan) totalCountSpan.textContent = totalRows;
+
+    // ==================== Filtrage principal ====================
+    function filterTable() {
+        var branchId   = filterBranch   ? filterBranch.value   : '';
+        var subjectId  = filterSubject  ? filterSubject.value  : '';
+        var unitId     = filterUnitName ? filterUnitName.value : '';
+        var searchText = filterSearch   ? filterSearch.value.trim().toLowerCase() : '';
+
+        var visibleCount = 0;
+
+        allRows.forEach(function (row) {
+            var rowBranchId  = row.getAttribute('data-branch-id')  || '';
+            var rowSubjectId = row.getAttribute('data-subject-id') || '';
+            var rowUnitId    = row.getAttribute('data-unit-id')    || '';
+            var rowUnitName  = (row.getAttribute('data-unit-name') || '').toLowerCase();
+            var rowBranchName  = (row.getAttribute('data-branch-name')  || '').toLowerCase();
+            var rowSubjectName = (row.getAttribute('data-subject-name') || '').toLowerCase();
+
+            var show = true;
+
+            if (branchId  && rowBranchId  !== branchId)  show = false;
+            if (subjectId && rowSubjectId !== subjectId) show = false;
+            if (unitId    && rowUnitId    !== unitId)    show = false;
+
+            if (searchText) {
+                var matches = rowUnitName.includes(searchText)
+                           || rowBranchName.includes(searchText)
+                           || rowSubjectName.includes(searchText);
+                if (!matches) show = false;
+            }
+
+            if (show) {
+                row.classList.remove('hidden-row');
+                visibleCount++;
+            } else {
+                row.classList.add('hidden-row');
+            }
+        });
+
+        // message aucun résultat
+        if (noResultsMsg) {
+            noResultsMsg.style.display = (visibleCount === 0 && totalRows > 0) ? 'block' : 'none';
+        }
+
+        // stats
+        var hasFilter = branchId || subjectId || unitId || searchText;
+        if (filterStats) {
+            if (hasFilter) {
+                filterStats.style.display = 'flex';
+                if (filteredCount) filteredCount.textContent = visibleCount;
+            } else {
+                filterStats.style.display = 'none';
+            }
+        }
+
+        // style actif sur les selects
+        [filterBranch, filterSubject, filterUnitName].forEach(function(sel) {
+            if (!sel) return;
+            if (sel.value) {
+                sel.classList.add('active-filter');
+            } else {
+                sel.classList.remove('active-filter');
+            }
+        });
+
+        updateActiveTags(branchId, subjectId, unitId, searchText);
+    }
+
+    // ==================== Tags actifs ====================
+    function updateActiveTags(branchId, subjectId, unitId, searchText) {
+        if (!activeTags) return;
+        var tags = [];
+
+        if (branchId && filterBranch) {
+            tags.push({ type: 'branch', label: 'السنة: ' + filterBranch.options[filterBranch.selectedIndex].text });
+        }
+        if (subjectId && filterSubject) {
+            tags.push({ type: 'subject', label: 'المادة: ' + filterSubject.options[filterSubject.selectedIndex].text });
+        }
+        if (unitId && filterUnitName) {
+            tags.push({ type: 'unit', label: 'الوحدة: ' + filterUnitName.options[filterUnitName.selectedIndex].text });
+        }
+        if (searchText) {
+            tags.push({ type: 'search', label: 'بحث: ' + searchText });
+        }
+
+        if (tags.length > 0) {
+            filterStatus.style.display = 'block';
+            activeTags.innerHTML = tags.map(function(t) {
+                return '<span class="filter-tag">'
+                     + '<i class="fas fa-tag"></i> ' + t.label
+                     + '<button class="filter-tag-remove" onclick="removeFilter(\'' + t.type + '\')" title="إزالة">'
+                     + '<i class="fas fa-times"></i></button></span>';
+            }).join('');
+        } else {
+            filterStatus.style.display = 'none';
+            activeTags.innerHTML = '';
+        }
+    }
+
+    // ==================== Supprimer un filtre via tag ====================
+    window.removeFilter = function (type) {
+        if (type === 'branch'  && filterBranch)   filterBranch.value   = '';
+        if (type === 'subject' && filterSubject)  filterSubject.value  = '';
+        if (type === 'unit'    && filterUnitName) filterUnitName.value = '';
+        if (type === 'search'  && filterSearch)   filterSearch.value   = '';
+        filterTable();
+    };
+
+    // ==================== Réinitialiser ====================
+    function resetAll() {
+        if (filterBranch)   filterBranch.value   = '';
+        if (filterSubject)  filterSubject.value  = '';
+        if (filterUnitName) filterUnitName.value = '';
+        if (filterSearch)   filterSearch.value   = '';
+        filterTable();
+    }
+
+    // ==================== Écouteurs ====================
+    if (filterBranch)   filterBranch.addEventListener('change', filterTable);
+    if (filterSubject)  filterSubject.addEventListener('change', filterTable);
+    if (filterUnitName) filterUnitName.addEventListener('change', filterTable);
+    if (filterSearch)   filterSearch.addEventListener('input',  filterTable);
+    if (resetBtn)       resetBtn.addEventListener('click', resetAll);
+    if (clearBtn)       clearBtn.addEventListener('click', resetAll);
+
+    // ==================== Animation d'entrée ====================
+    allRows.forEach(function (row, i) {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(8px)';
+        setTimeout(function () {
+            row.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, i * 40);
+    });
+});
+</script>

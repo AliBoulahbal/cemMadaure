@@ -1,0 +1,390 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-history"></i> المحتوى الحديث
+        </h3>
+        <div class="card-tools">
+            <a href="/content/upload" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-plus"></i> إضافة محتوى
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- إحصائيات سريعة -->
+        <div class="stats-grid">
+            <div class="stat-item stat-info">
+                <div class="stat-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">{{stats.videos}}</span>
+                    <span class="stat-label">فيديوهات</span>
+                </div>
+            </div>
+            <div class="stat-item stat-danger">
+                <div class="stat-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">{{stats.pdfs}}</span>
+                    <span class="stat-label">PDF</span>
+                </div>
+            </div>
+            <div class="stat-item stat-secondary">
+                <div class="stat-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">{{stats.images}}</span>
+                    <span class="stat-label">صور</span>
+                </div>
+            </div>
+            <div class="stat-item stat-success">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">{{stats.texts}}</span>
+                    <span class="stat-label">نصوص</span>
+                </div>
+            </div>
+            <div class="stat-item stat-warning">
+                <div class="stat-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">{{stats.quizzes}}</span>
+                    <span class="stat-label">اختبارات</span>
+                </div>
+            </div>
+            <div class="stat-item stat-dark">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">{{stats.total}}</span>
+                    <span class="stat-label">المجموع</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- جدول المحتوى -->
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="col-type">النوع</th>
+                        <th class="col-title">العنوان</th>
+                        <th class="col-lesson">الدرس</th>
+                        <th class="col-date">التاريخ</th>
+                        <th class="col-actions">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each contents}}
+                    <tr>
+                        <td class="col-type">
+                            {{#if (eq this.type 'video')}}
+                                <span class="type-badge type-video">
+                                    <i class="fas fa-video"></i> فيديو
+                                </span>
+                            {{else if (eq this.type 'pdf')}}
+                                <span class="type-badge type-pdf">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </span>
+                            {{else if (eq this.type 'image')}}
+                                <span class="type-badge type-image">
+                                    <i class="fas fa-image"></i> صورة
+                                </span>
+                            {{else if (eq this.type 'text')}}
+                                <span class="type-badge type-text">
+                                    <i class="fas fa-file-alt"></i> نص
+                                </span>
+                            {{else if (eq this.type 'quiz')}}
+                                <span class="type-badge type-quiz">
+                                    <i class="fas fa-question-circle"></i> اختبار
+                                </span>
+                            {{/if}}
+                        </td>
+                        <td class="col-title">
+                            <strong>{{this.title}}</strong>
+                            {{#if (eq this.type 'image')}}
+                            <div class="title-sub">
+                                <i class="fas fa-image"></i> 
+                                <a href="{{this.data.url}}" target="_blank" class="view-link">عرض الصورة</a>
+                            </div>
+                            {{/if}}
+                        </td>
+                        <td class="col-lesson">
+                            <a href="/content/manage/{{this.lessonId._id}}" class="lesson-link">
+                                {{this.lessonId.name}}
+                            </a>
+                        </td>
+                        <td class="col-date">
+                            <span class="date-badge">{{formatDate this.createdAt}}</span>
+                        </td>
+                        <td class="col-actions">
+                            <a href="/content/manage/{{this.lessonId._id}}" class="action-btn action-manage" title="إدارة المحتوى">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <div class="empty-content">
+                                <i class="fas fa-inbox fa-3x mb-3"></i>
+                                <p>لا يوجد محتوى حتى الآن</p>
+                                <a href="/content/upload" class="btn-outline-primary btn-sm">إضافة أول محتوى</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+/* تصميم نظيف للمحتوى الحديث */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    background: white;
+    border-radius: 16px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid #eef2f6;
+    transition: all 0.2s;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.stat-info .stat-icon { background: #eff6ff; color: #3b82f6; }
+.stat-danger .stat-icon { background: #fef2f2; color: #ef4444; }
+.stat-secondary .stat-icon { background: #f1f5f9; color: #64748b; }
+.stat-success .stat-icon { background: #ecfdf5; color: #10b981; }
+.stat-warning .stat-icon { background: #fffbeb; color: #f59e0b; }
+.stat-dark .stat-icon { background: #f1f5f9; color: #1e293b; }
+
+.stat-details {
+    flex: 1;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+/* جدول البيانات */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.data-table th {
+    text-align: right;
+    padding: 0.9rem 1rem;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.data-table tr:hover {
+    background: #fafcff;
+}
+
+/* أعمدة */
+.col-type { width: 100px; }
+.col-title { min-width: 200px; }
+.col-lesson { min-width: 180px; }
+.col-date { width: 110px; }
+.col-actions { width: 60px; text-align: center; }
+
+/* علامات النوع */
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.type-video { background: #eff6ff; color: #3b82f6; }
+.type-pdf { background: #fef2f2; color: #ef4444; }
+.type-image { background: #f1f5f9; color: #475569; }
+.type-text { background: #ecfdf5; color: #10b981; }
+.type-quiz { background: #fffbeb; color: #f59e0b; }
+
+/* روابط */
+.lesson-link {
+    color: #1e293b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.lesson-link:hover {
+    color: #3b82f6;
+}
+
+.view-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.7rem;
+}
+
+.view-link:hover {
+    text-decoration: underline;
+}
+
+/* تاريخ */
+.date-badge {
+    font-size: 0.7rem;
+    color: #64748b;
+    background: #f8fafc;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+}
+
+/* أزرار الإجراءات */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.action-manage:hover {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+/* حالة فارغة */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #94a3b8;
+}
+
+.empty-content i {
+    color: #cbd5e1;
+}
+
+.empty-content p {
+    margin-bottom: 1rem;
+}
+
+/* استجابة */
+@media (max-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .col-date {
+        width: 90px;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* زر خارجي */
+.btn-outline-primary {
+    background: none;
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+    padding: 0.35rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-outline-primary:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+}
+</style>

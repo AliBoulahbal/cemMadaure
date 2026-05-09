@@ -1,0 +1,462 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-clock"></i> المحتوى قيد المراجعة
+        </h3>
+        <div class="card-tools">
+            <a href="/content/upload" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> إضافة محتوى
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- إحصائيات -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon bg-warning">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.pending}}</div>
+                    <div class="stat-label">قيد المراجعة</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.approved}}</div>
+                    <div class="stat-label">تمت الموافقة</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-danger">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.rejected}}</div>
+                    <div class="stat-label">مرفوض</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-info">
+                    <i class="fas fa-chalkboard"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.totalLessons}}</div>
+                    <div class="stat-label">دروس بها محتوى</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- جدول المحتوى قيد المراجعة -->
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>النوع</th>
+                        <th>العنوان</th>
+                        <th>الدرس</th>
+                        <th>المادة</th>
+                        <th>السنة</th>
+                        <th>المنشئ</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الحالة</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each contents}}
+                    <tr>
+                        <td>{{inc @index}}</td>
+                        <td>
+                            {{#if (eq this.type 'video')}}
+                                <span class="type-badge type-video"><i class="fas fa-video"></i> فيديو</span>
+                            {{else if (eq this.type 'pdf')}}
+                                <span class="type-badge type-pdf"><i class="fas fa-file-pdf"></i> PDF</span>
+                            {{else if (eq this.type 'image')}}
+                                <span class="type-badge type-image"><i class="fas fa-image"></i> صورة</span>
+                            {{else if (eq this.type 'text')}}
+                                <span class="type-badge type-text"><i class="fas fa-file-alt"></i> نص</span>
+                            {{else if (eq this.type 'quiz')}}
+                                <span class="type-badge type-quiz"><i class="fas fa-question-circle"></i> اختبار</span>
+                            {{/if}}
+                        </td>
+                        <td><strong>{{this.title}}</strong></td>
+                        <td>{{this.lessonId.name}}</td>
+                        <td>{{this.lessonId.subjectId.name}}</td>
+                        <td>{{this.lessonId.branchId.name}}</td>
+                        <td>
+                            <span class="creator-name">{{this.createdBy.fullName}}</span>
+                            <br>
+                            <small class="creator-role">{{this.createdBy.role}}</small>
+                        </td>
+                        <td>{{formatDate this.createdAt}}</td>
+                        <td>
+                            {{#if (eq this.status 'PENDING')}}
+                                <span class="status-badge status-pending">
+                                    <i class="fas fa-clock"></i> قيد المراجعة
+                                </span>
+                            {{else if (eq this.status 'APPROVED')}}
+                                <span class="status-badge status-approved">
+                                    <i class="fas fa-check"></i> تمت الموافقة
+                                </span>
+                            {{else if (eq this.status 'REJECTED')}}
+                                <span class="status-badge status-rejected">
+                                    <i class="fas fa-times"></i> مرفوض
+                                </span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn preview-btn" data-content='{{json this}}' title="معاينة">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                {{#if (eq this.status 'PENDING')}}
+                                <button class="action-btn approve-btn" data-id="{{this._id}}" data-title="{{this.title}}" title="موافقة">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                                <button class="action-btn reject-btn" data-id="{{this._id}}" data-title="{{this.title}}" title="رفض">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                                {{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="10" class="empty-row">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox fa-3x"></i>
+                                <p>لا يوجد محتوى قيد المراجعة</p>
+                                <a href="/content/upload" class="btn-link">إضافة محتوى جديد</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة المعاينة -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-eye"></i> معاينة المحتوى</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="previewBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-close" data-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة الرفض -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-times-circle"></i> رفض المحتوى</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="rejectContentId">
+                <div class="form-group">
+                    <label>سبب الرفض</label>
+                    <textarea id="rejectionReason" class="form-control" rows="3" placeholder="اكتب سبب الرفض..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-close" data-dismiss="modal">إلغاء</button>
+                <button type="button" id="confirmReject" class="btn-danger">تأكيد الرفض</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* إحصائيات */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #eef2f6;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+}
+
+.bg-warning { background: #f59e0b; }
+.bg-success { background: #10b981; }
+.bg-danger { background: #ef4444; }
+.bg-info { background: #3b82f6; }
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+/* جدول البيانات */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.data-table th {
+    text-align: right;
+    padding: 0.8rem;
+    background: #f8fafc;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* علامات النوع */
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.type-video { background: #eff6ff; color: #3b82f6; }
+.type-pdf { background: #fef2f2; color: #ef4444; }
+.type-image { background: #f1f5f9; color: #475569; }
+.type-text { background: #ecfdf5; color: #10b981; }
+.type-quiz { background: #fffbeb; color: #f59e0b; }
+
+/* حالة المحتوى */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.status-pending { background: #fffbeb; color: #f59e0b; }
+.status-approved { background: #ecfdf5; color: #10b981; }
+.status-rejected { background: #fef2f2; color: #ef4444; }
+
+/* أزرار الإجراءات */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preview-btn:hover { background: #eff6ff; color: #3b82f6; }
+.approve-btn:hover { background: #ecfdf5; color: #10b981; }
+.reject-btn:hover { background: #fef2f2; color: #ef4444; }
+
+/* اسم المنشئ */
+.creator-name {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.creator-role {
+    font-size: 0.6rem;
+    color: #64748b;
+}
+
+/* حالة فارغة */
+.empty-row td {
+    padding: 2rem;
+}
+
+.empty-state {
+    text-align: center;
+    color: #94a3b8;
+}
+
+.empty-state i {
+    color: #cbd5e1;
+    margin-bottom: 0.5rem;
+}
+
+.btn-link {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-close {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// معاينة المحتوى
+document.querySelectorAll('.preview-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const content = JSON.parse(this.dataset.content);
+        const modalBody = document.getElementById('previewBody');
+        
+        if (content.type === 'video') {
+            modalBody.innerHTML = `<video width="100%" controls src="${content.data.url}"></video>`;
+        } else if (content.type === 'pdf') {
+            modalBody.innerHTML = `<iframe src="${content.data.url}" width="100%" height="500px"></iframe>`;
+        } else if (content.type === 'image') {
+            modalBody.innerHTML = `<img src="${content.data.url}" class="img-fluid">`;
+        } else if (content.type === 'text') {
+            modalBody.innerHTML = `<div class="card"><div class="card-header bg-info text-white">${content.title}</div><div class="card-body">${content.data.body}</div></div>`;
+        } else if (content.type === 'quiz') {
+            let html = '<div class="list-group">';
+            content.data.questions.forEach((q, i) => {
+                html += `<div class="list-group-item"><strong>سؤال ${i+1}:</strong> ${q.questionText}<br><ul>${q.options.map(opt => `<li>${opt.text} ${opt.isCorrect ? '✓' : ''}</li>`).join('')}</ul></div>`;
+            });
+            html += '</div>';
+            modalBody.innerHTML = html;
+        }
+        
+        $('#previewModal').modal('show');
+    });
+});
+
+// موافقة على المحتوى
+document.querySelectorAll('.approve-btn').forEach(btn => {
+    btn.addEventListener('click', async function() {
+        const contentId = this.dataset.id;
+        const title = this.dataset.title;
+        
+        const result = await Swal.fire({
+            title: 'تأكيد الموافقة',
+            text: `هل أنت متأكد من الموافقة على نشر "${title}"؟`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'نعم، وافق',
+            cancelButtonText: 'إلغاء'
+        });
+        
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/approval/content/${contentId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'PUBLISHED' })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    Swal.fire('تم!', 'تم نشر المحتوى بنجاح', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('خطأ', data.error, 'error');
+                }
+            } catch (error) {
+                Swal.fire('خطأ', error.message, 'error');
+            }
+        }
+    });
+});
+
+// رفض المحتوى
+let currentRejectId = null;
+
+document.querySelectorAll('.reject-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        currentRejectId = this.dataset.id;
+        document.getElementById('rejectContentId').value = this.dataset.id;
+        document.getElementById('rejectionReason').value = '';
+        $('#rejectModal').modal('show');
+    });
+});
+
+document.getElementById('confirmReject').addEventListener('click', async function() {
+    const contentId = currentRejectId;
+    const reason = document.getElementById('rejectionReason').value;
+    
+    if (!reason) {
+        Swal.fire('خطأ', 'الرجاء إدخال سبب الرفض', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/approval/content/${contentId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'REJECTED', rejectionReason: reason })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            Swal.fire('تم!', 'تم رفض المحتوى', 'success');
+            $('#rejectModal').modal('hide');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire('خطأ', data.error, 'error');
+        }
+    } catch (error) {
+        Swal.fire('خطأ', error.message, 'error');
+    }
+});
+</script>

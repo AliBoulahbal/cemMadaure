@@ -1,0 +1,582 @@
+<div class="modern-card">
+    <div class="modern-card-header">
+        <div class="modern-title-section">
+            <div class="modern-icon-wrapper bg-primary-light">
+                <i class="fas fa-chalkboard-teacher text-primary"></i>
+            </div>
+            <div>
+                <h3 class="modern-title">إضافة درس جديد</h3>
+                <p class="modern-subtitle">قم بإضافة درس تعليمي جديد للمادة</p>
+            </div>
+        </div>
+        <a href="/lesson" class="modern-btn modern-btn-secondary">
+            <i class="fas fa-arrow-right"></i> رجوع
+        </a>
+    </div>
+    
+    <div class="modern-card-body">
+        {{#if error}}
+        <div class="modern-alert modern-alert-danger">
+            <i class="fas fa-exclamation-circle"></i> {{error}}
+        </div>
+        {{/if}}
+        
+        <form action="/lesson/create" method="post" id="createLessonForm" class="modern-form">
+            <div class="form-group-modern full-width">
+                <label for="name" class="form-label">
+                    اسم الدرس <span class="required">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <i class="fas fa-heading input-icon"></i>
+                    <input type="text" 
+                           name="name" 
+                           id="name" 
+                           class="modern-input" 
+                           placeholder="مثال: مقدمة في الجبر، الدرس الأول: التعريفات الأساسية..."
+                           required 
+                           autofocus>
+                </div>
+                <span class="form-hint">أدخل الاسم الكامل للدرس التعليمي</span>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group-modern">
+                    <label for="branchId" class="form-label">
+                        السنة الدراسية <span class="required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-graduation-cap input-icon"></i>
+                        <select name="branchId" id="branchId" class="modern-input" required>
+                            <option value="">-- اختر السنة --</option>
+                            {{#each branches}}
+                            <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group-modern">
+                    <label for="subjectId" class="form-label">
+                        المادة <span class="required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-book input-icon"></i>
+                        <select name="subjectId" id="subjectId" class="modern-input" required>
+                            <option value="">-- اختر المادة --</option>
+                            {{#each subjects}}
+                            <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group-modern">
+                    <label for="unitId" class="form-label">
+                        الوحدة <span class="required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-layer-group input-icon"></i>
+                        <select name="unitId" id="unitId" class="modern-input" required disabled>
+                            <option value="">-- اختر المادة أولاً --</option>
+                        </select>
+                    </div>
+                    <span class="form-hint" id="unitHint">اختر المادة أولاً لتحميل الوحدات</span>
+                </div>
+                
+                <div class="form-group-modern">
+                    <label for="order" class="form-label">ترتيب العرض</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-sort-numeric-down input-icon"></i>
+                        <input type="number" name="order" id="order" class="modern-input" value="0" min="0" placeholder="0">
+                    </div>
+                    <span class="form-hint">كلما كان الرقم أصغر، كلما ظهر الدرس أولاً</span>
+                </div>
+            </div>
+            
+            <div class="form-check-modern">
+                <label class="checkbox-container">
+                    <input type="checkbox" name="isFree" id="isFree">
+                    <span class="checkmark"></span>
+                    <span class="checkbox-label">
+                        <i class="fas fa-gift"></i> درس مجاني (متاح للجميع بدون اشتراك)
+                    </span>
+                </label>
+            </div>
+            
+            <div class="form-group-modern full-width">
+                <label for="description" class="form-label">وصف الدرس</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-align-right input-icon textarea-icon"></i>
+                    <textarea name="description" id="description" class="modern-input modern-textarea" 
+                              rows="4" placeholder="وصف مختصر للدرس..."></textarea>
+                </div>
+                <span class="form-hint">أضف وصفاً يوضح محتوى الدرس وأهدافه</span>
+            </div>
+            
+            <div class="modern-info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>معلومات:</strong> بعد إضافة الدرس، يمكنك إضافة محتوى تعليمي (فيديوهات، PDF، نصوص، اختبارات).
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="modern-btn modern-btn-primary">
+                    <i class="fas fa-save"></i> حفظ الدرس
+                </button>
+                <button type="reset" class="modern-btn modern-btn-secondary">
+                    <i class="fas fa-undo"></i> إعادة تعيين
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    * { direction: rtl; text-align: right; }
+    
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #eef2ff;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --danger: #ef4444;
+        --danger-light: #fee2e2;
+        --info: #3b82f6;
+        --info-light: #dbeafe;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+    }
+    
+    .modern-card {
+        background: white;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        margin: 1.5rem;
+    }
+    
+    .modern-card-header {
+        padding: 1.5rem 2rem;
+        background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .modern-title-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .modern-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    .bg-primary-light { background: var(--primary-light); }
+    .text-primary { color: var(--primary); }
+    
+    .modern-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin: 0 0 0.25rem 0;
+    }
+    
+    .modern-subtitle {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        margin: 0;
+    }
+    
+    .modern-card-body {
+        padding: 2rem;
+    }
+    
+    .modern-form {
+        max-width: 100%;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .full-width {
+        grid-column: span 2;
+        margin-bottom: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .full-width {
+            grid-column: span 1;
+        }
+        .modern-card {
+            margin: 1rem;
+        }
+        .modern-card-header,
+        .modern-card-body {
+            padding: 1rem;
+        }
+    }
+    
+    .form-group-modern {
+        margin-bottom: 0;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+    }
+    
+    .required {
+        color: var(--danger);
+    }
+    
+    .input-wrapper {
+        position: relative;
+    }
+    
+    .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+        font-size: 1rem;
+        pointer-events: none;
+    }
+    
+    .textarea-icon {
+        top: 1rem;
+        transform: none;
+    }
+    
+    .modern-input {
+        width: 100%;
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        color: var(--gray-700);
+        background: white;
+        transition: all 0.2s ease;
+    }
+    
+    .modern-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .modern-input:disabled {
+        background: var(--gray-100);
+        cursor: not-allowed;
+    }
+    
+    .modern-textarea {
+        padding: 1rem 2.5rem 1rem 1rem;
+        resize: vertical;
+    }
+    
+    .form-hint {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--gray-400);
+        margin-top: 0.375rem;
+    }
+    
+    .form-check-modern {
+        margin: 1rem 0 1.5rem 0;
+    }
+    
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        user-select: none;
+    }
+    
+    .checkbox-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+    
+    .checkmark {
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border: 2px solid var(--gray-300);
+        border-radius: var(--radius-sm);
+        transition: all 0.2s ease;
+    }
+    
+    .checkbox-container:hover input ~ .checkmark {
+        border-color: var(--primary);
+    }
+    
+    .checkbox-container input:checked ~ .checkmark {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+    
+    .checkmark:after {
+        content: "";
+        display: none;
+        position: relative;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    
+    .checkbox-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+    
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray-600);
+    }
+    
+    .checkbox-label i {
+        color: var(--success);
+    }
+    
+    .modern-alert {
+        padding: 1rem 1.25rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .modern-alert-danger {
+        background: var(--danger-light);
+        color: var(--danger);
+        border-right: 3px solid var(--danger);
+    }
+    
+    .modern-info-box {
+        background: var(--info-light);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        border-right: 3px solid var(--info);
+        color: var(--info);
+        font-size: 0.875rem;
+    }
+    
+    .modern-info-box i {
+        font-size: 1.25rem;
+        margin-top: 0.125rem;
+    }
+    
+    .modern-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+    }
+    
+    .modern-btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .modern-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: white;
+    }
+    
+    .modern-btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-600);
+        border: 1px solid var(--gray-200);
+    }
+    
+    .modern-btn-secondary:hover {
+        background: var(--gray-200);
+        color: var(--gray-700);
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--gray-200);
+    }
+    
+    .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--gray-300);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const subjectSelect = document.getElementById('subjectId');
+    const unitSelect = document.getElementById('unitId');
+    const unitHint = document.getElementById('unitHint');
+    
+    if (subjectSelect && unitSelect) {
+        subjectSelect.addEventListener('change', async function() {
+            const subjectId = this.value;
+            
+            if (!subjectId) {
+                unitSelect.innerHTML = '<option value="">-- اختر المادة أولاً --</option>';
+                unitSelect.disabled = true;
+                unitHint.textContent = 'اختر المادة أولاً لتحميل الوحدات';
+                unitHint.style.color = 'var(--gray-400)';
+                return;
+            }
+            
+            // Show loading
+            unitSelect.innerHTML = '<option value="">جاري التحميل...</option>';
+            unitSelect.disabled = true;
+            unitHint.innerHTML = '<span class="loading-spinner"></span> جاري تحميل الوحدات...';
+            
+            try {
+                const response = await fetch(`/unit/api/by-subject/${subjectId}`);
+                if (!response.ok) throw new Error('Erreur réseau');
+                const data = await response.json();
+                
+                unitSelect.innerHTML = '<option value="">-- اختر الوحدة --</option>';
+                
+                if (data && data.length > 0) {
+                    data.forEach(unit => {
+                        const option = document.createElement('option');
+                        option.value = unit._id;
+                        option.textContent = unit.name;
+                        unitSelect.appendChild(option);
+                    });
+                    unitSelect.disabled = false;
+                    unitHint.textContent = `تم تحميل ${data.length} وحدة`;
+                    unitHint.style.color = 'var(--success)';
+                } else {
+                    unitSelect.innerHTML = '<option value="">لا توجد وحدات لهذه المادة</option>';
+                    unitSelect.disabled = true;
+                    unitHint.textContent = '⚠️ لا توجد وحدات لهذه المادة، قم بإضافة وحدات أولاً';
+                    unitHint.style.color = 'var(--warning)';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                unitSelect.innerHTML = '<option value="">خطأ في تحميل الوحدات</option>';
+                unitSelect.disabled = true;
+                unitHint.textContent = '❌ حدث خطأ في تحميل الوحدات';
+                unitHint.style.color = 'var(--danger)';
+            }
+        });
+    }
+    
+    // Form validation
+    const form = document.getElementById('createLessonForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const name = document.getElementById('name').value.trim();
+            const branchId = document.getElementById('branchId').value;
+            const subjectId = document.getElementById('subjectId').value;
+            const unitId = document.getElementById('unitId').value;
+            
+            if (!name) {
+                e.preventDefault();
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'الرجاء إدخال اسم الدرس' });
+                return false;
+            }
+            
+            if (!branchId) {
+                e.preventDefault();
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'الرجاء اختيار السنة الدراسية' });
+                return false;
+            }
+            
+            if (!subjectId) {
+                e.preventDefault();
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'الرجاء اختيار المادة' });
+                return false;
+            }
+            
+            if (!unitId) {
+                e.preventDefault();
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'الرجاء اختيار الوحدة' });
+                return false;
+            }
+        });
+    }
+});
+</script>

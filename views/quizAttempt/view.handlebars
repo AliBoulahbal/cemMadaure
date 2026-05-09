@@ -1,0 +1,103 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-file-alt"></i> تفاصيل المحاولة
+        </h3>
+        <div class="card-tools">
+            <a href="/quiz-attempt" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-left"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- معلومات المحاولة -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-user"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">الطالب</span>
+                        <span class="info-box-number">{{attempt.clientId.fullName}}</span>
+                        <small>{{attempt.clientId.email}}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-chalkboard"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">الدرس</span>
+                        <span class="info-box-number">{{attempt.lessonId.name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{totalScore}} / {{totalPossible}}</h3>
+                        <p>النتيجة النهائية</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>{{attempt.submittedAnswers.length}}</h3>
+                        <p>عدد الأسئلة المجاب عنها</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{formatDate attempt.createdAt}}</h3>
+                        <p>تاريخ المحاولة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- تفاصيل الإجابات -->
+        <h4 class="mt-4">تفاصيل الإجابات</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="50">#</th>
+                        <th>السؤال</th>
+                        <th width="100">الإجابة</th>
+                        <th width="80">النتيجة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each detailedAnswers}}
+                    <tr class="{{#if this.isCorrect}}table-success{{else}}table-danger{{/if}}">
+                        <td>{{inc @index}}</td>
+                        <td>
+                            <strong>{{this.question}}</strong>
+                            {{#if this.submittedAnswers.length}}
+                            <br>
+                            <small class="text-muted">
+                                الإجابات المقدمة: {{this.submittedAnswers}}
+                            </small>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if this.isCorrect}}
+                                <span class="badge badge-success">✓ صحيحة</span>
+                            {{else}}
+                                <span class="badge badge-danger">✗ خاطئة</span>
+                            {{/if}}
+                        </td>
+                        <td>{{this.score}} / {{this.maxScore}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

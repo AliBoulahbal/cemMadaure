@@ -1,0 +1,190 @@
+<!-- إحصائيات سريعة -->
+<div class="row mb-4">
+    <div class="col-lg-2 col-md-4 col-6">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3>{{stats.totalLessons}}</h3>
+                <p>إجمالي الدروس</p>
+            </div>
+            <div class="icon"><i class="fas fa-book"></i></div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{stats.lessonsWithContent}}</h3>
+                <p>دروس بمحتوى</p>
+            </div>
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{stats.totalParts}}</h3>
+                <p>إجمالي الأجزاء</p>
+            </div>
+            <div class="icon"><i class="fas fa-layer-group"></i></div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{stats.videos}}</h3>
+                <p>فيديوهات</p>
+            </div>
+            <div class="icon"><i class="fas fa-video"></i></div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{stats.pdfs}}</h3>
+                <p>ملفات PDF</p>
+            </div>
+            <div class="icon"><i class="fas fa-file-pdf"></i></div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-6">
+        <div class="small-box" style="background:#6f42c1;color:#fff">
+            <div class="inner">
+                <h3>{{stats.texts}}</h3>
+                <p>نصوص</p>
+            </div>
+            <div class="icon"><i class="fas fa-align-left"></i></div>
+        </div>
+    </div>
+</div>
+
+<!-- بحث وفلترة -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input type="text" id="searchInput" class="form-control" placeholder="ابحث عن درس..." oninput="filterLessons()">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select id="filterContent" class="form-control form-control-sm" onchange="filterLessons()">
+                    <option value="all">جميع الدروس</option>
+                    <option value="with">دروس بمحتوى</option>
+                    <option value="without">دروس بدون محتوى</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-left">
+                <a href="/content/upload" class="btn btn-success btn-sm">
+                    <i class="fas fa-plus"></i> رفع محتوى جديد
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- قائمة الدروس -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-list"></i> قائمة الدروس
+        </h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered mb-0" id="lessonsTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width:40px">#</th>
+                        <th>الدرس</th>
+                        <th>السنة</th>
+                        <th>المادة</th>
+                        <th>الوحدة</th>
+                        <th style="width:80px" class="text-center">الأجزاء</th>
+                        <th style="width:100px" class="text-center">المحتوى</th>
+                        <th style="width:160px" class="text-center">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each lessons}}
+                    <tr class="lesson-row" data-name="{{this.name}}" data-has-content="{{this.partsCount}}">
+                        <td class="text-muted small">{{inc @index}}</td>
+                        <td>
+                            <strong>{{this.name}}</strong>
+                            {{#if this.remarque}}
+                            <br><small class="text-muted">{{this.remarque}}</small>
+                            {{/if}}
+                        </td>
+                        <td><span class="badge badge-secondary">{{this.branchId.name}}</span></td>
+                        <td>{{this.subjectId.name}}</td>
+                        <td class="text-muted small">{{this.unitId.name}}</td>
+                        <td class="text-center">
+                            {{#if this.partsCount}}
+                            <span class="badge badge-success">{{this.partsCount}}</span>
+                            {{else}}
+                            <span class="badge badge-light text-muted">0</span>
+                            {{/if}}
+                        </td>
+                        <td class="text-center">
+                            {{#if this.hasVideo}}
+                            <i class="fas fa-video text-warning" title="فيديو"></i>
+                            {{/if}}
+                            {{#if this.hasPdf}}
+                            <i class="fas fa-file-pdf text-danger mr-1" title="PDF"></i>
+                            {{/if}}
+                            {{#unless this.partsCount}}
+                            <span class="text-muted small">—</span>
+                            {{/unless}}
+                        </td>
+                        <td class="text-center">
+                            <a href="/content/manage/{{this.id}}" class="btn btn-info btn-xs mr-1" title="إدارة المحتوى">
+                                <i class="fas fa-folder-open"></i> إدارة
+                            </a>
+                            <a href="/lesson-part/upload/{{this.id}}" class="btn btn-success btn-xs" title="رفع محتوى">
+                                <i class="fas fa-upload"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                            لا توجد دروس
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer text-muted small">
+        إجمالي: <span id="visibleCount">{{lessons.length}}</span> درس
+    </div>
+</div>
+
+<script>
+function filterLessons() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const filter = document.getElementById('filterContent').value;
+    const rows = document.querySelectorAll('.lesson-row');
+    let visible = 0;
+
+    rows.forEach(row => {
+        const name = (row.dataset.name || '').toLowerCase();
+        const hasContent = parseInt(row.dataset.hasContent || '0') > 0;
+
+        const matchSearch = !search || name.includes(search);
+        const matchFilter =
+            filter === 'all' ||
+            (filter === 'with' && hasContent) ||
+            (filter === 'without' && !hasContent);
+
+        const show = matchSearch && matchFilter;
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+
+    document.getElementById('visibleCount').textContent = visible;
+}
+</script>

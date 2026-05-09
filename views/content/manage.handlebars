@@ -1,0 +1,1255 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-file-alt"></i> محتوى الدرس: {{lesson.name}}
+        </h3>
+        <div class="card-tools">
+            <a href="/lesson" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+            <a href="/content/upload" class="btn-primary-sm">
+                <i class="fas fa-plus"></i> إضافة محتوى
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- بطاقات معلومات الدرس -->
+        <div class="lesson-info-grid">
+            <div class="info-item info-year">
+                <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="info-details">
+                    <span class="info-label">السنة الدراسية</span>
+                    <span class="info-value">{{lesson.branchId.name}}</span>
+                </div>
+            </div>
+            <div class="info-item info-subject">
+                <div class="info-icon"><i class="fas fa-book"></i></div>
+                <div class="info-details">
+                    <span class="info-label">المادة</span>
+                    <span class="info-value">{{lesson.subjectId.name}}</span>
+                </div>
+            </div>
+            <div class="info-item info-unit">
+                <div class="info-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="info-details">
+                    <span class="info-label">الوحدة</span>
+                    <span class="info-value">{{lesson.unitId.name}}</span>
+                </div>
+            </div>
+            <div class="info-item info-total">
+                <div class="info-icon"><i class="fas fa-database"></i></div>
+                <div class="info-details">
+                    <span class="info-label">إجمالي المحتوى</span>
+                    <span class="info-value">{{stats.total}}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- إحصائيات سريعة -->
+        <div class="stats-grid">
+            <div class="stat-item" data-type="video">
+                <div class="stat-icon"><i class="fas fa-video"></i></div>
+                <div class="stat-number">{{stats.videos}}</div>
+                <div class="stat-name">فيديوهات</div>
+            </div>
+            <div class="stat-item" data-type="pdf">
+                <div class="stat-icon"><i class="fas fa-file-pdf"></i></div>
+                <div class="stat-number">{{stats.pdfs}}</div>
+                <div class="stat-name">PDF</div>
+            </div>
+            <div class="stat-item" data-type="image">
+                <div class="stat-icon"><i class="fas fa-image"></i></div>
+                <div class="stat-number">{{stats.images}}</div>
+                <div class="stat-name">صور</div>
+            </div>
+            <div class="stat-item" data-type="text">
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-number">{{stats.texts}}</div>
+                <div class="stat-name">نصوص</div>
+            </div>
+            <div class="stat-item" data-type="quiz">
+                <div class="stat-icon"><i class="fas fa-question-circle"></i></div>
+                <div class="stat-number">{{stats.quizzes}}</div>
+                <div class="stat-name">اختبارات</div>
+            </div>
+        </div>
+        
+        <!-- Barre d'outils -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <span class="toolbar-title"><i class="fas fa-list-ul"></i> المحتويات</span>
+            </div>
+            <div class="toolbar-right">
+                {{#if stats.pending}}
+                <span class="badge-pending">
+                    <i class="fas fa-clock"></i> قيد المراجعة: {{stats.pending}}
+                </span>
+                {{/if}}
+                {{#if stats.published}}
+                <span class="badge-published">
+                    <i class="fas fa-check-circle"></i> منشور: {{stats.published}}
+                </span>
+                {{/if}}
+                <span class="drag-hint">
+                    <i class="fas fa-arrows-alt"></i> اسحب لترتيب
+                </span>
+            </div>
+        </div>
+        
+        <!-- Liste des contenus -->
+        <div class="content-table-wrapper">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th class="col-drag"></th>
+                        <th class="col-type">النوع</th>
+                        <th class="col-title">العنوان</th>
+                        <th class="col-status">الحالة</th>
+                        <th class="col-order">الترتيب</th>
+                        <th class="col-actions">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="sortable-list">
+                    {{#each contents}}
+                    <tr data-id="{{this._id}}" data-order="{{this.order}}" class="{{#if isPending}}row-pending{{/if}}">
+                        <td class="drag-cell">
+                            <i class="fas fa-grip-vertical drag-handle"></i>
+                        </td>
+                        <td>
+                            {{#if (eq this.type 'video')}}
+                                <span class="type-badge type-video"><i class="fas fa-video"></i> فيديو</span>
+                            {{else if (eq this.type 'pdf')}}
+                                <span class="type-badge type-pdf"><i class="fas fa-file-pdf"></i> PDF</span>
+                            {{else if (eq this.type 'image')}}
+                                <span class="type-badge type-image"><i class="fas fa-image"></i> صورة</span>
+                            {{else if (eq this.type 'text')}}
+                                <span class="type-badge type-text"><i class="fas fa-file-alt"></i> نص</span>
+                            {{else if (eq this.type 'quiz')}}
+                                <span class="type-badge type-quiz"><i class="fas fa-question-circle"></i> اختبار</span>
+                            {{/if}}
+                        </td>
+                        <td class="title-cell">
+                            <div class="title-main">{{this.title}}</div>
+                            {{#if (eq this.type 'image')}}
+                            <div class="title-sub">
+                                <a href="{{this.data.url}}" target="_blank" class="image-link">
+                                    <i class="fas fa-external-link-alt"></i> عرض الصورة
+                                </a>
+                            </div>
+                            {{/if}}
+                            {{#if (eq this.type 'text')}}
+                            <div class="title-sub text-preview">{{truncate this.data.body 80}}</div>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if isPending}}
+                                <span class="status-badge status-pending">
+                                    <i class="fas fa-hourglass-half"></i> قيد المراجعة
+                                </span>
+                            {{else if isPublished}}
+                                <span class="status-badge status-published">
+                                    <i class="fas fa-check-circle"></i> منشور
+                                </span>
+                            {{else}}
+                                <span class="status-badge status-draft">
+                                    <i class="fas fa-pencil-alt"></i> مسودة
+                                </span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <input type="number" class="order-input" value="{{this.order}}" data-id="{{this._id}}" min="0">
+                        </td>
+                        <td>
+                            <div class="action-group">
+                                <button class="action-icon view" data-type="{{this.type}}" data-content='{{json this}}' title="معاينة">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-icon edit" data-type="{{this.type}}" data-id="{{this._id}}" 
+                                    data-title="{{this.title}}" data-content='{{json this}}' title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                {{#if ../canPublish}}
+                                    {{#if isPending}}
+                                    <button class="action-icon approve" data-id="{{this._id}}" data-title="{{this.title}}" title="موافقة">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                    <button class="action-icon reject" data-id="{{this._id}}" data-title="{{this.title}}" title="رفض">
+                                        <i class="fas fa-times-circle"></i>
+                                    </button>
+                                    {{/if}}
+                                {{/if}}
+                                <form action="/content/delete/{{this._id}}?_method=DELETE" method="post" class="delete-form">
+                                    <button type="submit" class="action-icon delete" title="حذف" onclick="return confirm('هل أنت متأكد؟')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </table>
+                    </tr>
+                    {{else}}
+                    <tr class="empty-row">
+                        <td colspan="6">
+                            <div class="empty-content">
+                                <i class="fas fa-folder-open"></i>
+                                <p>لا يوجد محتوى لهذا الدرس</p>
+                                <a href="/content/upload" class="btn-outline">إضافة محتوى</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Actions de réorganisation -->
+        <div class="order-actions">
+            <button type="button" class="btn-save" id="saveOrder">
+                <i class="fas fa-save"></i> حفظ الترتيب
+            </button>
+            <button type="button" class="btn-reset" id="resetOrder">
+                <i class="fas fa-undo-alt"></i> إعادة تعيين
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de visualisation -->
+<div class="modal fade" id="contentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-eye"></i> معاينة المحتوى</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="contentModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary-sm" data-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'édition unifiée -->
+<div class="modal fade" id="editContentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-edit"></i> تعديل المحتوى</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editContentForm">
+                    <input type="hidden" id="editContentId">
+                    <div class="form-group">
+                        <label class="form-label">العنوان</label>
+                        <input type="text" class="form-control" id="editTitle" required>
+                    </div>
+                    <div id="editDynamicFields"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary-sm" data-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn-primary-sm" id="saveContentChanges">حفظ التغييرات</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de rejet -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-times-circle"></i> رفض المحتوى</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="rejectContentId">
+                <div class="form-group">
+                    <label>سبب الرفض</label>
+                    <textarea id="rejectionReason" class="form-control" rows="3" placeholder="اكتب سبب الرفض..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary-sm" data-dismiss="modal">إلغاء</button>
+                <button type="button" id="confirmReject" class="btn-danger-sm">تأكيد الرفض</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+/* ============================================
+   تصميم عصري ونظيف
+   ============================================ */
+
+/* الألوان الأساسية */
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-600: #475569;
+    --gray-800: #1e293b;
+}
+
+/* بطاقات المعلومات */
+.lesson-info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    background: white;
+    border-radius: 20px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid var(--gray-200);
+    transition: all 0.2s;
+}
+
+.info-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.info-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.info-year .info-icon { background: var(--primary); }
+.info-subject .info-icon { background: var(--success); }
+.info-unit .info-icon { background: var(--warning); }
+.info-total .info-icon { background: var(--gray-600); }
+
+.info-details {
+    flex: 1;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gray-600);
+    margin-bottom: 0.2rem;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Statistiques */
+.stats-grid {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+
+.stat-icon {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+    display: inline-block;
+}
+
+.stat-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.stat-name {
+    font-size: 0.65rem;
+    color: var(--gray-600);
+}
+
+/* Barre d'outils */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--gray-50);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.toolbar-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gray-800);
+}
+
+.toolbar-right {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge-pending {
+    background: #fffbeb;
+    color: var(--warning);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+}
+
+.badge-published {
+    background: #ecfdf5;
+    color: var(--success);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+}
+
+.drag-hint {
+    font-size: 0.7rem;
+    color: var(--gray-600);
+}
+
+/* Tableau */
+.content-table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--gray-200);
+}
+
+.content-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.content-table th {
+    text-align: right;
+    padding: 0.9rem 1rem;
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--gray-600);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.content-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: middle;
+}
+
+.content-table tr:hover {
+    background: var(--gray-50);
+}
+
+/* Largeurs des colonnes */
+.col-drag { width: 40px; }
+.col-type { width: 100px; }
+.col-status { width: 120px; }
+.col-order { width: 90px; }
+.col-actions { width: 180px; }
+
+/* Cellule de glissement */
+.drag-cell {
+    text-align: center;
+    cursor: grab;
+    color: var(--gray-600);
+}
+
+.drag-cell:active {
+    cursor: grabbing;
+}
+
+.row-pending {
+    background: #fffbeb;
+}
+
+/* Badges de type */
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.type-video { background: #eff6ff; color: var(--primary); }
+.type-pdf { background: #fef2f2; color: var(--danger); }
+.type-image { background: #f1f5f9; color: var(--gray-600); }
+.type-text { background: #ecfdf5; color: var(--success); }
+.type-quiz { background: #fffbeb; color: var(--warning); }
+
+/* Titre */
+.title-cell {
+    max-width: 280px;
+}
+
+.title-main {
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.2rem;
+}
+
+.title-sub {
+    font-size: 0.7rem;
+}
+
+.image-link {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.text-preview {
+    color: var(--gray-600);
+    display: block;
+}
+
+/* Badges de statut */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-pending { background: #fffbeb; color: var(--warning); }
+.status-published { background: #ecfdf5; color: var(--success); }
+.status-draft { background: #f1f5f9; color: var(--gray-600); }
+
+/* Input d'ordre */
+.order-input {
+    width: 65px;
+    padding: 0.35rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.order-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Groupe d'actions */
+.action-group {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-icon.view { color: var(--primary); }
+.action-icon.view:hover { background: #eff6ff; }
+
+.action-icon.edit { color: var(--warning); }
+.action-icon.edit:hover { background: #fffbeb; }
+
+.action-icon.approve { color: var(--success); }
+.action-icon.approve:hover { background: #ecfdf5; }
+
+.action-icon.reject { color: var(--danger); }
+.action-icon.reject:hover { background: #fef2f2; }
+
+.action-icon.delete { color: var(--danger); }
+.action-icon.delete:hover { background: #fef2f2; }
+
+.delete-form {
+    display: inline;
+}
+
+/* Actions de réorganisation */
+.order-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-save, .btn-reset {
+    padding: 0.5rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: none;
+}
+
+.btn-save {
+    background: var(--success);
+    color: white;
+}
+
+.btn-save:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.btn-reset {
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+.btn-reset:hover {
+    background: var(--gray-200);
+}
+
+/* Boutons */
+.btn-back, .btn-primary-sm, .btn-secondary-sm, .btn-danger-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-back {
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+.btn-back:hover {
+    background: var(--gray-200);
+}
+
+.btn-primary-sm {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary-sm:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary-sm {
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+.btn-danger-sm {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-outline {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* État vide */
+.empty-row td {
+    padding: 2rem;
+}
+
+.empty-content {
+    text-align: center;
+    color: var(--gray-600);
+}
+
+.empty-content i {
+    font-size: 3rem;
+    color: var(--gray-200);
+    margin-bottom: 0.5rem;
+}
+
+/* Sortable */
+.sortable-ghost {
+    opacity: 0.4;
+    background: var(--gray-100);
+}
+
+.sortable-drag {
+    opacity: 0.6;
+}
+
+/* Modales */
+.modal-content {
+    border-radius: 24px;
+    border: none;
+}
+
+.modal-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .lesson-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .lesson-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .col-actions {
+        min-width: 160px;
+    }
+}
+</style>
+
+<script>
+// ============================================
+// Sortable.js pour le drag & drop
+// ============================================
+let sortable = null;
+let originalOrders = [];
+
+function initSortable() {
+    const tbody = document.getElementById('sortable-list');
+    if (!tbody) return;
+    
+    originalOrders = [];
+    document.querySelectorAll('.order-input').forEach(input => {
+        originalOrders.push({ 
+            id: input.dataset.id, 
+            order: parseInt(input.value) 
+        });
+    });
+    
+    if (sortable) sortable.destroy();
+    sortable = new Sortable(tbody, {
+        handle: '.drag-handle',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        onEnd: function() {
+            document.querySelectorAll('#sortable-list tr').forEach((row, idx) => {
+                const orderInput = row.querySelector('.order-input');
+                if (orderInput) orderInput.value = idx;
+            });
+        }
+    });
+}
+
+function resetOrder() {
+    if (!originalOrders.length) return;
+    
+    originalOrders.forEach(orig => {
+        const input = document.querySelector(`.order-input[data-id="${orig.id}"]`);
+        if (input) input.value = orig.order;
+    });
+    
+    const tbody = document.getElementById('sortable-list');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort((a, b) => {
+        const aOrder = parseInt(a.querySelector('.order-input')?.value || 0);
+        const bOrder = parseInt(b.querySelector('.order-input')?.value || 0);
+        return aOrder - bOrder;
+    });
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+// Sauvegarder l'ordre
+document.getElementById('saveOrder')?.addEventListener('click', async function() {
+    const orders = [];
+    document.querySelectorAll('.order-input').forEach(input => {
+        orders.push({ 
+            id: input.dataset.id, 
+            order: parseInt(input.value) || 0 
+        });
+    });
+    
+    const btn = this;
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+    
+    try {
+        const response = await fetch('/content/reorder', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orders: orders })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'تم الحفظ', 
+                text: 'تم تحديث ترتيب المحتوى', 
+                timer: 1500, 
+                showConfirmButton: false 
+            });
+            originalOrders = [...orders];
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire({ icon: 'error', title: 'خطأ', text: result.error });
+        }
+    } catch (error) {
+        Swal.fire({ icon: 'error', title: 'خطأ', text: error.message });
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
+});
+
+// Réinitialiser l'ordre
+document.getElementById('resetOrder')?.addEventListener('click', function() {
+    Swal.fire({
+        title: 'إعادة تعيين الترتيب؟',
+        text: "سيتم استعادة الترتيب الأصلي",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f59e0b',
+        confirmButtonText: 'نعم، إعادة تعيين',
+        cancelButtonText: 'إلغاء'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            resetOrder();
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'تم', 
+                text: 'تم إعادة تعيين الترتيب', 
+                timer: 1000, 
+                showConfirmButton: false 
+            });
+        }
+    });
+});
+
+// ============================================
+// Visualisation du contenu
+// ============================================
+document.querySelectorAll('.view').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const content = JSON.parse(this.dataset.content);
+        const modalBody = document.getElementById('contentModalBody');
+        
+        if (content.type === 'video') {
+            modalBody.innerHTML = `<video width="100%" controls src="${content.data.url}"></video>`;
+        } else if (content.type === 'pdf') {
+            modalBody.innerHTML = `<iframe src="${content.data.url}" width="100%" height="500px"></iframe>`;
+        } else if (content.type === 'image') {
+            modalBody.innerHTML = `<img src="${content.data.url}" class="img-fluid">`;
+        } else if (content.type === 'text') {
+            modalBody.innerHTML = `<div class="p-3"><strong>${content.title}</strong><div class="mt-2">${content.data.body}</div></div>`;
+        } else if (content.type === 'quiz') {
+            let html = '<div class="list-group">';
+            content.data.questions.forEach((q, i) => {
+                html += `<div class="list-group-item"><strong>${i+1}. ${q.questionText}</strong><ul class="mt-2">${q.options.map(o => `<li>${o.text} ${o.isCorrect ? '✓' : ''}</li>`).join('')}</ul></div>`;
+            });
+            html += '</div>';
+            modalBody.innerHTML = html;
+        }
+        
+        $('#contentModal').modal('show');
+    });
+});
+
+// ============================================
+// Édition unifiée de tous les types - VERSION CORRIGÉE
+// ============================================
+let editorInstance = null;
+let currentEditType = null;
+
+// Ajouter la modale d'édition si elle n'existe pas
+if (!document.getElementById('editContentModal')) {
+    const modalHtml = `
+    <div class="modal fade" id="editContentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit"></i> تعديل المحتوى</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editContentForm">
+                        <input type="hidden" id="editContentId">
+                        <div class="form-group">
+                            <label class="form-label">العنوان <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editTitle" required>
+                        </div>
+                        <div id="editDynamicFields"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary-sm" data-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn-primary-sm" id="saveContentChanges">حفظ التغييرات</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// Gestionnaire d'édition
+document.querySelectorAll('.edit, .action-icon.edit').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const type = this.dataset.type;
+        const id = this.dataset.id;
+        const title = this.dataset.title;
+        let contentData = null;
+        
+        // Récupérer les données du contenu
+        if (this.dataset.content) {
+            try {
+                contentData = JSON.parse(this.dataset.content);
+            } catch(e) {
+                console.error('Erreur parsing content:', e);
+            }
+        }
+        
+        currentEditType = type;
+        
+        document.getElementById('editContentId').value = id;
+        document.getElementById('editTitle').value = title || '';
+        
+        const dynamicFields = document.getElementById('editDynamicFields');
+        
+        // Générer les champs selon le type
+        if (type === 'text') {
+            dynamicFields.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">المحتوى <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="editTextBody" rows="10">${contentData?.data?.body || ''}</textarea>
+                </div>
+            `;
+            setTimeout(() => {
+                if (editorInstance) editorInstance.destroy();
+                editorInstance = CKEDITOR.replace('editTextBody', {
+                    height: 300,
+                    language: 'ar',
+                    contentsLangDirection: 'rtl'
+                });
+            }, 100);
+        } 
+        // Gestionnaire d'édition pour les images
+else if (type === 'image') {
+    dynamicFields.innerHTML = `
+        <div class="form-group">
+            <label class="form-label">URL de l'image <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="editImageUrl" value="${contentData?.data?.url || ''}" placeholder="https://example.com/image.jpg">
+            <small class="form-text text-muted">لاحظ: /uploads/images/image-xxx.png</small>
+        </div>
+        <div class="form-group text-center" id="imagePreviewArea">
+            ${contentData?.data?.url ? `<img src="${contentData.data.url}" style="max-width: 200px; border-radius: 8px; border: 1px solid #ddd; padding: 5px;">` : '<span class="text-muted">لا توجد معاينة</span>'}
+        </div>
+        <div class="alert alert-warning mt-2">
+            <i class="fas fa-info-circle"></i> 
+            <strong>Remarque:</strong> Le chemin doit commencer par /uploads/images/
+        </div>
+    `;
+    
+    const urlInput = document.getElementById('editImageUrl');
+    if (urlInput) {
+        // Nettoyer l'URL si nécessaire
+        let currentUrl = urlInput.value;
+        if (currentUrl && !currentUrl.startsWith('/uploads/')) {
+            urlInput.value = '/uploads/images/' + currentUrl.split('/').pop();
+        }
+        
+        urlInput.addEventListener('input', function() {
+            let value = this.value;
+            // Auto-correction du chemin
+            if (value && !value.startsWith('/uploads/')) {
+                if (value.includes('uploads/images/')) {
+                    const parts = value.split('uploads/images/');
+                    this.value = '/uploads/images/' + parts[parts.length - 1];
+                }
+            }
+            
+            const preview = document.getElementById('imagePreviewArea');
+            if (this.value && this.value.trim()) {
+                preview.innerHTML = `<img src="${this.value}" style="max-width: 200px; border-radius: 8px; border: 1px solid #ddd; padding: 5px;" onerror="this.src='https://placehold.co/200x150?text=Image+non+trouvée'">`;
+            } else {
+                preview.innerHTML = '<span class="text-muted">لا توجد معاينة</span>';
+            }
+        });
+    }
+}
+        else if (type === 'video') {
+            dynamicFields.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">URL de la vidéo <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="editVideoUrl" value="${contentData?.data?.url || ''}" placeholder="https://example.com/video.mp4">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المدة (ثواني)</label>
+                    <input type="number" class="form-control" id="editDuration" value="${contentData?.data?.duration || 0}">
+                </div>
+            `;
+        } 
+        else if (type === 'pdf') {
+            dynamicFields.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">URL du PDF <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="editPdfUrl" value="${contentData?.data?.url || ''}" placeholder="https://example.com/document.pdf">
+                </div>
+            `;
+        } 
+        else if (type === 'quiz') {
+            dynamicFields.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> 
+                    لتعديل الاختبار، يرجى حذفه وإعادة إنشائه.
+                </div>
+            `;
+        }
+        
+        $('#editContentModal').modal('show');
+    });
+});
+
+// Sauvegarde des modifications - VERSION CORRIGÉE
+document.getElementById('saveContentChanges')?.addEventListener('click', async function() {
+    const contentId = document.getElementById('editContentId').value;
+    const title = document.getElementById('editTitle').value.trim();
+    
+    // Validation du titre
+    if (!title) {
+        Swal.fire({ icon: 'error', title: 'خطأ', text: 'العنوان مطلوب' });
+        return;
+    }
+    
+    let data = {};
+    let hasData = false;
+    
+    // Récupérer les données selon le type
+    if (currentEditType === 'text') {
+        const body = editorInstance ? editorInstance.getData() : document.getElementById('editTextBody')?.value;
+        if (!body || body.trim() === '') {
+            Swal.fire({ icon: 'error', title: 'خطأ', text: 'المحتوى مطلوب' });
+            return;
+        }
+        data = { body: body };
+        hasData = true;
+    } 
+    else if (currentEditType === 'image') {
+        const url = document.getElementById('editImageUrl')?.value.trim();
+        if (!url) {
+            Swal.fire({ icon: 'error', title: 'خطأ', text: 'URL الصورة مطلوب' });
+            return;
+        }
+        data = { url: url };
+        hasData = true;
+    } 
+    else if (currentEditType === 'video') {
+        const url = document.getElementById('editVideoUrl')?.value.trim();
+        if (!url) {
+            Swal.fire({ icon: 'error', title: 'خطأ', text: 'URL الفيديو مطلوب' });
+            return;
+        }
+        data = { 
+            url: url, 
+            duration: parseInt(document.getElementById('editDuration')?.value) || 0 
+        };
+        hasData = true;
+    } 
+    else if (currentEditType === 'pdf') {
+        const url = document.getElementById('editPdfUrl')?.value.trim();
+        if (!url) {
+            Swal.fire({ icon: 'error', title: 'خطأ', text: 'URL PDF مطلوب' });
+            return;
+        }
+        data = { url: url };
+        hasData = true;
+    }
+    
+    if (!hasData && currentEditType !== 'quiz') {
+        Swal.fire({ icon: 'error', title: 'خطأ', text: 'البيانات مطلوبة' });
+        return;
+    }
+    
+    const btn = this;
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+    
+    try {
+        const response = await fetch(`/content/update/${contentId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, data })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'تم!', 
+                text: result.warning || 'تم تحديث المحتوى بنجاح',
+                timer: 1500, 
+                showConfirmButton: false 
+            });
+            $('#editContentModal').modal('hide');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire({ icon: 'error', title: 'خطأ', text: result.error || 'Erreur lors de la mise à jour' });
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        Swal.fire({ icon: 'error', title: 'خطأ', text: error.message });
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
+});
+
+// ============================================
+// Approbation
+// ============================================
+document.querySelectorAll('.approve').forEach(btn => {
+    btn.addEventListener('click', async function() {
+        const result = await Swal.fire({
+            title: 'تأكيد الموافقة',
+            text: 'هل أنت متأكد من الموافقة على نشر هذا المحتوى؟',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'نعم، وافق',
+            cancelButtonText: 'إلغاء'
+        });
+        
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/approval/content/${this.dataset.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'PUBLISHED' })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    Swal.fire('تم!', 'تم نشر المحتوى', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('خطأ', data.error, 'error');
+                }
+            } catch (error) {
+                Swal.fire('خطأ', error.message, 'error');
+            }
+        }
+    });
+});
+
+// ============================================
+// Rejet
+// ============================================
+let currentRejectId = null;
+
+document.querySelectorAll('.reject').forEach(btn => {
+    btn.addEventListener('click', function() {
+        currentRejectId = this.dataset.id;
+        $('#rejectModal').modal('show');
+    });
+});
+
+document.getElementById('confirmReject')?.addEventListener('click', async function() {
+    const reason = document.getElementById('rejectionReason').value;
+    if (!reason) {
+        Swal.fire('خطأ', 'الرجاء إدخال سبب الرفض', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/approval/content/${currentRejectId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'REJECTED', rejectionReason: reason })
+        });
+        const data = await response.json();
+        if (data.success) {
+            Swal.fire('تم!', 'تم رفض المحتوى', 'success');
+            $('#rejectModal').modal('hide');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire('خطأ', data.error, 'error');
+        }
+    } catch (error) {
+        Swal.fire('خطأ', error.message, 'error');
+    }
+});
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    initSortable();
+});
+</script>

@@ -1,0 +1,146 @@
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-semibold">
+                <i class="fab fa-vimeo text-primary me-2"></i>Ajouter un Reel
+            </h4>
+            <p class="text-muted small mt-1">Ajouter une vidéo courte pour la section Reels/Shorts</p>
+        </div>
+        <a href="/vimeo-code" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-right me-1"></i>Retour
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form action="/vimeo-code/reel/create" method="post">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Les Reels sont des vidéos courtes (type TikTok/Shorts) qui apparaîtront dans la section dédiée de l'application mobile.
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">URL Vimeo <span class="text-danger">*</span></label>
+                        <input type="url" class="form-control" name="videoUrl" required 
+                               placeholder="https://vimeo.com/123456789">
+                        <div class="form-text small">Collez l'URL de votre vidéo Vimeo</div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">Titre <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="title" required 
+                               placeholder="Ex: Cours de maths - Les équations">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">Description</label>
+                        <textarea class="form-control" name="description" rows="3" 
+                                  placeholder="Description courte de la vidéo..."></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Nom de l'auteur</label>
+                        <input type="text" class="form-control" name="userName" 
+                               value="Éducation CEM" placeholder="Nom de l'auteur">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">URL photo de profil</label>
+                        <input type="url" class="form-control" name="userPhotoUrl" 
+                               placeholder="https://... (optionnel)">
+                        <div class="form-text small">Photo de profil de l'auteur</div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fab fa-vimeo me-1"></i>Créer le Reel
+                        </button>
+                        <a href="/vimeo-code" class="btn btn-light px-4">Annuler</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Aperçu de l'URL Vimeo -->
+    <div class="card border-0 shadow-sm mt-4" id="previewCard" style="display:none;">
+        <div class="card-header bg-white border-0">
+            <h6 class="mb-0">
+                <i class="fas fa-eye me-2"></i>Aperçu
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="ratio ratio-16x9">
+                <iframe id="vimeoPreview" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Aperçu automatique de la vidéo Vimeo
+const urlInput = document.querySelector('input[name="videoUrl"]');
+const previewCard = document.getElementById('previewCard');
+const vimeoPreview = document.getElementById('vimeoPreview');
+
+urlInput.addEventListener('input', function() {
+    const url = this.value;
+    const vimeoRegex = /vimeo\.com\/(?:video\/)?(\d+)/i;
+    const match = url.match(vimeoRegex);
+    
+    if (match && match[1]) {
+        const videoId = match[1];
+        vimeoPreview.src = `https://player.vimeo.com/video/${videoId}?autoplay=0&badge=0&byline=0&portrait=0&title=0`;
+        previewCard.style.display = 'block';
+    } else {
+        previewCard.style.display = 'none';
+        vimeoPreview.src = '';
+    }
+});
+</script>
+
+<style>
+.card {
+    border-radius: 20px;
+}
+.form-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+}
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+.btn-primary {
+    background: #3b82f6;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.2rem;
+}
+.btn-light {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+.ratio {
+    border-radius: 12px;
+    overflow: hidden;
+}
+.alert-info {
+    background: #e0f2fe;
+    border: none;
+    color: #0369a1;
+    border-radius: 12px;
+}
+</style>

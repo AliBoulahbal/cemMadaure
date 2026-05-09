@@ -1,0 +1,368 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-users"></i> المستخدمون
+        </h3>
+        <div class="card-tools">
+            <a href="/users/create" class="btn-add">
+                <i class="fas fa-plus"></i> إضافة مستخدم
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <!-- بطاقات الإحصائيات -->
+        <div class="stats-grid">
+            <div class="stat-card stat-total">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.total}}</div>
+                    <div class="stat-label">المجموع</div>
+                </div>
+            </div>
+            <div class="stat-card stat-super">
+                <div class="stat-icon"><i class="fas fa-crown"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.super_admin}}</div>
+                    <div class="stat-label">مدير عام</div>
+                </div>
+            </div>
+            <div class="stat-card stat-admin">
+                <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.admin}}</div>
+                    <div class="stat-label">مدير</div>
+                </div>
+            </div>
+            <div class="stat-card stat-teacher">
+                <div class="stat-icon"><i class="fas fa-chalkboard-user"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.teacher}}</div>
+                    <div class="stat-label">أستاذ</div>
+                </div>
+            </div>
+            <div class="stat-card stat-viewer">
+                <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.viewer}}</div>
+                    <div class="stat-label">مشاهد</div>
+                </div>
+            </div>
+            <div class="stat-card stat-active">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value">{{stats.active}}</div>
+                    <div class="stat-label">نشط</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- جدول المستخدمين -->
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="col-num">#</th>
+                        <th>الاسم الكامل</th>
+                        <th>اسم المستخدم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>الدور</th>
+                        <th>الحالة</th>
+                        <th>تاريخ التسجيل</th>
+                        <th class="col-actions">إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <td class="text-center">{{inc @index}}</td>
+                        <td><strong>{{this.fullName}}</strong></td>
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
+                        <td>
+                            {{#if (eq this.role 'super_admin')}}
+                                <span class="role-badge role-super"><i class="fas fa-crown"></i> مدير عام</span>
+                            {{else if (eq this.role 'admin')}}
+                                <span class="role-badge role-admin"><i class="fas fa-user-shield"></i> مدير</span>
+                            {{else if (eq this.role 'teacher')}}
+                                <span class="role-badge role-teacher"><i class="fas fa-chalkboard-user"></i> أستاذ</span>
+                            {{else}}
+                                <span class="role-badge role-viewer"><i class="fas fa-eye"></i> مشاهد</span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if (eq this.status 'active')}}
+                                <span class="status-badge status-active">نشط</span>
+                            {{else}}
+                                <span class="status-badge status-inactive">غير نشط</span>
+                            {{/if}}
+                        </td>
+                        <td><span class="date-badge">{{formatDate this.createdAt}}</span></td>
+                        <td class="actions-cell">
+                            <div class="action-group">
+                                <a href="/users/view/{{this._id}}" class="action-icon view" title="عرض">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="/users/edit/{{this._id}}" class="action-icon edit" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/users/change-password/{{this._id}}" class="action-icon key" title="تغيير كلمة المرور">
+                                    <i class="fas fa-key"></i>
+                                </a>
+                                {{#if (neq this._id ../currentUserId)}}
+                                <form action="/users/delete/{{this._id}}?_method=DELETE" method="post" class="delete-form">
+                                    <button type="submit" class="action-icon delete" title="حذف" onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                                {{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="8" class="empty-row">
+                            <div class="empty-state">
+                                <i class="fas fa-users fa-3x"></i>
+                                <p>لا يوجد مستخدمين</p>
+                                <a href="/users/create" class="btn-link">إضافة مستخدم جديد</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ============================================
+   تصميم المستخدمين - نسخة موحدة
+   ============================================ */
+
+/* بطاقات الإحصائيات */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border: 1px solid #eef2f6;
+    transition: all 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.stat-total .stat-icon { background: #eff6ff; color: #3b82f6; }
+.stat-super .stat-icon { background: #fef2f2; color: #ef4444; }
+.stat-admin .stat-icon { background: #fffbeb; color: #f59e0b; }
+.stat-teacher .stat-icon { background: #ecfdf5; color: #10b981; }
+.stat-viewer .stat-icon { background: #f1f5f9; color: #64748b; }
+.stat-active .stat-icon { background: #ecfdf5; color: #10b981; }
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+/* جدول البيانات */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.data-table th {
+    text-align: right;
+    padding: 0.9rem 1rem;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.data-table tr:hover {
+    background: #fafcff;
+}
+
+.col-num { width: 60px; text-align: center; }
+.col-actions { width: 140px; }
+
+/* علامات الأدوار */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.role-super { background: #fef2f2; color: #ef4444; }
+.role-admin { background: #fffbeb; color: #f59e0b; }
+.role-teacher { background: #ecfdf5; color: #10b981; }
+.role-viewer { background: #f1f5f9; color: #64748b; }
+
+/* علامات الحالة */
+.status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.status-active { background: #ecfdf5; color: #10b981; }
+.status-inactive { background: #fef2f2; color: #ef4444; }
+
+/* تاريخ */
+.date-badge {
+    font-size: 0.7rem;
+    color: #64748b;
+    background: #f8fafc;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+}
+
+/* أزرار الإجراءات */
+.action-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.action-icon.view:hover { background: #eff6ff; color: #3b82f6; }
+.action-icon.edit:hover { background: #fffbeb; color: #f59e0b; }
+.action-icon.key:hover { background: #f1f5f9; color: #1e293b; }
+.action-icon.delete:hover { background: #fef2f2; color: #ef4444; }
+
+.delete-form {
+    display: inline;
+}
+
+/* زر الإضافة */
+.btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #3b82f6;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-add:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    color: white;
+}
+
+/* حالة فارغة */
+.empty-row td {
+    padding: 2rem;
+}
+
+.empty-state {
+    text-align: center;
+    color: #94a3b8;
+}
+
+.empty-state i {
+    color: #cbd5e1;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    margin: 0.5rem 0;
+}
+
+.btn-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* استجابة */
+@media (max-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+</style>

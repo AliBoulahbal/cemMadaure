@@ -1,0 +1,476 @@
+<div class="modern-card">
+    <div class="modern-card-header">
+        <div class="modern-title-section">
+            <div class="modern-icon-wrapper bg-info-light">
+                <i class="fas fa-chalkboard-teacher text-info"></i>
+            </div>
+            <div>
+                <h3 class="modern-title">{{lesson.name}}</h3>
+                <p class="modern-subtitle">عرض تفاصيل الدرس والمحتوى المرتبط به</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="/lesson" class="modern-btn modern-btn-secondary">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+            <a href="/lesson/edit/{{lesson._id}}" class="modern-btn modern-btn-warning">
+                <i class="fas fa-edit"></i> تعديل
+            </a>
+            <a href="/content/manage/{{lesson._id}}" class="modern-btn modern-btn-info">
+                <i class="fas fa-file-alt"></i> إدارة المحتوى
+            </a>
+        </div>
+    </div>
+    
+    <div class="modern-card-body">
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-label">
+                    <i class="fas fa-heading"></i> اسم الدرس
+                </div>
+                <div class="info-value">{{lesson.name}}</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">
+                    <i class="fas fa-graduation-cap"></i> السنة الدراسية
+                </div>
+                <div class="info-value">
+                    {{#if lesson.branchId}}
+                        <span class="badge-modern badge-branch">{{lesson.branchId.name}}</span>
+                    {{else}}
+                        <span class="text-muted">غير محدد</span>
+                    {{/if}}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">
+                    <i class="fas fa-book"></i> المادة
+                </div>
+                <div class="info-value">
+                    {{#if lesson.subjectId}}
+                        <span class="badge-modern badge-subject">{{lesson.subjectId.name}}</span>
+                    {{else}}
+                        <span class="text-muted">غير محدد</span>
+                    {{/if}}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">
+                    <i class="fas fa-layer-group"></i> الوحدة
+                </div>
+                <div class="info-value">
+                    {{#if lesson.unitId}}
+                        <span class="badge-modern badge-unit">{{lesson.unitId.name}}</span>
+                    {{else}}
+                        <span class="text-muted">غير محدد</span>
+                    {{/if}}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">
+                    <i class="fas fa-sort-numeric-down"></i> الترتيب
+                </div>
+                <div class="info-value">
+                    <span class="order-badge">{{lesson.order}}</span>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">
+                    <i class="fas fa-gift"></i> نوع الدرس
+                </div>
+                <div class="info-value">
+                    {{#if lesson.isFree}}
+                        <span class="badge-free">
+                            <i class="fas fa-gift"></i> مجاني للجميع
+                        </span>
+                    {{else}}
+                        <span class="badge-paid">
+                            <i class="fas fa-lock"></i> للمشتركين فقط
+                        </span>
+                    {{/if}}
+                </div>
+            </div>
+            
+            <div class="info-card full-width">
+                <div class="info-label">
+                    <i class="fas fa-align-right"></i> وصف الدرس
+                </div>
+                <div class="info-value description-text">
+                    {{#if lesson.description}}
+                        {{lesson.description}}
+                    {{else}}
+                        <span class="text-muted">لا يوجد وصف</span>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h4 class="section-title">المحتوى التعليمي</h4>
+                <a href="/content/manage/{{lesson._id}}" class="modern-btn modern-btn-sm modern-btn-primary">
+                    <i class="fas fa-plus"></i> إضافة محتوى
+                </a>
+            </div>
+            <div class="modern-info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>ملاحظة:</strong> يمكنك إضافة محتوى تعليمي لهذا الدرس من خلال زر "إدارة المحتوى". يمكنك إضافة فيديوهات، ملفات PDF، نصوص تعليمية، واختبارات.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    * { direction: rtl; text-align: right; }
+    
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #eef2ff;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --danger: #ef4444;
+        --danger-light: #fee2e2;
+        --info: #3b82f6;
+        --info-light: #dbeafe;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+    }
+    
+    .modern-card {
+        background: white;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        margin: 1.5rem;
+    }
+    
+    .modern-card-header {
+        padding: 1.5rem 2rem;
+        background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    .modern-title-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .modern-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    .bg-info-light { background: var(--info-light); }
+    .text-info { color: var(--info); }
+    
+    .modern-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin: 0 0 0.25rem 0;
+    }
+    
+    .modern-subtitle {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        margin: 0;
+    }
+    
+    .modern-card-body {
+        padding: 2rem;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .full-width {
+        grid-column: span 2;
+    }
+    
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+        .full-width {
+            grid-column: span 1;
+        }
+    }
+    
+    .info-card {
+        background: var(--gray-50);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.25rem;
+        border: 1px solid var(--gray-200);
+        transition: all 0.2s ease;
+    }
+    
+    .info-card:hover {
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .info-label {
+        font-size: 0.7rem;
+        color: var(--gray-500);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-label i {
+        font-size: 0.875rem;
+    }
+    
+    .info-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--gray-800);
+    }
+    
+    .description-text {
+        line-height: 1.6;
+        font-weight: normal;
+    }
+    
+    .badge-modern {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .badge-branch {
+        background: var(--info-light);
+        color: var(--info);
+    }
+    
+    .badge-subject {
+        background: var(--success-light);
+        color: var(--success);
+    }
+    
+    .badge-unit {
+        background: var(--warning-light);
+        color: var(--warning);
+    }
+    
+    .order-badge {
+        background: var(--gray-100);
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--gray-600);
+        display: inline-block;
+    }
+    
+    .badge-free {
+        background: var(--success-light);
+        color: var(--success);
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+    
+    .badge-paid {
+        background: var(--gray-100);
+        color: var(--gray-500);
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+    
+    .content-section {
+        margin-top: 2rem;
+        border-top: 1px solid var(--gray-200);
+        padding-top: 1.5rem;
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .section-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-md);
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+    }
+    
+    .section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin: 0;
+        flex: 1;
+    }
+    
+    .modern-btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .modern-info-box {
+        background: var(--info-light);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        border-right: 3px solid var(--info);
+        color: var(--info);
+        font-size: 0.875rem;
+    }
+    
+    .modern-info-box i {
+        font-size: 1.25rem;
+        margin-top: 0.125rem;
+    }
+    
+    .modern-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+    }
+    
+    .modern-btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-600);
+        border: 1px solid var(--gray-200);
+    }
+    
+    .modern-btn-secondary:hover {
+        background: var(--gray-200);
+        color: var(--gray-700);
+    }
+    
+    .modern-btn-warning {
+        background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        color: white;
+    }
+    
+    .modern-btn-warning:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: white;
+    }
+    
+    .modern-btn-info {
+        background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+        color: white;
+    }
+    
+    .modern-btn-info:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: white;
+    }
+    
+    .modern-btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+    }
+    
+    .modern-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: white;
+    }
+    
+    .text-muted { color: var(--gray-400); }
+    
+    @media (max-width: 768px) {
+        .modern-card {
+            margin: 1rem;
+        }
+        .modern-card-header,
+        .modern-card-body {
+            padding: 1rem;
+        }
+        .header-actions {
+            width: 100%;
+            justify-content: flex-start;
+        }
+        .modern-btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+        }
+    }
+</style>

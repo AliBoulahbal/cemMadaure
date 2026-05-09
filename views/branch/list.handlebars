@@ -1,0 +1,71 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-calendar-alt"></i> السنوات الدراسية
+        </h3>
+        <div class="card-tools">
+            <button class="btn btn-secondary btn-sm" disabled>
+                <i class="fas fa-info-circle"></i> سنوات ثابتة
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>معلومات:</strong> السنوات الدراسية هي قائمة ثابتة ولا يمكن تعديلها أو حذفها.
+            <br>
+            <small>السنوات المتاحة: السنة الأولى متوسط، السنة الثانية متوسط، السنة الثالثة متوسط، السنة الرابعة متوسط</small>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="50">#</th>
+                        <th>السنة الدراسية</th>
+                        <th width="100">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each branches}}
+                    <tr>
+                        <td>{{inc @index}}</td>
+                        <td>
+                            <strong>{{this.name}}</strong>
+                            {{#if this.isConstant}}
+                                <span class="badge bg-secondary ms-2">ثابتة</span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if this.isConstant}}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-lock"></i> غير قابلة للتعديل
+                                </span>
+                            {{else}}
+                                <span class="badge bg-warning">قابلة للتعديل</span>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="3" class="text-center">لا توجد سنوات دراسية</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="fas fa-info-circle"></i> معلومات</h5>
+    </div>
+    <div class="card-body">
+        <ul class="mb-0">
+            <li>السنوات الدراسية <strong>ثابتة ولا يمكن تعديلها أو حذفها</strong></li>
+            <li>السنوات المتاحة: السنة الأولى متوسط، السنة الثانية متوسط، السنة الثالثة متوسط، السنة الرابعة متوسط</li>
+            <li>لبناء المنهج الدراسي، انتقل إلى إدارة المواد ← الوحدات ← الدروس</li>
+        </ul>
+    </div>
+</div>

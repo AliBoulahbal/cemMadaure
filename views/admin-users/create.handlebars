@@ -1,0 +1,112 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+.uform { font-family: 'IBM Plex Sans Arabic', sans-serif; direction: rtl; max-width: 720px; }
+.uform .fheader { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; padding-bottom:1.25rem; border-bottom:1px solid #e8edf2; }
+.uform .ftitle { font-size:1.3rem; font-weight:700; color:#0f172a; margin:0; display:flex; align-items:center; gap:0.5rem; }
+.uform .ftitle i { color:#3b82f6; }
+.uform .btn-back { display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1rem; border-radius:9px; background:#f1f5f9; color:#64748b; text-decoration:none; font-size:0.82rem; transition:background 0.2s; }
+.uform .btn-back:hover { background:#e2e8f0; color:#334155; }
+.uform .form-section { background:#fff; border:1px solid #e8edf2; border-radius:14px; padding:1.5rem; margin-bottom:1.25rem; }
+.uform .section-title { font-size:0.72rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:1.25rem; }
+.uform .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.uform .form-group { display:flex; flex-direction:column; gap:0.4rem; }
+.uform .form-group.full { grid-column:1/-1; }
+.uform label { font-size:0.78rem; font-weight:600; color:#374151; }
+.uform label .req { color:#ef4444; margin-right:0.2rem; }
+.uform input, .uform select {
+    padding:0.6rem 0.85rem; border:1.5px solid #e2e8f0; border-radius:9px;
+    font-size:0.85rem; color:#0f172a; background:#fff; transition:border-color 0.2s;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+.uform input:focus, .uform select:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.08); }
+.uform .hint { font-size:0.72rem; color:#94a3b8; }
+.uform .toggle-wrap { display:flex; align-items:center; gap:0.75rem; padding:0.75rem 1rem; background:#f8fafc; border-radius:10px; border:1.5px solid #e2e8f0; }
+.uform .toggle-label { font-size:0.82rem; font-weight:500; color:#374151; }
+.uform .toggle-sub { font-size:0.72rem; color:#94a3b8; }
+.uform input[type="checkbox"] { width:18px; height:18px; accent-color:#3b82f6; cursor:pointer; flex-shrink:0; }
+.uform .form-actions { display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem; }
+.uform .btn-submit { display:inline-flex; align-items:center; gap:0.5rem; padding:0.65rem 1.5rem; background:#0f172a; color:#fff; border:none; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; transition:background 0.2s; font-family:'IBM Plex Sans Arabic',sans-serif; }
+.uform .btn-submit:hover { background:#1e293b; }
+.uform .btn-cancel { display:inline-flex; align-items:center; padding:0.65rem 1.2rem; background:#f1f5f9; color:#64748b; text-decoration:none; border-radius:10px; font-size:0.85rem; transition:background 0.2s; }
+.uform .btn-cancel:hover { background:#e2e8f0; color:#334155; }
+.uform .alert-err { background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:10px; padding:0.85rem 1rem; font-size:0.83rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; }
+</style>
+
+<div class="uform">
+    <div class="fheader">
+        <h2 class="ftitle"><i class="fas fa-user-plus"></i> إضافة مشرف جديد</h2>
+        <a href="/admin-users" class="btn-back"><i class="fas fa-arrow-right"></i> رجوع</a>
+    </div>
+
+    {{#if error}}
+    <div class="alert-err"><i class="fas fa-exclamation-circle"></i> {{error}}</div>
+    {{/if}}
+
+    <form action="/admin-users/create" method="post">
+        <div class="form-section">
+            <div class="section-title">المعلومات الشخصية</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>الاسم الكامل <span class="req">*</span></label>
+                    <input type="text" name="fullName" placeholder="أدخل الاسم الكامل" required>
+                </div>
+                <div class="form-group">
+                    <label>اسم المستخدم <span class="req">*</span></label>
+                    <input type="text" name="username" placeholder="username" required>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني <span class="req">*</span></label>
+                    <input type="email" name="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" name="phone" placeholder="+213 ...">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-title">الصلاحيات والأمان</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>كلمة المرور <span class="req">*</span></label>
+                    <input type="password" id="password" name="password" placeholder="••••••" required>
+                    <span class="hint">6 أحرف على الأقل</span>
+                </div>
+                <div class="form-group">
+                    <label>الدور <span class="req">*</span></label>
+                    <select name="role" required>
+                        <option value="viewer">مشاهد</option>
+                        <option value="teacher">أستاذ</option>
+                        <option value="admin">مدير</option>
+                        <option value="super_admin">مدير عام</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label class="toggle-wrap">
+                        <input type="checkbox" name="isActive" checked>
+                        <div>
+                            <div class="toggle-label">حساب نشط</div>
+                            <div class="toggle-sub">يمكن لهذا المستخدم تسجيل الدخول فوراً</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> إضافة المشرف</button>
+            <a href="/admin-users" class="btn-cancel">إلغاء</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const pass = document.getElementById('password').value;
+    if (pass.length < 6) {
+        e.preventDefault();
+        Swal.fire({ icon: 'warning', title: 'كلمة المرور قصيرة', text: 'يجب أن تكون 6 أحرف على الأقل', confirmButtonColor: '#0f172a' });
+    }
+});
+</script>

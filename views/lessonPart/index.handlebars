@@ -1,0 +1,486 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  --ink: #0f1117;
+  --ink-muted: #6b7280;
+  --surface: #ffffff;
+  --surface-2: #f7f8fa;
+  --border: #e8eaed;
+  --accent: #2563eb;
+  --accent-soft: #eff4ff;
+  --success: #059669;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --info: #0284c7;
+  --radius: 14px;
+  --shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,.1), 0 12px 32px rgba(0,0,0,.06);
+}
+
+* { box-sizing: border-box; }
+
+body, .lesson-part-page {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+/* ─── Page header ─── */
+.lp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.lp-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.lp-subtitle {
+  font-size: .8rem;
+  color: var(--ink-muted);
+  margin: .2rem 0 0;
+}
+.lp-actions { display: flex; gap: .5rem; }
+
+/* ─── Buttons ─── */
+.btn-lp {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .82rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .15s ease;
+  white-space: nowrap;
+}
+.btn-lp-primary  { background: var(--accent); color: white; }
+.btn-lp-primary:hover  { background: #1d4ed8; color: white; transform: translateY(-1px); }
+.btn-lp-outline  { background: transparent; color: var(--ink-muted); border: 1px solid var(--border); }
+.btn-lp-outline:hover  { border-color: var(--ink-muted); color: var(--ink); }
+.btn-lp-danger   { background: transparent; color: var(--danger); border: 1px solid #fecaca; }
+.btn-lp-danger:hover   { background: #fef2f2; }
+.btn-lp-sm { padding: .35rem .75rem; font-size: .78rem; }
+
+/* ─── Stat cards ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+@media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all .2s ease;
+  box-shadow: var(--shadow);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.stat-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  color: white;
+}
+.stat-dot-blue   { background: linear-gradient(135deg,#3b82f6,#2563eb); }
+.stat-dot-green  { background: linear-gradient(135deg,#10b981,#059669); }
+.stat-dot-sky    { background: linear-gradient(135deg,#38bdf8,#0284c7); }
+.stat-dot-red    { background: linear-gradient(135deg,#f87171,#dc2626); }
+.stat-info .num  { font-size: 1.6rem; font-weight: 700; line-height: 1.1; color: var(--ink); }
+.stat-info .lbl  { font-size: .72rem; color: var(--ink-muted); margin-top: .1rem; letter-spacing: .03em; text-transform: uppercase; }
+
+/* ─── Main card ─── */
+.lp-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.lp-card-header {
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+}
+.lp-card-title {
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ─── Search ─── */
+.search-box {
+  position: relative;
+}
+.search-box input {
+  padding: .45rem .85rem .45rem 2.2rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .82rem;
+  background: var(--surface-2);
+  color: var(--ink);
+  outline: none;
+  width: 200px;
+  transition: all .2s;
+}
+.search-box input:focus { border-color: var(--accent); background: white; width: 240px; }
+.search-box i {
+  position: absolute;
+  left: .65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-muted);
+  font-size: .75rem;
+}
+
+/* ─── Table ─── */
+.lp-table { width: 100%; border-collapse: collapse; }
+.lp-table thead th {
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  text-align: right;
+}
+.lp-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.lp-table tbody tr:last-child { border-bottom: none; }
+.lp-table tbody tr:hover { background: var(--surface-2); }
+.lp-table td {
+  padding: .85rem 1rem;
+  font-size: .84rem;
+  color: var(--ink);
+  vertical-align: middle;
+  text-align: right;
+}
+.lp-table td.center { text-align: center; }
+.row-num { color: var(--ink-muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.lesson-name { font-weight: 500; }
+.lesson-desc { font-size: .75rem; color: var(--ink-muted); margin-top: .15rem; }
+
+/* ─── Badges ─── */
+.lp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .25rem .6rem;
+  border-radius: 6px;
+  font-size: .72rem;
+  font-weight: 500;
+}
+.badge-blue  { background: #eff4ff; color: #2563eb; }
+.badge-green { background: #ecfdf5; color: #059669; }
+.badge-red   { background: #fef2f2; color: #dc2626; }
+.badge-amber { background: #fffbeb; color: #d97706; }
+.badge-gray  { background: var(--surface-2); color: var(--ink-muted); border: 1px solid var(--border); }
+.badge-muted { background: #f1f5f9; color: #94a3b8; font-style: italic; }
+
+/* ─── Row actions ─── */
+.row-actions { display: flex; gap: .35rem; justify-content: center; align-items: center; }
+
+/* ─── Empty state ─── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--ink-muted);
+}
+.empty-state i { font-size: 2.5rem; opacity: .35; margin-bottom: 1rem; display: block; }
+.empty-state p { font-size: .9rem; margin-bottom: 1rem; }
+
+/* ─── Footer ─── */
+.lp-card-footer {
+  padding: .85rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface-2);
+}
+.footer-text { font-size: .75rem; color: var(--ink-muted); }
+
+/* ─── Modal ─── */
+.lp-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,17,23,.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+.lp-modal-backdrop.open { display: flex; }
+.lp-modal {
+  background: white;
+  border-radius: 18px;
+  padding: 2rem;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,.15);
+  animation: modalIn .2s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)  translateY(0); }
+}
+.modal-icon {
+  width: 52px; height: 52px;
+  background: #fef2f2;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: var(--danger);
+  margin-bottom: 1.2rem;
+}
+.modal-title { font-weight: 700; font-size: 1.05rem; margin-bottom: .5rem; }
+.modal-body  { font-size: .85rem; color: var(--ink-muted); line-height: 1.6; margin-bottom: 1.5rem; }
+.modal-body strong { color: var(--danger); }
+.modal-footer-btns { display: flex; gap: .75rem; justify-content: flex-end; }
+</style>
+
+<div class="lesson-part-page">
+
+  <!-- Header -->
+  <div class="lp-header">
+    <div>
+      <h1 class="lp-title">إدارة المحتوى</h1>
+      <p class="lp-subtitle">جميع دروس المنصة وأجزاؤها</p>
+    </div>
+    <div class="lp-actions">
+      <a href="/lesson" class="btn-lp btn-lp-outline">
+        <i class="fas fa-chalkboard"></i> إدارة الدروس
+      </a>
+      <a href="/lesson" class="btn-lp btn-lp-primary">
+        <i class="fas fa-plus"></i> رفع محتوى
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-dot stat-dot-blue"><i class="fas fa-chalkboard"></i></div>
+      <div class="stat-info">
+        <div class="num">{{stats.totalLessons}}</div>
+        <div class="lbl">دروس</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-dot stat-dot-green"><i class="fas fa-cubes"></i></div>
+      <div class="stat-info">
+        <div class="num">{{stats.totalParts}}</div>
+        <div class="lbl">أجزاء</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-dot stat-dot-sky"><i class="fas fa-video"></i></div>
+      <div class="stat-info">
+        <div class="num">{{stats.totalVideos}}</div>
+        <div class="lbl">فيديوهات</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-dot stat-dot-red"><i class="fas fa-file-pdf"></i></div>
+      <div class="stat-info">
+        <div class="num">{{stats.totalPDFs}}</div>
+        <div class="lbl">ملفات PDF</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table card -->
+  <div class="lp-card">
+    <div class="lp-card-header">
+      <h2 class="lp-card-title">قائمة الدروس</h2>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="بحث...">
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="lp-table" id="lessonsTable">
+        <thead>
+          <tr>
+            <th style="width:48px;">#</th>
+            <th>الدرس</th>
+            <th>السنة</th>
+            <th>المادة</th>
+            <th>الوحدة</th>
+            <th style="width:200px; text-align:center;">المحتوى</th>
+            <th style="width:180px; text-align:center;">الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each lessons}}
+          <tr data-lesson-id="{{toString _id}}">
+            <td><span class="row-num">{{inc @index}}</span></td>
+            <td>
+              <div class="lesson-name">{{name}}</div>
+              {{#if description}}<div class="lesson-desc">{{description}}</div>{{/if}}
+            </td>
+            <td><span class="lp-badge badge-gray">{{branchId.name}}</span></td>
+            <td>{{subjectId.name}}</td>
+            <td>{{unitId.name}}</td>
+            <td class="center">
+              {{#if partsCount}}
+              <div style="display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;">
+                {{#each parts}}
+                  {{#if url}}<span class="lp-badge badge-blue"><i class="fas fa-video"></i> فيديو</span>{{/if}}
+                  {{#if body}}
+                    {{#if (eq type "TEXT")}}
+                      <span class="lp-badge badge-green"><i class="fas fa-file-alt"></i> نص</span>
+                    {{else if (eq type "QUIZ")}}
+                      <span class="lp-badge badge-amber"><i class="fas fa-question-circle"></i> اختبار</span>
+                    {{else}}
+                      <span class="lp-badge badge-red"><i class="fas fa-file-pdf"></i> PDF</span>
+                    {{/if}}
+                  {{/if}}
+                {{/each}}
+              </div>
+              {{else}}
+              <span class="lp-badge badge-muted">لا يوجد محتوى</span>
+              {{/if}}
+            </td>
+            <td>
+              <div class="row-actions">
+                <a href="/lesson-part/lesson/{{toString _id}}" class="btn-lp btn-lp-outline btn-lp-sm" title="عرض">
+                  <i class="fas fa-eye"></i> عرض
+                </a>
+                <a href="/lesson-part/upload/{{toString _id}}" class="btn-lp btn-lp-sm" style="background:#ecfdf5;color:#059669;border:none;" title="رفع">
+                  <i class="fas fa-upload"></i>
+                </a>
+                {{#if partsCount}}
+                <button class="btn-lp btn-lp-danger btn-lp-sm" onclick="confirmDelete('{{toString _id}}')" title="حذف">
+                  <i class="fas fa-trash"></i>
+                </button>
+                {{/if}}
+              </div>
+            </td>
+          </tr>
+          {{else}}
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>لا توجد دروس بعد</p>
+                <a href="/lesson/create" class="btn-lp btn-lp-primary">
+                  <i class="fas fa-plus"></i> أضف درساً
+                </a>
+              </div>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lp-card-footer">
+      <span class="footer-text">إجمالي الدروس: {{stats.totalLessons}}</span>
+      <span class="footer-text">إجمالي الأجزاء: {{stats.totalParts}}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Delete modal -->
+<div class="lp-modal-backdrop" id="deleteModalBackdrop">
+  <div class="lp-modal">
+    <div class="modal-icon"><i class="fas fa-trash-alt"></i></div>
+    <div class="modal-title">تأكيد الحذف</div>
+    <div class="modal-body">هل أنت متأكد من حذف محتوى هذا الدرس؟<br><strong>⚠️ هذا الإجراء لا يمكن التراجع عنه.</strong></div>
+    <div class="modal-footer-btns">
+      <button class="btn-lp btn-lp-outline" onclick="closeDeleteModal()">إلغاء</button>
+      <button class="btn-lp btn-lp-primary" id="confirmDeleteBtn" style="background:var(--danger);">حذف</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+let lessonIdToDelete = null;
+
+function confirmDelete(id) {
+  lessonIdToDelete = id;
+  document.getElementById('deleteModalBackdrop').classList.add('open');
+}
+function closeDeleteModal() {
+  document.getElementById('deleteModalBackdrop').classList.remove('open');
+  lessonIdToDelete = null;
+}
+document.getElementById('deleteModalBackdrop').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeDeleteModal();
+});
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+  if (!lessonIdToDelete) return;
+  try {
+    const res = await fetch(`/lesson-part/lesson/${lessonIdToDelete}/content`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+    closeDeleteModal();
+    Swal.fire({ icon:'success', title:'تم الحذف', text:'تم حذف محتوى الدرس بنجاح', timer:1500, showConfirmButton:false })
+        .then(() => location.reload());
+  } catch (err) {
+    Swal.fire({ icon:'error', title:'خطأ', text: err.message });
+  }
+});
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('#lessonsTable tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+
+// Auto-refresh stats every 30s
+setInterval(async () => {
+  try {
+    const res = await fetch('/lesson-part/stats');
+    const s = await res.json();
+    if (s.success) {
+      const nums = document.querySelectorAll('.stat-info .num');
+      if (nums[0]) nums[0].textContent = s.totalLessons;
+      if (nums[1]) nums[1].textContent = s.totalParts;
+      if (nums[2]) nums[2].textContent = s.totalVideos;
+      if (nums[3]) nums[3].textContent = s.totalPDFs;
+    }
+  } catch {}
+}, 30000);
+</script>

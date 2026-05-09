@@ -1,0 +1,71 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-plus-circle"></i> إضافة مادة دراسية جديدة
+        </h3>
+        <div class="card-tools">
+            <a href="/branch" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    {{#if error}}
+    <div class="alert alert-danger m-3">
+        <i class="fas fa-exclamation-circle"></i> {{error}}
+    </div>
+    {{/if}}
+    
+    <form action="/branch/create" method="post">
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>معلومات:</strong> المواد هي التخصصات الدراسية (مثال: رياضيات، لغة عربية، علوم، إلخ.)
+            </div>
+            
+            <div class="form-group">
+                <label for="name">اسم المادة <span class="text-danger">*</span></label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name" 
+                       placeholder="مثال: رياضيات، لغة عربية، علوم فيزيائية..." 
+                       required
+                       autofocus>
+                <small class="form-text text-muted">أدخل الاسم الكامل للمادة</small>
+            </div>
+            
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>ملاحظة:</strong>
+                <ul class="mt-2 mb-0">
+                    <li>يمكن ربط هذه المادة بسنوات دراسية مختلفة</li>
+                    <li>يمكنك إنشاء وحدات ودروس لكل مادة</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> حفظ
+            </button>
+            <button type="reset" class="btn btn-secondary">
+                <i class="fas fa-undo"></i> إعادة تعيين
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        if (!name) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ',
+                text: 'الرجاء إدخال اسم المادة'
+            });
+        }
+    });
+</script>

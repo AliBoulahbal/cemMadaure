@@ -1,0 +1,405 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+.dash {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  direction: rtl;
+  color: #0f172a;
+}
+
+/* ── Grille stats ── */
+.dash .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dash .scard {
+  background: #fff;
+  border: 1px solid #e8edf2;
+  border-radius: 16px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.dash .scard::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  opacity: 0.05;
+  background: currentColor;
+  transform: translate(30%, 30%);
+}
+.dash .scard:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.dash .sicon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.dash .si-blue   { background: #eff6ff; color: #3b82f6; }
+.dash .si-green  { background: #ecfdf5; color: #10b981; }
+.dash .si-amber  { background: #fffbeb; color: #f59e0b; }
+.dash .si-red    { background: #fef2f2; color: #ef4444; }
+.dash .si-slate  { background: #f1f5f9; color: #64748b; }
+.dash .si-dark   { background: #f1f5f9; color: #1e293b; }
+.dash .si-purple { background: #f5f3ff; color: #8b5cf6; }
+.dash .si-teal   { background: #f0fdfa; color: #14b8a6; }
+
+.dash .sinfo { flex: 1; min-width: 0; }
+.dash .snum  { font-size: 1.7rem; font-weight: 700; line-height: 1; color: #0f172a; }
+.dash .slbl  { font-size: 0.72rem; color: #94a3b8; font-weight: 500; margin-top: 0.2rem; }
+.dash .sarrow { color: #cbd5e1; font-size: 0.75rem; transition: color 0.2s; }
+.dash .scard:hover .sarrow { color: #3b82f6; }
+
+/* ── Rangée graphiques ── */
+.dash .charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Rangée activité + étudiants ── */
+.dash .bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Cartes génériques ── */
+.dash .dcard {
+  background: #fff;
+  border: 1px solid #e8edf2;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.dash .dcard-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.dash .dcard-title {
+  font-size: 0.85rem; font-weight: 700; color: #0f172a;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.dash .dcard-title i { color: #94a3b8; font-size: 0.8rem; }
+.dash .dcard-link {
+  font-size: 0.72rem; color: #3b82f6; text-decoration: none; font-weight: 500;
+}
+.dash .dcard-link:hover { text-decoration: underline; }
+.dash .dcard-body { padding: 1.25rem; }
+
+/* ── Items activité ── */
+.dash .act-item {
+  display: flex; align-items: center; gap: 0.85rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #f8fafc;
+}
+.dash .act-item:last-child { border-bottom: none; }
+.dash .act-ico {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: #f1f5f9; color: #3b82f6;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; flex-shrink: 0;
+}
+.dash .act-body { flex: 1; min-width: 0; }
+.dash .act-title { font-size: 0.83rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dash .act-meta  { font-size: 0.68rem; color: #94a3b8; margin-top: 0.1rem; }
+.dash .act-badge {
+  font-size: 0.65rem; font-weight: 600;
+  padding: 0.18rem 0.55rem; border-radius: 20px;
+  flex-shrink: 0;
+}
+.dash .badge-order { background: #f1f5f9; color: #475569; }
+.dash .badge-score { background: #dcfce7; color: #15803d; }
+
+/* ── Barre de contenu ── */
+.dash .content-bars { display: flex; flex-direction: column; gap: 0.85rem; }
+.dash .cbar-item { display: flex; align-items: center; gap: 0.75rem; }
+.dash .cbar-label { font-size: 0.78rem; font-weight: 500; color: #374151; width: 60px; flex-shrink: 0; text-align: right; }
+.dash .cbar-track { flex: 1; height: 8px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+.dash .cbar-fill  { height: 100%; border-radius: 99px; transition: width 1s ease; }
+.dash .cbar-val   { font-size: 0.75rem; font-weight: 700; color: #0f172a; width: 32px; text-align: left; }
+
+/* ── Pending banner ── */
+.dash .pending-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.dash .pending-banner:hover { opacity: 0.92; }
+.dash .pb-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: #fbbf24; font-size: 1.3rem;
+}
+.dash .pb-text { flex: 1; }
+.dash .pb-title { font-size: 0.95rem; font-weight: 700; color: #fff; }
+.dash .pb-sub   { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 0.15rem; }
+.dash .pb-count {
+  background: #ef4444; color: #fff;
+  font-size: 1rem; font-weight: 700;
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.dash .pb-arrow { color: rgba(255,255,255,0.4); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .dash .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash .charts-row, .dash .bottom-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .dash .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+
+<div class="dash">
+
+  {{#if pendingCount}}
+  {{#if (gt pendingCount 0)}}
+  <a href="/approval" class="pending-banner">
+    <div class="pb-icon"><i class="fas fa-bell"></i></div>
+    <div class="pb-text">
+      <div class="pb-title">عناصر في انتظار المراجعة</div>
+      <div class="pb-sub">انقر للمراجعة والموافقة أو الرفض</div>
+    </div>
+    <div class="pb-count">{{pendingCount}}</div>
+    <i class="fas fa-arrow-left pb-arrow"></i>
+  </a>
+  {{/if}}
+  {{/if}}
+
+  <!-- ── الإحصاءات ── -->
+  <div class="stats-grid">
+    <a href="/branch" class="scard">
+      <div class="sicon si-blue"><i class="fas fa-calendar-alt"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalBranches}}</div>
+        <div class="slbl">السنوات الدراسية</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/subject" class="scard">
+      <div class="sicon si-green"><i class="fas fa-book"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalSubjects}}</div>
+        <div class="slbl">المواد الدراسية</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/unit" class="scard">
+      <div class="sicon si-amber"><i class="fas fa-layer-group"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalUnits}}</div>
+        <div class="slbl">الوحدات</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/lesson" class="scard">
+      <div class="sicon si-red"><i class="fas fa-chalkboard"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalLessons}}</div>
+        <div class="slbl">الدروس</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/content/recent" class="scard">
+      <div class="sicon si-slate"><i class="fas fa-file-alt"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalContents}}</div>
+        <div class="slbl">إجمالي المحتوى</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/users" class="scard">
+      <div class="sicon si-dark"><i class="fas fa-users"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalUsers}}</div>
+        <div class="slbl">المستخدمين</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/quiz" class="scard">
+      <div class="sicon si-purple"><i class="fas fa-question-circle"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalQuizzes}}</div>
+        <div class="slbl">الاختبارات</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+    <a href="/quiz-attempt" class="scard">
+      <div class="sicon si-teal"><i class="fas fa-chart-line"></i></div>
+      <div class="sinfo">
+        <div class="snum">{{stats.totalAttempts}}</div>
+        <div class="slbl">محاولات الاختبارات</div>
+      </div>
+      <i class="fas fa-arrow-left sarrow"></i>
+    </a>
+  </div>
+
+  <!-- ── المخططات ── -->
+  <div class="charts-row">
+
+    <!-- توزيع المحتوى بالأشرطة -->
+    <div class="dcard">
+      <div class="dcard-header">
+        <div class="dcard-title"><i class="fas fa-chart-pie"></i> المحتوى حسب النوع</div>
+        <a href="/content/recent" class="dcard-link">عرض الكل</a>
+      </div>
+      <div class="dcard-body">
+        <div class="content-bars" id="contentBars">
+          <div class="cbar-item">
+            <span class="cbar-label">فيديوهات</span>
+            <div class="cbar-track"><div class="cbar-fill" style="background:#3b82f6; width:0%" data-val="{{stats.totalVideos}}" data-max="{{stats.totalContents}}"></div></div>
+            <span class="cbar-val">{{stats.totalVideos}}</span>
+          </div>
+          <div class="cbar-item">
+            <span class="cbar-label">PDF</span>
+            <div class="cbar-track"><div class="cbar-fill" style="background:#ef4444; width:0%" data-val="{{stats.totalPdfs}}" data-max="{{stats.totalContents}}"></div></div>
+            <span class="cbar-val">{{stats.totalPdfs}}</span>
+          </div>
+          <div class="cbar-item">
+            <span class="cbar-label">نصوص</span>
+            <div class="cbar-track"><div class="cbar-fill" style="background:#10b981; width:0%" data-val="{{stats.totalTexts}}" data-max="{{stats.totalContents}}"></div></div>
+            <span class="cbar-val">{{stats.totalTexts}}</span>
+          </div>
+          <div class="cbar-item">
+            <span class="cbar-label">اختبارات</span>
+            <div class="cbar-track"><div class="cbar-fill" style="background:#f59e0b; width:0%" data-val="{{stats.totalQuizzes}}" data-max="{{stats.totalContents}}"></div></div>
+            <span class="cbar-val">{{stats.totalQuizzes}}</span>
+          </div>
+          <div class="cbar-item">
+            <span class="cbar-label">صور</span>
+            <div class="cbar-track"><div class="cbar-fill" style="background:#8b5cf6; width:0%" data-val="{{stats.totalImages}}" data-max="{{stats.totalContents}}"></div></div>
+            <span class="cbar-val">{{stats.totalImages}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- توزيع المستخدمين -->
+    <div class="dcard">
+      <div class="dcard-header">
+        <div class="dcard-title"><i class="fas fa-users"></i> توزيع المستخدمين</div>
+        <a href="/users" class="dcard-link">إدارة المستخدمين</a>
+      </div>
+      <div class="dcard-body">
+        <canvas id="usersChart" height="210"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── آخر الدروس + أفضل الطلاب ── -->
+  <div class="bottom-row">
+    <div class="dcard">
+      <div class="dcard-header">
+        <div class="dcard-title"><i class="fas fa-clock"></i> آخر الدروس المضافة</div>
+        <a href="/lesson" class="dcard-link">عرض الكل</a>
+      </div>
+      <div class="dcard-body" style="padding:0.5rem 1.25rem;">
+        {{#each recentLessons}}
+        <div class="act-item">
+          <div class="act-ico"><i class="fas fa-chalkboard"></i></div>
+          <div class="act-body">
+            <div class="act-title">{{this.name}}</div>
+            <div class="act-meta">{{this.branchId.name}} · {{this.subjectId.name}} · {{this.unitId.name}}</div>
+          </div>
+          <span class="act-badge badge-order">#{{this.order}}</span>
+        </div>
+        {{else}}
+        <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">لا توجد دروس</div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="dcard">
+      <div class="dcard-header">
+        <div class="dcard-title"><i class="fas fa-trophy"></i> أفضل الطلاب</div>
+        <a href="/quiz-attempt" class="dcard-link">عرض الكل</a>
+      </div>
+      <div class="dcard-body" style="padding:0.5rem 1.25rem;">
+        {{#each topStudents}}
+        <div class="act-item">
+          <div class="act-ico" style="background:#fef9c3; color:#ca8a04;"><i class="fas fa-user-graduate"></i></div>
+          <div class="act-body">
+            <div class="act-title">{{this.fullName}}</div>
+            <div class="act-meta">{{this.email}}</div>
+          </div>
+          <span class="act-badge badge-score">{{this.avgScore}}%</span>
+        </div>
+        {{else}}
+        <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.82rem;">لا توجد بيانات</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ── Barres de contenu animées ──
+document.querySelectorAll('.cbar-fill').forEach(bar => {
+  const val = parseInt(bar.dataset.val) || 0;
+  const max = parseInt(bar.dataset.max) || 1;
+  const pct = max > 0 ? Math.round((val / max) * 100) : 0;
+  setTimeout(() => { bar.style.width = pct + '%'; }, 200);
+});
+
+// ── Graphique utilisateurs ──
+const usersCtx = document.getElementById('usersChart').getContext('2d');
+new Chart(usersCtx, {
+  type: 'bar',
+  data: {
+    labels: ['مدير عام', 'مدير', 'أستاذ', 'مشاهد'],
+    datasets: [{
+      label: 'عدد المستخدمين',
+      data: [{{stats.superAdminCount}}, {{stats.adminCount}}, {{stats.teacherCount}}, {{stats.viewerCount}}],
+      backgroundColor: ['#ef4444','#f59e0b','#3b82f6','#8b5cf6'],
+      borderRadius: 8,
+      barPercentage: 0.55,
+      categoryPercentage: 0.7
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { rtl: true, bodyFont: { family: 'IBM Plex Sans Arabic' } }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: '#f1f5f9' },
+        ticks: { font: { family: 'IBM Plex Sans Arabic', size: 11 }, stepSize: 1 }
+      },
+      x: {
+        grid: { display: false },
+        ticks: { font: { family: 'IBM Plex Sans Arabic', size: 11 } }
+      }
+    }
+  }
+});
+</script>

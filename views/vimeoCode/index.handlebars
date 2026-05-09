@@ -1,0 +1,256 @@
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-semibold">
+                <i class="fab fa-vimeo text-primary me-2"></i>رموز Vimeo
+            </h4>
+            <p class="text-muted small mt-1">Gérer les codes d'accès à la plateforme Vimeo</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#generateModal">
+                <i class="fas fa-magic me-1"></i>Générer un code
+            </button>
+            <a href="/vimeo-code/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i>Ajouter un code
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-2 col-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-info">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{stats.total}}</h3>
+                    <p class="stat-label">Total</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-warning">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{stats.pending}}</h3>
+                    <p class="stat-label">En attente</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{stats.active}}</h3>
+                    <p class="stat-label">Actifs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-danger">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{stats.used}}</h3>
+                    <p class="stat-label">Utilisés</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-secondary">
+                    <i class="fas fa-hourglass-end"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-number">{{stats.expired}}</h3>
+                    <p class="stat-label">Expirés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des codes -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="border-0 py-3 px-3">Code</th>
+                            <th class="border-0 py-3">Utilisateur</th>
+                            <th class="border-0 py-3">Statut</th>
+                            <th class="border-0 py-3">Titre vidéo</th>
+                            <th class="border-0 py-3">Créé le</th>
+                            <th class="border-0 py-3 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each codes}}
+                        <tr>
+                            <td class="px-3">
+                                <code class="fw-bold">{{code}}</code>
+                            </td>
+                            <td>{{user}}</td>
+                            <td>
+                                {{#if (eq status 'PENDING')}}
+                                    <span class="status-badge pending"><i class="fas fa-clock"></i> En attente</span>
+                                {{else if (eq status 'ACTIVE')}}
+                                    <span class="status-badge active"><i class="fas fa-check-circle"></i> Actif</span>
+                                {{else if (eq status 'USED')}}
+                                    <span class="status-badge used"><i class="fas fa-check-double"></i> Utilisé</span>
+                                {{else if (eq status 'EXPIRED')}}
+                                    <span class="status-badge expired"><i class="fas fa-hourglass-end"></i> Expiré</span>
+                                {{/if}}
+                            </td>
+                            <td>
+                                {{#if videoTitle}}
+                                    <span class="small">{{videoTitle}}</span>
+                                {{else}}
+                                    <span class="text-muted">—</span>
+                                {{/if}}
+                            </td>
+                            <td class="small">{{formatDate createdAt}}</td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/vimeo-code/edit/{{_id}}" class="btn btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {{#if (eq status 'PENDING')}}
+                                    <form action="/vimeo-code/mark-active/{{_id}}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-success" title="Marquer actif">
+                                            <i class="fas fa-check-circle"></i>
+                                        </button>
+                                    </form>
+                                    {{/if}}
+                                    {{#if (eq status 'ACTIVE')}}
+                                    <form action="/vimeo-code/mark-used/{{_id}}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-info" title="Marquer utilisé">
+                                            <i class="fas fa-check-double"></i>
+                                        </button>
+                                    </form>
+                                    {{/if}}
+                                    <form action="/vimeo-code/delete/{{_id}}?_method=DELETE" method="post" class="d-inline" onsubmit="return confirm('Supprimer ce code ?')">
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fab fa-vimeo fa-2x mb-2 d-block"></i>
+                                    <p>Aucun code Vimeo</p>
+                                    <a href="/vimeo-code/create" class="btn btn-sm btn-primary">Ajouter un code</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Générer un code -->
+<div class="modal fade" id="generateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/vimeo-code/generate" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Générer un nouveau code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Utilisateur</label>
+                        <input type="text" class="form-control" name="user" value="education" placeholder="Nom d'utilisateur">
+                    </div>
+                    <div class="alert alert-info small">
+                        <i class="fas fa-info-circle"></i> Un code aléatoire à 10 chiffres sera généré automatiquement.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Générer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #eef2f6;
+}
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: white;
+}
+.stat-icon.bg-info { background: #0ea5e9; }
+.stat-icon.bg-warning { background: #f59e0b; }
+.stat-icon.bg-success { background: #10b981; }
+.stat-icon.bg-danger { background: #ef4444; }
+.stat-icon.bg-secondary { background: #64748b; }
+.stat-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.2;
+}
+.stat-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin: 0;
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+.status-badge.pending { background: #fef3c7; color: #d97706; }
+.status-badge.active { background: #dcfce7; color: #16a34a; }
+.status-badge.used { background: #e0e7ff; color: #4f46e5; }
+.status-badge.expired { background: #fee2e2; color: #dc2626; }
+code {
+    background: #f1f5f9;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+.card {
+    border-radius: 20px;
+}
+.table th {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+</style>

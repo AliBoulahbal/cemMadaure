@@ -1,0 +1,73 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-edit"></i> تعديل صلاحية: {{permission.name}}
+        </h3>
+        <div class="card-tools">
+            <a href="/permissions" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        {{#if error}}
+        <div class="alert-error">{{error}}</div>
+        {{/if}}
+        
+        <form action="/permissions/edit/{{permission._id}}?_method=PUT" method="post" class="permission-form">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="field-label">الاسم <span class="required">*</span></label>
+                    <input type="text" name="name" class="field-input" value="{{permission.name}}" required>
+                    <small>مثال: عرض المستخدمين</small>
+                </div>
+                
+                <div class="form-field">
+                    <label class="field-label">الكود <span class="required">*</span></label>
+                    <input type="text" name="code" class="field-input" value="{{permission.code}}" required>
+                    <small>مثال: users.view</small>
+                </div>
+                
+                <div class="form-field">
+                    <label class="field-label">الفئة <span class="required">*</span></label>
+                    <select name="category" class="field-select" required>
+                        <option value="users" {{#if (eq permission.category 'users')}}selected{{/if}}>إدارة المستخدمين</option>
+                        <option value="content" {{#if (eq permission.category 'content')}}selected{{/if}}>إدارة المحتوى</option>
+                        <option value="academic" {{#if (eq permission.category 'academic')}}selected{{/if}}>الإدارة التربوية</option>
+                        <option value="reports" {{#if (eq permission.category 'reports')}}selected{{/if}}>التقارير</option>
+                        <option value="settings" {{#if (eq permission.category 'settings')}}selected{{/if}}>الإعدادات</option>
+                        <option value="system" {{#if (eq permission.category 'system')}}selected{{/if}}>النظام</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="field-label">الأدوار الافتراضية</label>
+                    <select name="defaultRoles" multiple class="field-select" style="height: 100px;">
+                        <option value="super_admin" {{#if (includes permission.defaultRoles 'super_admin')}}selected{{/if}}>مدير عام</option>
+                        <option value="admin" {{#if (includes permission.defaultRoles 'admin')}}selected{{/if}}>مدير</option>
+                        <option value="teacher" {{#if (includes permission.defaultRoles 'teacher')}}selected{{/if}}>أستاذ</option>
+                        <option value="viewer" {{#if (includes permission.defaultRoles 'viewer')}}selected{{/if}}>مشاهد</option>
+                    </select>
+                    <small>اضغط Ctrl لاختيار عدة خيارات</small>
+                </div>
+                
+                <div class="form-field full-width">
+                    <label class="field-label">الوصف</label>
+                    <textarea name="description" class="field-input" rows="3">{{permission.description}}</textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> حفظ التغييرات
+                </button>
+                <a href="/permissions" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Helper includes doit être défini dans server.js
+</script>

@@ -1,0 +1,145 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-book"></i> Liste des Matières
+        </h3>
+        <div class="card-tools">
+            <a href="/matiere/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Ajouter une matière
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover datatable">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="50">#</th>
+                        <th>Nom de la matière</th>
+                        <th>Année scolaire</th>
+                        <th>Ordre</th>
+                        <th width="150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each matieres}}
+                    <tr>
+                        <td>{{inc @index}}</td>
+                        <td>
+                            <strong>{{this.name}}</strong>
+                        </td>
+                        <td>
+                            {{#if this.AnneeId}}
+                                <span class="badge badge-info">{{this.AnneeId.name}}</span>
+                            {{else}}
+                                <span class="badge badge-secondary">Non assignée</span>
+                            {{/if}}
+                        </td>
+                        <td>{{this.order}}</td>
+                        <td>
+                            <a href="/matiere/edit/{{this._id}}" class="btn btn-warning btn-sm" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="/matiere/delete/{{this._id}}?_method=DELETE" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm delete-btn" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle"></i> Aucune matière trouvée.
+                                <a href="/matiere/create" class="alert-link">Cliquez ici pour ajouter une matière</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Card pour les statistiques -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie"></i> Répartition par année
+                </h3>
+            </div>
+            <div class="card-body">
+                <canvas id="matieresChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-tips"></i> Conseils
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> <strong>Bon à savoir:</strong>
+                    <ul class="mt-2 mb-0">
+                        <li>Chaque matière doit être associée à une année scolaire</li>
+                        <li>L'ordre détermine l'affichage dans l'application mobile</li>
+                        <li>Vous pouvez modifier ou supprimer une matière à tout moment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Statistiques des matières par année
+    const matieresParAnnee = {};
+    {{#each matieres}}
+        {{#if this.AnneeId}}
+            matieresParAnnee['{{this.AnneeId.name}}'] = (matieresParAnnee['{{this.AnneeId.name}}'] || 0) + 1;
+        {{/if}}
+    {{/each}}
+    
+    const ctx = document.getElementById('matieresChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(matieresParAnnee),
+            datasets: [{
+                label: 'Nombre de matières',
+                data: Object.values(matieresParAnnee),
+                backgroundColor: '#007bff',
+                borderColor: '#0056b3',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 1,
+                    title: {
+                        display: true,
+                        text: 'Nombre de matières'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Années scolaires'
+                    }
+                }
+            }
+        }
+    });
+</script>

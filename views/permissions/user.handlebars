@@ -1,0 +1,267 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-user-shield"></i> صلاحيات المستخدم: {{user.fullName}}
+        </h3>
+        <div class="card-tools">
+            <a href="/users" class="btn-back">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <form action="/permissions/user/{{user._id}}?_method=PUT" method="post">
+            <div class="user-info">
+                <div class="info-row">
+                    <span class="info-label">اسم المستخدم:</span>
+                    <span class="info-value">{{user.username}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">الدور:</span>
+                    <span class="info-value role-badge role-{{user.role}}">{{user.role}}</span>
+                </div>
+            </div>
+            
+            <div class="permissions-section">
+                <h4>الصلاحيات الإضافية</h4>
+                <div class="permissions-grid">
+                    {{#each allPermissions}}
+                    {{#if (eq this.category 'users')}}
+                    <div class="perm-category">
+                        <div class="category-title">👥 إدارة المستخدمين</div>
+                    {{/if}}
+                    {{#if (eq this.category 'content')}}
+                    <div class="perm-category">
+                        <div class="category-title">📄 إدارة المحتوى</div>
+                    {{/if}}
+                    {{#if (eq this.category 'academic')}}
+                    <div class="perm-category">
+                        <div class="category-title">📚 الإدارة التربوية</div>
+                    {{/if}}
+                    {{#if (eq this.category 'reports')}}
+                    <div class="perm-category">
+                        <div class="category-title">📊 التقارير</div>
+                    {{/if}}
+                    {{#if (eq this.category 'settings')}}
+                    <div class="perm-category">
+                        <div class="category-title">⚙️ الإعدادات</div>
+                    {{/if}}
+                    {{#if (eq this.category 'system')}}
+                    <div class="perm-category">
+                        <div class="category-title">🖥️ النظام</div>
+                    {{/if}}
+                    {{/each}}
+                    
+                    {{#each allPermissions}}
+                    <div class="perm-item" data-category="{{this.category}}">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="permissions" value="{{this.code}}" 
+                                {{#if (lookup ../userPermissionsMap this.code)}}checked{{/if}}>
+                            <span class="checkmark"></span>
+                            <div class="perm-info">
+                                <strong>{{this.name}}</strong>
+                                <small>{{this.code}}</small>
+                                <p>{{this.description}}</p>
+                            </div>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> حفظ الصلاحيات
+                </button>
+                <a href="/users" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.user-info {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.info-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #475569;
+}
+
+.info-value {
+    color: #1e293b;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.role-super_admin { background: #fef2f2; color: #ef4444; }
+.role-admin { background: #fffbeb; color: #f59e0b; }
+.role-teacher { background: #ecfdf5; color: #10b981; }
+.role-viewer { background: #f1f5f9; color: #64748b; }
+
+.permissions-section h4 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #1e293b;
+}
+
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.perm-item {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    height: 18px;
+    width: 18px;
+    background-color: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+    border-color: #3b82f6;
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom-checkbox .checkmark:after {
+    right: 5px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.perm-info {
+    flex: 1;
+}
+
+.perm-info strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #1e293b;
+}
+
+.perm-info small {
+    font-size: 0.65rem;
+    color: #3b82f6;
+    font-family: monospace;
+}
+
+.perm-info p {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin: 0.2rem 0 0;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.btn-submit {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-back, .btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.permissions-grid {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Style pour les catégories */
+.perm-category {
+    grid-column: span 2;
+    margin-top: 0.5rem;
+}
+
+.category-title {
+    font-weight: 600;
+    color: #1e293b;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+</style>
+
+<script>
+// Pas de helper includes nécessaire, tout est géré par le contrôleur
+</script>
