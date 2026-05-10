@@ -320,11 +320,11 @@ async function uploadToWasabi(file, previewContainer, onSuccess) {
         if (progressBar) progressBar.style.width = '100%';
 
         // 3) Succès — utiliser l'URL publique
-        onSuccess(presignData.publicUrl, type);
+        onSuccess(presignData.publicUrl, presignData.proxyUrl, type);
 
         previewContainer.innerHTML = `
             <div class="media-preview">
-                ${renderMediaPreview(presignData.publicUrl, type)}
+                ${renderMediaPreview(presignData.proxyUrl, type)}
                 <span class="wasabi-badge"><i class="fas fa-cloud"></i> Wasabi</span>
             </div>`;
 
@@ -346,11 +346,10 @@ function uploadQuestionMedia(type) {
         const file = e.target.files[0];
         if (!file) return;
         const previewDiv = document.getElementById('questionMediaPreview');
-        await uploadToWasabi(file, previewDiv, (url, mediaType) => {
-            questionMediaData = { url, type: mediaType };
-            document.getElementById('subQuestion').value = url;
+        await uploadToWasabi(file, previewDiv, (publicUrl, proxyUrl, mediaType) => {
+            document.getElementById('subQuestion').value = publicUrl;
             document.getElementById('questionMediaType').value = mediaType;
-            document.getElementById('questionMediaUrl').value = url;
+            document.getElementById('questionMediaUrl').value = publicUrl;
             // Ajouter bouton supprimer
             const btn = document.createElement('button');
             btn.type = 'button';
@@ -439,8 +438,8 @@ async function uploadOptionMedia(optionId, type) {
         const file = e.target.files[0];
         if (!file) return;
         const previewDiv = document.getElementById(`option-media-preview-${optionId}`);
-        await uploadToWasabi(file, previewDiv, (url, mediaType) => {
-            optionMediaData[optionId] = { url, type: mediaType };
+        await uploadToWasabi(file, previewDiv, (publicUrl, proxyUrl, mediaType) => {
+            optionMediaData[optionId] = { url: publicUrl, type: mediaType };
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'modern-btn modern-btn-danger';

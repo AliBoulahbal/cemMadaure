@@ -72,11 +72,11 @@
                     {{#if quiz.questionMediaUrl}}
                     <div class="media-preview existing-media">
                         {{#if (eq quiz.questionMediaType 'image')}}
-                            <img src="{{quiz.questionMediaUrl}}" alt="Question media">
+                            <img src="/v1/proxy?url={{quiz.questionMediaUrl}}" alt="Question media">
                         {{else if (eq quiz.questionMediaType 'video')}}
-                            <video src="{{quiz.questionMediaUrl}}" controls></video>
+                            <video src="/v1/proxy?url={{quiz.questionMediaUrl}}" controls></video>
                         {{else if (eq quiz.questionMediaType 'audio')}}
-                            <audio src="{{quiz.questionMediaUrl}}" controls></audio>
+                            <audio src="/v1/proxy?url={{quiz.questionMediaUrl}}" controls></audio>
                         {{/if}}
                         <span class="wasabi-badge"><i class="fas fa-cloud"></i> Wasabi</span>
                         <button type="button" class="modern-btn modern-btn-danger" onclick="removeQuestionMedia()">
@@ -133,11 +133,11 @@
                                 {{#if this.mediaUrl}}
                                 <div class="media-preview existing-media">
                                     {{#if (eq this.mediaType 'image')}}
-                                        <img src="{{this.mediaUrl}}" alt="Option media">
+                                        <img src="/v1/proxy?url={{this.mediaUrl}}" alt="Option media">
                                     {{else if (eq this.mediaType 'video')}}
-                                        <video src="{{this.mediaUrl}}" controls></video>
+                                        <video src="/v1/proxy?url={{this.mediaUrl}}" controls></video>
                                     {{else if (eq this.mediaType 'audio')}}
-                                        <audio src="{{this.mediaUrl}}" controls></audio>
+                                        <audio src="/v1/proxy?url={{this.mediaUrl}}" controls></audio>
                                     {{/if}}
                                     <span class="wasabi-badge"><i class="fas fa-cloud"></i> Wasabi</span>
                                     <button type="button" class="modern-btn modern-btn-danger" onclick="removeOptionMedia({{@index}})">
@@ -352,11 +352,11 @@ async function uploadToWasabi(file, previewContainer, onSuccess) {
         });
 
         if (progressBar) progressBar.style.width = '100%';
-        onSuccess(presignData.publicUrl, type);
+        onSuccess(presignData.publicUrl, presignData.proxyUrl, type);
 
         previewContainer.innerHTML = `
             <div class="media-preview">
-                ${renderMediaPreview(presignData.publicUrl, type)}
+                ${renderMediaPreview(presignData.proxyUrl, type)}
                 <span class="wasabi-badge"><i class="fas fa-cloud"></i> Wasabi</span>
             </div>`;
 
@@ -378,10 +378,10 @@ function uploadQuestionMedia(type) {
         const file = e.target.files[0];
         if (!file) return;
         const previewDiv = document.getElementById('questionMediaPreview');
-        await uploadToWasabi(file, previewDiv, (url, mediaType) => {
-            document.getElementById('subQuestion').value = url;
+        await uploadToWasabi(file, previewDiv, (publicUrl, proxyUrl, mediaType) => {
+            document.getElementById('subQuestion').value = publicUrl;
             document.getElementById('questionMediaType').value = mediaType;
-            document.getElementById('questionMediaUrl').value = url;
+            document.getElementById('questionMediaUrl').value = publicUrl;
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'modern-btn modern-btn-danger';
@@ -410,8 +410,8 @@ async function uploadOptionMedia(optionId, type) {
         const file = e.target.files[0];
         if (!file) return;
         const previewDiv = document.getElementById(`option-media-preview-${optionId}`);
-        await uploadToWasabi(file, previewDiv, (url, mediaType) => {
-            optionMediaData[optionId] = { url, type: mediaType };
+        await uploadToWasabi(file, previewDiv, (publicUrl, proxyUrl, mediaType) => {
+            optionMediaData[optionId] = { url: publicUrl, type: mediaType };
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'modern-btn modern-btn-danger';
