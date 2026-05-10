@@ -249,12 +249,13 @@ exports.getPresignUrl = async (req, res) => {
       return res.status(400).json({ success: false, error: 'امتداد الملف غير مسموح: ' + ext });
     }
 
-    const { url, key, publicUrl } = await getPresignedUrl(type, ext);
+    const { url, key, publicUrl, proxyUrl } = await getPresignedUrl(type, ext);
 
     res.json({
       success: true,
-      uploadUrl: url,    // URL présignée PUT → utilisée par le navigateur
-      publicUrl,         // URL publique Wasabi → stockée en base
+      uploadUrl: url,    // URL présignée PUT → pour uploader depuis le navigateur
+      publicUrl,         // URL brute Wasabi → stockée en base de données
+      proxyUrl,          // URL proxy → utilisée pour afficher le média
       key
     });
   } catch (error) {
