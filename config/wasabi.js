@@ -19,12 +19,18 @@ const FOLDERS = {
   video: 'uploads/videos',
   pdf:   'uploads/pdfs',
   image: 'uploads/images',
+  audio: 'uploads/audios',   // ← ajouté
 };
 
 const MIME_TYPES = {
+  // video
   mp4: 'video/mp4', webm: 'video/webm', avi: 'video/x-msvideo', mov: 'video/quicktime',
+  // pdf
   pdf: 'application/pdf',
+  // image
   jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif',
+  // audio ← ajouté
+  mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', m4a: 'audio/mp4', aac: 'audio/aac',
 };
 
 async function getPresignedUrl(type, ext) {
