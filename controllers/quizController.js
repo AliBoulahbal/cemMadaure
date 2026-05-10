@@ -2,7 +2,7 @@ const Quiz = require('../models/Quiz');
 const Lesson = require('../models/Lesson');
 const Branch = require('../models/Branch');
 const Subject = require('../models/Subject');
-const { getPresignedUrl } = require('../middleware/wasabi'); // adapter le chemin selon votre projet
+const { getPresignedUrl } = require('../config/wasabi'); // adapter le chemin selon votre projet
 
 // ==================== PAGE D'ACCUEIL DES QUIZ ====================
 exports.index = async (req, res) => {
