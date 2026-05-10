@@ -643,12 +643,16 @@ exports.getQuizByLesson = async (req, res) => {
       lessonId: quiz.lessonId,
       question: quiz.question,
       subQuestion: quiz.subQuestion || '',
+      questionMediaType: quiz.questionMediaType || 'text',
+      questionMediaUrl: quiz.questionMediaUrl || '',
       typeQuiz: quiz.typeQuiz,
       point: quiz.point,
       options: quiz.options.map(opt => ({
         id: opt._id,
         content: opt.content,
-        isCorrect: opt.isCorrect
+        isCorrect: opt.isCorrect,
+        mediaType: opt.mediaType || 'text',
+        mediaUrl: opt.mediaUrl || ''
       })),
       explanation: quiz.explanation || ''
     }));
@@ -727,12 +731,16 @@ exports.getQuizListByLessonId = async (req, res) => {
         lessonId: quiz.lessonId,
         question: quiz.question,
         subQuestion: quiz.subQuestion || '',
+        questionMediaType: quiz.questionMediaType || 'text',
+        questionMediaUrl: quiz.questionMediaUrl || '',
         typeQuiz: quiz.typeQuiz,
         point: quiz.point,
         options: quiz.options.map(opt => ({
           id: opt._id,
           content: opt.content,
-          isCorrect: opt.isCorrect
+          isCorrect: opt.isCorrect,
+          mediaType: opt.mediaType || 'text',
+          mediaUrl: opt.mediaUrl || ''
         })),
         explanation: quiz.explanation || '',
         resultDto
