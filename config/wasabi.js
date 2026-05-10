@@ -43,8 +43,11 @@ async function getPresignedUrl(type, ext) {
     expiresIn: 3600,
     unhoistableHeaders: new Set(['x-amz-checksum-crc32']),
   });
+  // URL brute Wasabi (stockée en base de données)
   const publicUrl = `https://s3.eu-central-2.wasabisys.com/${BUCKET}/${key}`;
-  return { url, key, publicUrl };
+  // URL proxy (utilisée pour l'affichage — contourne la restriction accès public)
+  const proxyUrl = `/v1/proxy?url=${encodeURIComponent(publicUrl)}`;
+  return { url, key, publicUrl, proxyUrl };
 }
 
 module.exports = { getPresignedUrl };
